@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+    <meta name="theme-color" content="#4f46e5" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b0f19" media="(prefers-color-scheme: dark)" />
+
+    <title>TOOLZEN — Every Tool. One Place.</title>
+    <meta
+      name="description"
+      content="TOOLZEN is a free online tools platform offering browser-based utilities for documents, images, files, text, developers, security and everyday calculations, with no account required."
+    />
+    <link rel="canonical" href="__SITE_URL__/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="TOOLZEN" />
+    <meta property="og:title" content="TOOLZEN — Every Tool. One Place." />
+    <meta
+      property="og:description"
+      content="Free online tools to simplify your documents, images, files and everyday digital tasks. No sign-up required."
+    />
+    <meta property="og:url" content="__SITE_URL__/" />
+    <meta property="og:image" content="__SITE_URL__/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="TOOLZEN — Every Tool. One Place." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="TOOLZEN — Every Tool. One Place." />
+    <meta
+      name="twitter:description"
+      content="Free online tools to simplify your documents, images, files and everyday digital tasks."
+    />
+    <meta name="twitter:image" content="__SITE_URL__/og-image.png" />
+
+    <!--
+      Site-wide entity schema (Organization + WebSite).
+      This is separate from the per-route schema managed by <Seo>, which uses a
+      different script id, so both survive client-side navigation.
+      Replace the __SITE_URL__ token via VITE_SITE_URL at build time.
+    -->
+    <script type="application/ld+json" id="toolzen-site-jsonld">
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "@id": "__SITE_URL__/#organization",
+          "name": "TOOLZEN",
+          "alternateName": "TOOLZEN — Every Tool. One Place.",
+          "url": "__SITE_URL__/",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "__SITE_URL__/logo.png",
+            "width": 512,
+            "height": 512
+          },
+          "description": "TOOLZEN is a free online tools platform offering browser-based utilities for documents, images, files, text, developers, security and everyday calculations, with no account required.",
+          "slogan": "Every Tool. One Place.",
+          "knowsAbout": [
+            "online tools",
+            "PDF utilities",
+            "image conversion",
+            "text analysis",
+            "developer utilities",
+            "cybersecurity tools",
+            "file conversion",
+            "productivity software"
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "@id": "__SITE_URL__/#website",
+          "name": "TOOLZEN",
+          "alternateName": "Every Tool. One Place.",
+          "url": "__SITE_URL__/",
+          "description": "TOOLZEN is a free online tools platform offering browser-based utilities for documents, images, files, text, developers, security and everyday calculations, with no account required.",
+          "inLanguage": "en",
+          "publisher": { "@id": "__SITE_URL__/#organization" },
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "__SITE_URL__/tools?q={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+          }
+        }
+      ]
+    </script>
+
+    <!-- Set the theme class before paint to avoid a flash of the wrong theme. -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('toolzen-theme')
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+          var dark = stored ? stored === 'dark' : prefersDark
+          document.documentElement.classList.toggle('dark', dark)
+        } catch (e) {
+          /* ignore */
+        }
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

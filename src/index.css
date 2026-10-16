@@ -1,0 +1,129 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   TOOLZEN design tokens
+   Colours are stored as space-separated RGB channels so Tailwind can apply
+   opacity modifiers, e.g. `bg-brand/10`.
+   ========================================================================== */
+@layer base {
+  :root {
+    --c-bg: 248 250 252;
+    --c-fg: 15 23 42;
+    --c-surface: 255 255 255;
+    --c-surface-2: 241 245 249;
+    --c-muted: 100 116 139;
+    --c-line: 226 232 240;
+
+    --c-brand: 79 70 229;
+    --c-brand-hover: 67 56 202;
+    --c-brand-soft: 238 242 255;
+    --c-brand-fg: 255 255 255;
+
+    --c-accent: 139 92 246;
+    --c-accent-soft: 245 243 255;
+
+    --c-success: 22 163 74;
+    --c-warning: 217 119 6;
+    --c-danger: 220 38 38;
+    --c-danger-fg: 255 255 255;
+
+    color-scheme: light;
+  }
+
+  .dark {
+    --c-bg: 9 12 20;
+    --c-fg: 226 232 240;
+    --c-surface: 17 23 35;
+    --c-surface-2: 26 34 48;
+    --c-muted: 148 163 184;
+    --c-line: 35 45 62;
+
+    --c-brand: 99 102 241;
+    --c-brand-hover: 129 140 248;
+    --c-brand-soft: 32 36 66;
+    --c-brand-fg: 255 255 255;
+
+    --c-accent: 167 139 250;
+    --c-accent-soft: 42 34 68;
+
+    --c-success: 74 222 128;
+    --c-warning: 251 191 36;
+    --c-danger: 248 113 113;
+    --c-danger-fg: 9 12 20;
+
+    color-scheme: dark;
+  }
+
+  * {
+    border-color: rgb(var(--c-line));
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-bg text-fg font-sans antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Consistent, visible keyboard focus across the app. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand ring-offset-2 ring-offset-bg;
+  }
+
+  ::selection {
+    background-color: rgb(var(--c-brand) / 0.22);
+  }
+
+  /* Respect users who prefer reduced motion. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Reusable surface card used across tool pages and the homepage. */
+  .tz-card {
+    @apply rounded-2xl border border-line bg-surface shadow-card;
+  }
+
+  /* Thin, theme-aware scrollbars for scrollable panes. */
+  .tz-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--c-line)) transparent;
+  }
+  .tz-scroll::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  .tz-scroll::-webkit-scrollbar-thumb {
+    background-color: rgb(var(--c-line));
+    border-radius: 9999px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+
+  /* Skip link for keyboard users. */
+  .tz-skip-link {
+    @apply absolute left-4 top-4 z-50 -translate-y-24 rounded-lg bg-brand px-4 py-2 text-sm font-medium text-brand-fg transition-transform;
+  }
+  .tz-skip-link:focus {
+    @apply translate-y-0;
+  }
+}
+
+@layer utilities {
+  .tz-container {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+}
