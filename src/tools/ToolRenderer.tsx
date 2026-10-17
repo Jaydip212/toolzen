@@ -69,6 +69,26 @@ const toolComponents: Record<string, LazyExoticComponent<ComponentType>> = {
   'profit-margin-calculator': lazy(() => import('./profit-margin-calculator')),
   'compound-interest-calculator': lazy(() => import('./compound-interest-calculator')),
   'reading-time-calculator': lazy(() => import('./reading-time-calculator')),
+
+  // Image tools
+  'image-compressor': lazy(() => import('./image-compressor')),
+  'image-resizer': lazy(() => import('./image-resizer')),
+  'image-cropper': lazy(() => import('./image-cropper')),
+  'image-format-converter': lazy(() => import('./image-format-converter')),
+  'jpg-to-png': lazy(() => import('./jpg-to-png')),
+  'png-to-jpg': lazy(() => import('./png-to-jpg')),
+  'webp-converter': lazy(() => import('./webp-converter')),
+  'image-rotator': lazy(() => import('./image-rotator')),
+  'image-flipper': lazy(() => import('./image-flipper')),
+  'image-metadata-viewer': lazy(() => import('./image-metadata-viewer')),
+  'image-dimensions-checker': lazy(() => import('./image-dimensions-checker')),
+  'image-color-picker': lazy(() => import('./image-color-picker')),
+  'image-to-pdf': lazy(() => import('./image-to-pdf')),
+  'multiple-image-resizer': lazy(() => import('./multiple-image-resizer')),
+  'image-background-utilities': lazy(() => import('./image-background-utilities')),
+  'image-watermark': lazy(() => import('./image-watermark')),
+  'base64-to-image': lazy(() => import('./base64-to-image')),
+  'favicon-generator': lazy(() => import('./favicon-generator')),
 }
 
 /** Resolve the component for a tool id, if it has been implemented. */

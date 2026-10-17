@@ -1107,7 +1107,7 @@ const seeds: ToolSeed[] = [
   },
 
   /* ------------------------------------------------------------------ */
-  /* IMAGE — planned                                                     */
+  /* IMAGE — live                                                     */
   /* ------------------------------------------------------------------ */
   {
     id: 'image-compressor',
@@ -1116,12 +1116,41 @@ const seeds: ToolSeed[] = [
     categories: ['image'],
     keywords: ['compress', 'optimise', 'reduce size', 'quality'],
     icon: 'gauge',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'JPEG, PNG or WebP image',
     outputFormat: 'Compressed image',
     processingMode: 'client',
     maxFileSize: '20 MB per image',
     addedAt: '2026-10-17',
+    instructions:     [
+      'Choose an image. It stays in this browser tab; nothing is uploaded.',
+      'Pick a size: set the longest side in pixels, choose a percentage, or fit inside a preset such as Full HD.',
+      'Pick a quality preset. High is around 88 and is visually lossless for most photographs; Small at 60 is fine for thumbnails.',
+      'Choose the output format. WebP is the smallest lossy option, PNG is lossless but larger, JPEG has the widest compatibility.',
+      'Press Compress. The tool reports the new size and the percentage saved, and it says so plainly if the file grew instead.',
+    ],
+    faqs:     [
+      {
+        question: 'Why did my file get bigger?',
+        answer:
+          'A JPEG is already compressed, so re-encoding it at a high quality can add data rather than remove it. The tool reports the real number instead of hiding it. Converting to WebP, or lowering the quality, usually fixes it.',
+      },
+      {
+        question: 'Should I lower the size or the quality first?',
+        answer:
+          'Lower the size. Halving the side lengths removes three quarters of the pixels, which saves far more than any quality setting. The tool warns you when the size is doing the work so you do not spend detail on both.',
+      },
+      {
+        question: 'Is the quality number a promise?',
+        answer:
+          'No. The saving estimate the tool shows before you press the button is a guess based on the quality alone. The real number is measured after encoding, and that is the one reported as the result.',
+      },
+      {
+        question: 'Does PNG compression lose anything?',
+        answer:
+          'No. PNG is lossless, so the picture is exactly what you put in. It is also the larger file for anything photographic, which is the trade-off the tool states on the quality panel.',
+      },
+    ],
   },
   {
     id: 'image-resizer',
@@ -1130,12 +1159,40 @@ const seeds: ToolSeed[] = [
     categories: ['image'],
     keywords: ['resize', 'scale', 'dimensions', 'pixels'],
     icon: 'ruler',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Image file',
     outputFormat: 'Resized image',
     processingMode: 'client',
     maxFileSize: '20 MB per image',
     addedAt: '2026-10-17',
+    instructions:     [
+      'Choose the image you want to resize.',
+      'Pick a target mode: Long edge sets one number and derives the other from the aspect ratio, Percent scales both sides, Preset fits inside a box, and Exact takes both numbers from you.',
+      'Check the target size the tool reports. It also says in plain words when the shape changes.',
+      'Press Resize and download the result.',
+    ],
+    faqs:     [
+      {
+        question: 'What is the difference between an exact resize and a preset?',
+        answer:
+          'An exact resize stretches the image to the two numbers you type, even if that distorts it. A preset fits the image inside a box while keeping its shape, so a landscape photo on a square preset is letterboxed rather than squashed.',
+      },
+      {
+        question: 'Can I make a small image bigger?',
+        answer:
+          'You can, but the tool warns you first. Scaling up cannot add detail that was never captured, so the result looks soft. If you need a bigger file for print, it is better to re-export the original.',
+      },
+      {
+        question: 'Why does the output come out as WebP?',
+        answer:
+          'WebP is the smallest of the formats the tool can write and every current browser reads it. You can switch to PNG or JPEG in the output format list if you need those instead.',
+      },
+      {
+        question: 'My file says .png but the tool says it is a JPEG. Which is right?',
+        answer:
+          'The bytes are right, and the tool trusts them. People rename files and some tools write the wrong extension. The tool tells you when the name and the format disagree rather than silently mislabelling the output.',
+      },
+    ],
   },
   {
     id: 'image-cropper',
@@ -1144,12 +1201,40 @@ const seeds: ToolSeed[] = [
     categories: ['image'],
     keywords: ['crop', 'trim', 'aspect ratio'],
     icon: 'crop',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Image file',
     outputFormat: 'Cropped image',
     processingMode: 'client',
     maxFileSize: '20 MB per image',
     addedAt: '2026-10-17',
+    instructions:     [
+      'Choose the image you want to crop.',
+      'Pick an aspect ratio, or leave it on Free to draw any box you like.',
+      'Drag a box over the image. The tool shows the selection size in pixels and the percentage of the area it keeps.',
+      'Press Crop and download the result as a PNG.',
+    ],
+    faqs:     [
+      {
+        question: 'What happens if I drag outside the image?',
+        answer:
+          'The selection is trimmed to the edge and the tool tells you it did, along with the real size of the crop. It never silently exports a rectangle that extends past the picture.',
+      },
+      {
+        question: 'Does cropping reduce the file size?',
+        answer:
+          'Usually, because there are fewer pixels, but the tool re-encodes as a lossless PNG, so a heavily-compressed JPEG cropped to PNG can end up larger. If that matters to you, follow the crop with the compressor.',
+      },
+      {
+        question: 'Can I crop to an exact pixel size?',
+        answer:
+          'Not from this page. The box is drawn as a percentage of the image and the result is whatever pixels that covers. For exact dimensions, use the resizer with the Exact mode.',
+      },
+      {
+        question: 'Why is the whole image reported as covering 100 percent?',
+        answer:
+          'A box drawn around everything leaves nothing to crop, so the tool says so rather than exporting an identical copy. Drag a smaller box to actually cut something away.',
+      },
+    ],
   },
   {
     id: 'image-format-converter',
@@ -1158,12 +1243,40 @@ const seeds: ToolSeed[] = [
     categories: ['image', 'conversion'],
     keywords: ['convert', 'format', 'jpeg', 'png', 'webp'],
     icon: 'repeat',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Image file',
     outputFormat: 'Image in the selected format',
     processingMode: 'client',
     maxFileSize: '20 MB per image',
     addedAt: '2026-10-17',
+    instructions:     [
+      'Choose the image you want to convert.',
+      'Pick the target format from PNG, JPEG and WebP.',
+      'For a lossy target, set the quality. The tool explains what the setting costs before you press the button.',
+      'Press Convert and download the result. The tool reports the new size and the change against the original.',
+    ],
+    faqs:     [
+      {
+        question: 'Which format should I choose?',
+        answer:
+          'WebP for modern websites, because it is smaller than a JPEG at the same visible quality and can hold transparency. PNG for screenshots, logos and anything you will edit again. JPEG only when you need compatibility with older software.',
+      },
+      {
+        question: 'What happens to the transparency in my PNG if I convert to JPEG?',
+        answer:
+          'It becomes black, because JPEG has no alpha channel. The tool warns you before you convert, and offers WebP or PNG as formats that keep the see-through areas.',
+      },
+      {
+        question: 'Why is the converted file sometimes larger?',
+        answer:
+          'Re-encoding an already-compressed image can add data, particularly at a high quality setting. The tool reports the number it measured and does not describe a growth as a saving.',
+      },
+      {
+        question: 'Does the tool read the extension on the file name?',
+        answer:
+          'No, it reads the bytes. A JPEG renamed to .png is still a JPEG, and the tool says so rather than producing a file with a misleading extension.',
+      },
+    ],
   },
   {
     id: 'jpg-to-png',
@@ -1172,12 +1285,39 @@ const seeds: ToolSeed[] = [
     categories: ['image', 'conversion'],
     keywords: ['jpg to png', 'convert', 'transparency'],
     icon: 'image',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'JPG image',
     outputFormat: 'PNG image',
     processingMode: 'client',
     maxFileSize: '20 MB per image',
     addedAt: '2026-10-17',
+    instructions:     [
+      'Choose the JPEG you want to convert.',
+      'The target is already set to PNG, because that is what this page is for.',
+      'Press Convert to PNG and download the result.',
+    ],
+    faqs:     [
+      {
+        question: 'Why convert a JPEG to PNG?',
+        answer:
+          'It stops the quality loss from any further edits. A JPEG loses a little detail every time it is re-saved; a PNG does not. The file will be larger, which is the trade.',
+      },
+      {
+        question: 'Will converting fix a blurry photo?',
+        answer:
+          'No. The detail that JPEG compression already threw away is gone. Converting to PNG protects what is left from further damage, but it cannot add anything back.',
+      },
+      {
+        question: 'Is this page doing something the general converter is not?',
+        answer:
+          'No. It is the same converter with the target already chosen, so the two cannot disagree and you do not have to pick a format you already decided on.',
+      },
+      {
+        question: 'Does JPEG have transparency?',
+        answer:
+          'No. If your JPEG already looks like it has a see-through area, that is really black or white. Converting to PNG will make that obvious rather than fix it.',
+      },
+    ],
   },
   {
     id: 'png-to-jpg',
@@ -1186,12 +1326,39 @@ const seeds: ToolSeed[] = [
     categories: ['image', 'conversion'],
     keywords: ['png to jpg', 'convert', 'flatten'],
     icon: 'image',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'PNG image',
     outputFormat: 'JPG image',
     processingMode: 'client',
     maxFileSize: '20 MB per image',
     addedAt: '2026-10-17',
+    instructions:     [
+      'Choose the PNG you want to convert.',
+      'The target is already set to JPEG. Set the quality if you want a different balance of size against detail.',
+      'Press Convert to JPEG and download the result.',
+    ],
+    faqs:     [
+      {
+        question: 'Why convert a PNG to JPEG?',
+        answer:
+          'For photographs, a JPEG is many times smaller than a PNG at a quality most people cannot tell apart. The cost is that it is lossy, so every further save loses a little more.',
+      },
+      {
+        question: 'What happens to the transparency?',
+        answer:
+          'It turns black, because JPEG has no alpha channel. The tool warns you before you convert. If you need to keep see-through areas, choose WebP or stay on PNG.',
+      },
+      {
+        question: 'What quality should I use?',
+        answer:
+          '85 is the tool\'s suggestion and is a good default. 90 and above costs a lot of file size for very little visible gain; below 60 the loss starts to show on detailed images.',
+      },
+      {
+        question: 'Is a JPEG or a PNG better for a screenshot?',
+        answer:
+          'A PNG. Screenshots are mostly flat colour and text, and JPEG smears sharp edges. Converting a screenshot to JPEG is the one case where the file usually gets bigger and looks worse.',
+      },
+    ],
   },
   {
     id: 'webp-converter',
@@ -1200,12 +1367,40 @@ const seeds: ToolSeed[] = [
     categories: ['image', 'conversion'],
     keywords: ['webp', 'convert', 'google'],
     icon: 'repeat',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Image file',
     outputFormat: 'WebP, JPEG or PNG image',
     processingMode: 'client',
     maxFileSize: '20 MB per image',
     addedAt: '2026-10-17',
+    instructions:     [
+      'Choose the image you want to convert.',
+      'The target is already set to WebP.',
+      'Set the quality if you want to. WebP needs a lower number than JPEG to look the same, which is the tool\'s whole suggestion.',
+      'Press Convert to WebP and download the result.',
+    ],
+    faqs:     [
+      {
+        question: 'Will WebP work everywhere?',
+        answer:
+          'In every current browser, yes. Older software and some social platforms still do not accept it, which is the tool\'s stated trade-off. Keep a JPEG or PNG copy if you are uploading somewhere you cannot check.',
+      },
+      {
+        question: 'Why is the suggested quality lower than for JPEG?',
+        answer:
+          'Because it needs to be. WebP at 82 looks about as good as a JPEG at 85, and it is smaller. Giving it the same number would waste exactly the advantage you converted for.',
+      },
+      {
+        question: 'Can WebP hold transparency?',
+        answer:
+          'Yes, both the lossy and the lossless variants. That makes it the natural choice when you need a small file that also keeps see-through areas.',
+      },
+      {
+        question: 'Is this page different from the general converter?',
+        answer:
+          'No, it is the same converter with the target pre-selected. They share one implementation so the two pages can never produce different results.',
+      },
+    ],
   },
   {
     id: 'image-rotator',
@@ -1214,12 +1409,40 @@ const seeds: ToolSeed[] = [
     categories: ['image'],
     keywords: ['rotate', 'turn', 'straighten'],
     icon: 'rotate-cw',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Image file',
     outputFormat: 'Rotated image',
     processingMode: 'client',
     maxFileSize: '20 MB per image',
     addedAt: '2026-10-17',
+    instructions:     [
+      'Choose the image you want to rotate.',
+      'Press Rotate left, Rotate right or Turn upside down. Each press is a quarter turn.',
+      'Watch the output size change: a quarter turn swaps the width and the height.',
+      'Press Apply and export to download a PNG of the result.',
+    ],
+    faqs:     [
+      {
+        question: 'Is the rotation lossless?',
+        answer:
+          'No. The tool re-draws the image on a canvas, which re-encodes it. A true lossless JPEG rotation only works when the sides are exact multiples of the encoder\'s block size, and this tool would rather re-encode and say so than claim a saving that silently fails.',
+      },
+      {
+        question: 'My photo from a phone looks sideways. Why?',
+        answer:
+          'The camera writes an orientation tag instead of rotating the pixels, and not every program reads it. Rotating the image here bakes the correct orientation into the file so it displays the same way everywhere.',
+      },
+      {
+        question: 'Why is the export always a PNG?',
+        answer:
+          'Because PNG is lossless, so rotating a PNG costs nothing, and a rotated JPEG would already have lost data. If you need a JPEG, re-run the downloaded PNG through the compressor.',
+      },
+      {
+        question: 'Can I rotate by an arbitrary angle such as 30 degrees?',
+        answer:
+          'Not on this page. A rotation by anything other than a quarter turn leaves triangular gaps at the corners that have to be filled in with something, and this tool does not invent pixels. Use a design tool for that.',
+      },
+    ],
   },
   {
     id: 'image-flipper',
@@ -1228,12 +1451,40 @@ const seeds: ToolSeed[] = [
     categories: ['image'],
     keywords: ['flip', 'mirror', 'reflect'],
     icon: 'flip',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Image file',
     outputFormat: 'Flipped image',
     processingMode: 'client',
     maxFileSize: '20 MB per image',
     addedAt: '2026-10-17',
+    instructions:     [
+      'Choose the image you want to mirror.',
+      'Press Flip horizontally to mirror it left to right, or Flip vertically to mirror it top to bottom.',
+      'The rotation buttons work too, and combine with the flips.',
+      'Press Apply and export to download a PNG.',
+    ],
+    faqs:     [
+      {
+        question: 'What is the difference between flipping and rotating?',
+        answer:
+          'Rotating turns the whole image. Flipping mirrors it, the way text appears when you hold a page up to a lamp. Flipping horizontally is what corrects a mirrored selfie or a front-facing camera.',
+      },
+      {
+        question: 'Will the image get bigger?',
+        answer:
+          'No. A flip on its own does not change the dimensions, so the output size stays the same. Only a quarter turn swaps the width and height.',
+      },
+      {
+        question: 'Why is the export a PNG and not the format I put in?',
+        answer:
+          'Because a flip forces a re-encode, and this tool uses the lossless format for that so the mirror itself costs nothing. Convert the result with the compressor if you need a smaller file.',
+      },
+      {
+        question: 'Can I flip an image without losing any quality at all?',
+        answer:
+          'Not through this tool, which redraws the picture. A mirror also cannot be stored as a metadata tag the way an orientation can, so every flipper has to re-encode.',
+      },
+    ],
   },
   {
     id: 'image-metadata-viewer',
@@ -1242,12 +1493,40 @@ const seeds: ToolSeed[] = [
     categories: ['image'],
     keywords: ['exif', 'metadata', 'camera', 'gps', 'properties'],
     icon: 'info',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Image file',
     outputFormat: 'Metadata report',
     processingMode: 'client',
     maxFileSize: '20 MB per image',
     addedAt: '2026-10-17',
+    instructions:     [
+      'Choose a JPEG, PNG or WebP file. The tool reads it in this tab and nothing is uploaded.',
+      'Read the tags. JPEG carries the most, because that is where cameras write EXIF.',
+      'Check the orientation note, which explains how the file says it should be displayed.',
+      'If you want to share the file, press Export a copy without EXIF to strip the tags.',
+    ],
+    faqs:     [
+      {
+        question: 'Why does my photo have no tags at all?',
+        answer:
+          'Because something already removed them. Screenshots, images from design tools, and anything that has been through a social network are all stripped. WhatsApp, Instagram and X all strip EXIF on upload.',
+      },
+      {
+        question: 'What is in EXIF that I should care about?',
+        answer:
+          'The camera make and model, the exact date and time, the settings used, and sometimes GPS coordinates. Publishing the original file publishes all of that, which is why the tool offers a cleaned copy.',
+      },
+      {
+        question: 'Why is the date shown without a time zone?',
+        answer:
+          'Because EXIF does not record one. The camera stores its own local time, and the tool reports that as written rather than guessing an offset that would be wrong by hours.',
+      },
+      {
+        question: 'Does the cleaned copy lose quality?',
+        answer:
+          'Some, because it has to be re-encoded to drop the tags, and the tool uses JPEG at 92 percent. That is a real cost and the tool states it rather than claiming a free clean.',
+      },
+    ],
   },
   {
     id: 'image-dimensions-checker',
@@ -1256,12 +1535,40 @@ const seeds: ToolSeed[] = [
     categories: ['image'],
     keywords: ['dimensions', 'resolution', 'aspect ratio', 'size'],
     icon: 'ruler',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Image file',
     outputFormat: 'Dimension details',
     processingMode: 'client',
     maxFileSize: '20 MB per image',
     addedAt: '2026-10-17',
+    instructions:     [
+      'Choose an image. Its pixel size is read from the file header when possible and by decoding it otherwise.',
+      'Type what the image is for, for example website hero, thumbnail, print poster or 4k screen.',
+      'Read the verdict, which says whether the size is enough for that job.',
+      'Set a DPI if you are printing, to see the physical size the pixels work out to.',
+    ],
+    faqs:     [
+      {
+        question: 'Where does the tool get the size from?',
+        answer:
+          'For a PNG, GIF or BMP the size sits at a fixed place in the header, so it can be read without decoding. For a JPEG the tool walks the segment table. The panel says which method was used, so you know how much to trust it.',
+      },
+      {
+        question: 'What if I type something the tool does not recognise?',
+        answer:
+          'It says so and reports the raw numbers rather than inventing a verdict. The benchmark list is short on purpose, because a confident answer about a job it knows nothing about would be a guess.',
+      },
+      {
+        question: 'Does a bigger pixel count always mean a better image?',
+        answer:
+          'No, and that is why the tool only compares against a job. A 6000-pixel banner for a 600-pixel slot is worse than a sharp 1200-pixel one, because it carries no extra information and takes longer to load.',
+      },
+      {
+        question: 'What DPI should I use for print?',
+        answer:
+          '300 for a printed page, which is what the tool defaults to. 150 is acceptable for large posters viewed at a distance. Screen use has no DPI setting at all, which is why the field matters only for print.',
+      },
+    ],
   },
   {
     id: 'image-color-picker',
@@ -1270,12 +1577,40 @@ const seeds: ToolSeed[] = [
     categories: ['image', 'color'],
     keywords: ['colour picker', 'eyedropper', 'hex', 'rgb', 'palette'],
     icon: 'palette',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Image file',
     outputFormat: 'Colour values',
     processingMode: 'client',
     maxFileSize: '20 MB per image',
     addedAt: '2026-10-17',
+    instructions:     [
+      'Choose an image, or paste a colour as a hex value or an rgb() string.',
+      'Click anywhere on the image to pick that pixel\'s colour.',
+      'Read the palette below the image for the dominant colours, with the share of pixels each one covers.',
+      'Compare against a second colour to see the WCAG contrast ratio and whether the pair is safe for body text.',
+    ],
+    faqs:     [
+      {
+        question: 'How is the palette decided?',
+        answer:
+          'Colours within sixteen of each other in every channel are merged into one swatch, so a photograph\'s hundreds of near-identical greens do not drown the colours that matter. Transparent pixels are skipped entirely, so a transparent PNG reports only its visible colours.',
+      },
+      {
+        question: 'What do the contrast numbers mean?',
+        answer:
+          'They are WCAG contrast ratios. 4.5 to 1 is the bar for body text, 3 to 1 is allowed for large text and icons, and 7 to 1 is the strict AAA level. The tool reports the level in plain words rather than just the letters.',
+      },
+      {
+        question: 'Why does my huge image load quickly?',
+        answer:
+          'The picker works on a copy capped at 1600 pixels wide, so clicking is measured against the whole image without decoding every pixel of a panorama. The palette is sampled the same way.',
+      },
+      {
+        question: 'Why does the tool reject an hsl() colour I paste in?',
+        answer:
+          'Because an hsl() string has to be resolved by a browser, and this tool does not depend on one to parse a colour. It reads hex and rgb(), and says so rather than returning a wrong answer.',
+      },
+    ],
   },
   {
     id: 'image-to-pdf',
@@ -1284,12 +1619,40 @@ const seeds: ToolSeed[] = [
     categories: ['image', 'pdf', 'conversion'],
     keywords: ['images to pdf', 'convert', 'combine'],
     icon: 'file-text',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Image files',
     outputFormat: 'PDF',
     processingMode: 'client',
     maxFileSize: '20 MB per image',
     addedAt: '2026-10-17',
+    instructions:     [
+      'Choose one or more images. Each becomes one page, in the order you add them.',
+      'Pick the page size, A4 or US Letter in either orientation.',
+      'Set the margin in millimetres. Zero prints to the edge.',
+      'Press Build PDF and download the result.',
+    ],
+    faqs:     [
+      {
+        question: 'Will my image fill the whole page?',
+        answer:
+          'Only if the shape matches. The image is scaled to fit inside the page and centred, so the aspect ratio is never changed. A landscape photo on a portrait page ends up with bands above and below, which is the honest result.',
+      },
+      {
+        question: 'What happens to a transparent PNG?',
+        answer:
+          'It is flattened onto white, because a PDF page has no way to show through. Without that step the transparent areas would come out black, which the tool avoids rather than describing as a feature.',
+      },
+      {
+        question: 'Are the images embedded at full quality?',
+        answer:
+          'No, they are embedded as JPEG at 92 percent. That keeps the file small, and it means the PDF is not a pixel-identical copy of your originals. The tool states this rather than implying a lossless archive.',
+      },
+      {
+        question: 'Can I reorder the pages afterwards?',
+        answer:
+          'Not from this tool. Add the images in the order you want them, because the pages follow that order. To change it, rebuild with the files added differently.',
+      },
+    ],
   },
   {
     id: 'multiple-image-resizer',
@@ -1298,12 +1661,40 @@ const seeds: ToolSeed[] = [
     categories: ['image', 'productivity'],
     keywords: ['batch resize', 'bulk', 'many images'],
     icon: 'layers',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Multiple image files',
     outputFormat: 'Resized images',
     processingMode: 'client',
     maxFileSize: '20 MB per image',
     addedAt: '2026-10-17',
+    instructions:     [
+      'Choose up to fifty images at once.',
+      'Pick a target. Long edge keeps each image\'s own shape and sets its longest side to the number you give.',
+      'Press Resize. The tool reports progress as each image finishes.',
+      'Download the files one at a time, or all together as a zip.',
+    ],
+    faqs:     [
+      {
+        question: 'Why do the images end up different sizes?',
+        answer:
+          'Because a mixed batch cannot all be the same number of pixels and keep their shape. Long edge mode sets the longest side to the same number, so a landscape and a portrait both get a 1600-pixel long edge and different short edges.',
+      },
+      {
+        question: 'What does the exact square mode do?',
+        answer:
+          'It forces every image to the same width and height. Images whose shape does not match are stretched, which the tool warns about, because a batch sharing one pair of numbers cannot do otherwise.',
+      },
+      {
+        question: 'Why is there a limit of fifty files?',
+        answer:
+          'Because everything runs in this browser tab. A very large batch would have to hold every decoded image in memory at once and exhaust the tab\'s allowance, so the limit is stated rather than reached.',
+      },
+      {
+        question: 'How are the output files named?',
+        answer:
+          'The original name, then a hyphen and a number padded to the width of the batch, so a batch of twelve sorts correctly in any file manager. The tool keeps the numbering consistent rather than starting over.',
+      },
+    ],
   },
   {
     id: 'image-background-utilities',
@@ -1313,12 +1704,163 @@ const seeds: ToolSeed[] = [
     categories: ['image'],
     keywords: ['background', 'remove background', 'transparent'],
     icon: 'droplet',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Image file',
     outputFormat: 'Image with modified background',
     processingMode: 'client',
     maxFileSize: '20 MB per image',
     addedAt: '2026-10-17',
+    instructions:     [
+      'Read what this tool is for. It adds borders, fills a backdrop and sets up a transparent canvas; it does not cut a subject out of its background.',
+      'Choose a PNG or WebP, the two formats that keep transparency.',
+      'Pick a job: a padding border, a solid-colour backdrop, an outline, or an empty transparent canvas.',
+      'Set the amount as a percentage of the shorter side, then apply and download as PNG.',
+    ],
+    faqs:     [
+      {
+        question: 'Why does this tool not remove backgrounds?',
+        answer:
+          'Because doing that needs a segmentation model that decides which pixels are the subject and which are the background, and a tool that guessed would produce a bad cut-out without telling you. What it does instead are the jobs that get mistaken for removal, and it says plainly which is which.',
+      },
+      {
+        question: 'What is the difference between a padding border and an outline?',
+        answer:
+          'A padding border grows the canvas and centres the image inside it, leaving a gap of the background. An outline is drawn immediately along the image edge and leaves the canvas size unchanged.',
+      },
+      {
+        question: 'Why is everything saved as PNG?',
+        answer:
+          'Because PNG is the format here that keeps a transparent canvas see-through. A JPEG would fill the transparency with black, which the tool warns about rather than letting you discover it after downloading.',
+      },
+      {
+        question: 'What is the percentage measured against?',
+        answer:
+          'The shorter side of the image. That means the same number produces the same visual proportion on a wide banner as on a tall portrait, instead of being tied to whichever axis happens to be longest.',
+      },
+    ],
+  },
+  {
+    id: 'image-watermark',
+    name: 'Image Watermark',
+    description: 'Stamp a logo or signature across an image, with control over position, size and strength.',
+    categories: ['image'],
+    keywords: ['watermark', 'logo', 'stamp', 'copyright', 'brand', 'tiled'],
+    icon: 'droplet',
+    status: 'live',
+    inputFormat: 'An image plus a PNG watermark',
+    outputFormat: 'PNG with the watermark applied',
+    processingMode: 'client',
+    maxFileSize: '20 MB per image',
+    addedAt: '2026-10-18',
+    instructions: [
+      'Choose the image you are protecting, then the watermark itself. A PNG with a transparent background is the right mark; a solid rectangle simply covers the picture.',
+      'Pick one of six placements: a corner, dead centre, or tiled across the whole image.',
+      'Set the mark width as a percentage of the image, and the opacity. The tool warns when the strength is high enough to cover the picture or low enough to vanish on a busy photo.',
+      'Press Apply watermark and download the PNG. The image keeps its own pixel dimensions; only the watermark is added.',
+    ],
+    faqs: [
+      {
+        question: 'Does the watermark change the size of my image?',
+        answer:
+          'No. The exported PNG has exactly the width and height of the image you uploaded. The watermark is drawn on top at the size you set, measured as a percentage of the image width, so the same settings give the same result whatever the resolution.',
+      },
+      {
+        question: 'Which placement should I choose?',
+        answer:
+          'A corner is the conventional choice: it proves authorship without covering the picture. Tiled repeats the mark across the whole image and is the hardest to crop out, but it is also the most intrusive. A centred mark sits over the subject, which looks deliberate but is easy to remove with a patch tool.',
+      },
+      {
+        question: 'What does the opacity warning mean?',
+        answer:
+          'At 75% or above the mark covers the picture it is meant to label, and below about 8% it disappears against a busy photo. Both ranges are reported rather than silently applied. Roughly 20 to 40% is enough to see without spoiling the image.',
+      },
+      {
+        question: 'Can I watermark with text instead of a logo?',
+        answer:
+          'Not in this tool. It stamps an image you supply, so the mark is exactly the artwork you drew rather than a font this site picked for you. Render your signature or logo to a transparent PNG first, then stamp it here.',
+      },
+    ],
+  },
+  {
+    id: 'base64-to-image',
+    name: 'Base64 to Image',
+    description: 'Turn a pasted Base64 string back into an image file you can preview and download.',
+    categories: ['conversion', 'image'],
+    keywords: ['base64', 'decode', 'data url', 'image', 'restore'],
+    icon: 'image',
+    status: 'live',
+    inputFormat: 'Base64 text, with or without a data: URL prefix',
+    outputFormat: 'The decoded image file',
+    processingMode: 'client',
+    addedAt: '2026-10-18',
+    instructions: [
+      'Paste the Base64 text. A whole data: URL, including the “base64,” part, is accepted too.',
+      'Press Decode. The tool reads the first bytes to work out which image format the data holds.',
+      'Preview the result, check the byte count, and download it with the suggested file name.',
+    ],
+    faqs: [
+      {
+        question: 'How does the tool know which format to save as?',
+        answer:
+          'By reading the first bytes of the decoded data. PNG, JPEG, GIF and WebP are recognised from their signatures, and the suggested file name uses the matching extension. If the bytes are not one of those, the download is named .bin and the tool says so rather than inventing an extension.',
+      },
+      {
+        question: 'What if I paste a whole data URL by mistake?',
+        answer:
+          'Nothing goes wrong. The tool strips the “data:image/png;base64,” prefix and decodes the payload. It reports the URL’s own MIME type separately when one is present, so a data URL claiming the wrong type is visible as such.',
+      },
+      {
+        question: 'Is the decoded image uploaded anywhere?',
+        answer:
+          'No. Decoding happens in this browser tab, and the preview is a local blob URL. Nothing you paste is sent to a server, and closing the tab discards it.',
+      },
+      {
+        question: 'Why is the decoded file smaller than the text I pasted?',
+        answer:
+          'Because Base64 spends four characters on every three bytes of data. The tool reports the decoded byte count so you can see the real size, and a round trip through this tool and its encoder reproduces the identical bytes.',
+      },
+    ],
+  },
+  {
+    id: 'favicon-generator',
+    name: 'Favicon Generator',
+    description: 'Generate every favicon size a site needs from one image, plus the HTML tags and manifest.',
+    categories: ['image', 'document'],
+    keywords: ['favicon', 'icon', 'apple touch icon', 'manifest', 'pwa'],
+    icon: 'sparkles',
+    status: 'live',
+    inputFormat: 'One square image, ideally 512 × 512 or larger',
+    outputFormat: 'ZIP of PNG icons, the link tags and a web manifest',
+    processingMode: 'client',
+    maxFileSize: '20 MB',
+    addedAt: '2026-10-18',
+    instructions: [
+      'Choose a square source image. A PNG, JPEG, WebP or SVG at 512 × 512 or larger gives the sharpest result.',
+      'Enter the site name for the web app manifest, which is what a phone shows when the site is installed.',
+      'Press Generate all icons and download the ZIP. It holds the icons, the HTML link tags, and the manifest.',
+    ],
+    faqs: [
+      {
+        question: 'Which sizes come out of the tool?',
+        answer:
+          '16, 32, 180, 192 and 512 pixels, all as PNG because every browser accepts it. The 180-pixel icon is the Apple touch icon, and 192 and 512 are the manifest sizes for installed phones.',
+      },
+      {
+        question: 'Why does the tool refuse a small image?',
+        answer:
+          'Because upscaling produces a blurry icon, and a 128-pixel source stretched to 512 is worse than a missing icon. The tool says the source is too small and asks for a larger one rather than quietly generating five soft files.',
+      },
+      {
+        question: 'Why is the Apple icon a solid square?',
+        answer:
+          'iOS masks the icon with its own rounded corners over a black background, so a transparent icon shows that black through. The tool fills the Apple icon with white and leaves the browser icons transparent, matching what each platform expects.',
+      },
+      {
+        question: 'What do I do with the HTML snippet?',
+        answer:
+          'Paste the link tags from site.html-snippet.txt into the head of your pages, and upload the manifest and icons to your site root. The snippet already points at the filenames in the ZIP, so the paths line up if you keep that layout.',
+      },
+    ],
   },
 
   /* ------------------------------------------------------------------ */
