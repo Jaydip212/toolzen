@@ -151,7 +151,7 @@ const seeds: ToolSeed[] = [
   },
 
   /* ------------------------------------------------------------------ */
-  /* TEXT & DOCUMENT — planned                                           */
+  /* TEXT & DOCUMENT — live                                              */
   /* ------------------------------------------------------------------ */
   {
     id: 'text-formatter',
@@ -160,11 +160,39 @@ const seeds: ToolSeed[] = [
     categories: ['text', 'document'],
     keywords: ['clean text', 'whitespace', 'trim', 'format'],
     icon: 'align-left',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Text',
     outputFormat: 'Formatted text',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Paste the text you want to tidy into the editor.',
+      'Tick the cleanup rules you want — the formatted result updates as you change them.',
+      'Copy or download the result, or use “Replace input with result” to keep working on it.',
+    ],
+    faqs: [
+      {
+        question: 'What does the Text Formatter actually change?',
+        answer:
+          'Only the rules you tick: trimming each line, collapsing repeated spaces, converting tabs to spaces, removing or collapsing blank lines, and trimming the whole document. It never rewords, reorders or deletes your content.',
+      },
+      {
+        question: 'In what order are the cleanup rules applied?',
+        answer:
+          'Line endings are normalised first, then tabs are converted to spaces, then each line is trimmed, then repeated spaces collapse, then blank lines are handled, and finally the whole document is trimmed. The order is fixed so the same input always produces the same output.',
+      },
+      {
+        question: 'Is my text uploaded when I use the Text Formatter?',
+        answer:
+          'No. The Text Formatter runs entirely in your browser, so the text you paste never leaves your device and is never sent to a server.',
+      },
+      {
+        question: 'Is the Text Formatter free?',
+        answer:
+          'Yes. It is completely free, needs no account, and has no limit on how much text you can clean up.',
+      },
+    ],
+    privacyNote: 'Runs entirely in your browser. Your text is never uploaded.',
   },
   {
     id: 'text-comparison',
@@ -173,11 +201,39 @@ const seeds: ToolSeed[] = [
     categories: ['text', 'document'],
     keywords: ['diff', 'compare', 'changes', 'differences'],
     icon: 'diff',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Two blocks of text',
     outputFormat: 'Highlighted differences',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Paste the original text into the left editor.',
+      'Paste the changed text into the right editor.',
+      'Review the highlighted differences, or switch to Unified view for a copyable diff.',
+    ],
+    faqs: [
+      {
+        question: 'How does TOOLZEN compare the two texts?',
+        answer:
+          'Line by line, using a longest-common-subsequence comparison. That finds the smallest set of added and removed lines between the two versions, so the result is exact rather than an approximation.',
+      },
+      {
+        question: 'What is the difference between side-by-side and unified view?',
+        answer:
+          'Side by side shows both versions in aligned columns, with removed lines on the left and added lines on the right. Unified shows a single standard diff where “−” marks removed lines and “+” marks added lines — the same format used by git and the diff command.',
+      },
+      {
+        question: 'Can I ignore case or spacing differences?',
+        answer:
+          'Yes. Turn on “Ignore letter case” or “Ignore whitespace” and those differences are treated as matches. The original text is still displayed exactly as you typed it.',
+      },
+      {
+        question: 'Is there a size limit for the comparison?',
+        answer:
+          'Each side is limited to 3,000 lines. The comparison is exact rather than heuristic, so the limit keeps it instant inside a browser tab. Split larger documents into parts and compare them one at a time.',
+      },
+    ],
+    privacyNote: 'Runs entirely in your browser. Neither text is ever uploaded.',
   },
   {
     id: 'duplicate-line-remover',
@@ -186,11 +242,39 @@ const seeds: ToolSeed[] = [
     categories: ['text', 'document'],
     keywords: ['deduplicate', 'unique lines', 'list cleanup'],
     icon: 'list',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Multi-line text',
     outputFormat: 'Deduplicated text',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Paste your list into the editor, one item per line.',
+      'Choose whether to keep the first or last copy, and how strict the matching should be.',
+      'Copy or download the de-duplicated list.',
+    ],
+    faqs: [
+      {
+        question: 'How does TOOLZEN decide two lines are duplicates?',
+        answer:
+          'Each line is reduced to a comparison key and duplicates are found by exact key match. You control whether that key ignores letter case and surrounding spaces, so matching can be as strict or as loose as you need.',
+      },
+      {
+        question: 'What does “keep last” do?',
+        answer:
+          'It keeps the final occurrence of each duplicated value and removes the earlier copies, leaving the surviving line in its original position in the list.',
+      },
+      {
+        question: 'Are blank lines removed as duplicates?',
+        answer:
+          'Not by default. “Keep blank lines” is on, so empty lines are preserved and are never counted as duplicates. Turn it off if you want repeated blank lines collapsed to one.',
+      },
+      {
+        question: 'Does the tool change the order of my list?',
+        answer:
+          'No. The Duplicate Line Remover only deletes lines — it never reorders them. Use the Line Sorter if you also want the list sorted.',
+      },
+    ],
+    privacyNote: 'Runs entirely in your browser. Your list is never uploaded.',
   },
   {
     id: 'line-sorter',
@@ -199,11 +283,39 @@ const seeds: ToolSeed[] = [
     categories: ['text', 'document'],
     keywords: ['sort lines', 'alphabetical', 'numerical', 'reverse'],
     icon: 'sort',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Multi-line text',
     outputFormat: 'Sorted text',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Paste your list into the editor, one item per line.',
+      'Pick the order — alphabetical, natural, numeric or by line length — and the direction.',
+      'Copy or download the sorted list.',
+    ],
+    faqs: [
+      {
+        question: 'What is natural sort?',
+        answer:
+          'Natural sort compares numbers embedded in text by value, so item2 comes before item10. Plain alphabetical sort puts item10 first, because the character “1” sorts before “2”.',
+      },
+      {
+        question: 'What happens to non-numeric lines in numeric mode?',
+        answer:
+          'They always sink to the bottom of the list in both ascending and descending order, so the numbers stay grouped together instead of being broken up by labels.',
+      },
+      {
+        question: 'Does sorting ignore letter case?',
+        answer:
+          'Yes by default — “Apple” and “apple” are treated as equal for ordering. Turn on “Case sensitive” to order uppercase letters before lowercase ones.',
+      },
+      {
+        question: 'Can I sort and remove duplicates in one pass?',
+        answer:
+          'Yes. Tick “Remove duplicates” and “Remove empty lines” to clean the list at the same time. The tool reports exactly how many lines each option removed.',
+      },
+    ],
+    privacyNote: 'Runs entirely in your browser. Your list is never uploaded.',
   },
   {
     id: 'markdown-previewer',
@@ -212,11 +324,39 @@ const seeds: ToolSeed[] = [
     categories: ['document', 'developer'],
     keywords: ['markdown', 'preview', 'readme'],
     icon: 'book-open',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Markdown text',
-    outputFormat: 'Rendered preview',
+    outputFormat: 'Rendered preview and HTML',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Type or paste Markdown into the editor.',
+      'Watch the rendered preview update beside it as you write.',
+      'Copy the generated HTML, or download a complete HTML file with styling applied.',
+    ],
+    faqs: [
+      {
+        question: 'Is the Markdown preview safe to use?',
+        answer:
+          'Yes. Markdown can contain raw HTML, so the rendered output is passed through DOMPurify before it is displayed. Scripts, iframes, embedded objects and inline event handlers such as onerror are stripped rather than executed.',
+      },
+      {
+        question: 'Which Markdown features are supported?',
+        answer:
+          'GitHub Flavored Markdown: tables, task lists, fenced code blocks, autolinks and strikethrough, plus the usual headings, lists, links, images and blockquotes.',
+      },
+      {
+        question: 'Can I export the rendered result?',
+        answer:
+          'Yes. Copy the generated HTML to paste it anywhere, or download a complete HTML document that already includes basic styling so it looks right when opened in a browser.',
+      },
+      {
+        question: 'Does the previewer upload my Markdown?',
+        answer:
+          'No. Everything is typed or pasted into the editor and rendered locally in your browser. Nothing is uploaded and no account is required.',
+      },
+    ],
+    privacyNote: 'Runs entirely in your browser. Your Markdown is never uploaded.',
   },
   {
     id: 'csv-viewer',
@@ -225,12 +365,41 @@ const seeds: ToolSeed[] = [
     categories: ['document'],
     keywords: ['csv', 'spreadsheet', 'table', 'view'],
     icon: 'table',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'CSV file',
     outputFormat: 'Tabular view',
     processingMode: 'client',
     maxFileSize: '20 MB per file',
     addedAt: '2026-10-17',
+    instructions: [
+      "Drop a CSV or TSV file, or paste rows into the box.",
+      "Pick a delimiter, or leave it on automatic detection.",
+      "Turn off \"First row is a header\" if the file has no header.",
+      "Click \"Download CSV\" to save a normalised copy with RFC 4180 quoting.",
+    ],
+    faqs: [
+      {
+        question: "How many rows can it show?",
+        answer:
+          "The table shows the first 200 rows so the page stays responsive. The download contains every row that was parsed.",
+      },
+      {
+        question: "Does it handle quoted fields and embedded newlines?",
+        answer:
+          "Yes. Quoted fields, doubled quotes, embedded newlines, CRLF line endings and a UTF-8 BOM are all handled by the same RFC 4180 parser.",
+      },
+      {
+        question: "Why do my numbers look like text?",
+        answer:
+          "CSV has no types, so every value is a string. The table right-aligns anything that looks numeric, but the value itself is never converted.",
+      },
+      {
+        question: "Is the file uploaded?",
+        answer:
+          "No. The File API reads it locally and the parse happens in this tab.",
+      },
+    ],
+
   },
   {
     id: 'csv-to-json',
@@ -239,11 +408,40 @@ const seeds: ToolSeed[] = [
     categories: ['document', 'developer', 'conversion'],
     keywords: ['csv', 'json', 'convert', 'spreadsheet'],
     icon: 'braces',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'CSV file or text',
     outputFormat: 'JSON',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      "Drop a CSV file or paste rows.",
+      "Choose Objects to use the first row as keys, or Arrays to keep every row as-is.",
+      "Check or uncheck Pretty-print depending on where the JSON is going.",
+      "Download the result, or copy it from the output box.",
+    ],
+    faqs: [
+      {
+        question: "What happens to duplicate column names?",
+        answer:
+          "They are renamed name, name_2, name_3 rather than overwriting each other. The tool lists every rename it made.",
+      },
+      {
+        question: "Are numbers converted to JSON numbers?",
+        answer:
+          "No. Every value stays a string, because CSV carries no type information and guessing would silently corrupt values such as \"007\" or \"1,000\".",
+      },
+      {
+        question: "What if a row has fewer columns than the header?",
+        answer:
+          "It is padded with empty strings so the object always has every key.",
+      },
+      {
+        question: "Is my data uploaded?",
+        answer:
+          "No. Parsing and conversion happen entirely in your browser.",
+      },
+    ],
+
   },
   {
     id: 'json-to-csv',
@@ -252,11 +450,40 @@ const seeds: ToolSeed[] = [
     categories: ['document', 'developer', 'conversion'],
     keywords: ['json', 'csv', 'convert', 'export'],
     icon: 'table',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'JSON array',
     outputFormat: 'CSV',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      "Paste a JSON array of objects, an array of arrays, or a single object.",
+      "Pick a delimiter and choose whether to write a header row.",
+      "Check the row and column counts before downloading.",
+      "Download the CSV, or copy it from the output box.",
+    ],
+    faqs: [
+      {
+        question: "How are nested objects handled?",
+        answer:
+          "They are written as JSON inside the cell. Flattening would invent column names such as address.city that you did not choose, and would change shape whenever one record had an extra field.",
+      },
+      {
+        question: "What if records have different keys?",
+        answer:
+          "The header is the union of every key, in first-seen order. A record missing a key gets an empty cell.",
+      },
+      {
+        question: "Why CRLF line endings?",
+        answer:
+          "RFC 4180 specifies CRLF, and Excel expects it. Every spreadsheet application accepts it.",
+      },
+      {
+        question: "Does it work with a single object?",
+        answer:
+          "Yes. A lone object is treated as a one-row table.",
+      },
+    ],
+
   },
   {
     id: 'json-formatter',
@@ -265,11 +492,40 @@ const seeds: ToolSeed[] = [
     categories: ['developer', 'document'],
     keywords: ['json', 'pretty print', 'validate', 'minify', 'lint'],
     icon: 'braces',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'JSON text',
     outputFormat: 'Formatted or minified JSON',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      "Paste JSON into the editor.",
+      "Choose an indent size, or switch to Minify.",
+      "Turn on \"Sort keys alphabetically\" if you want a stable key order.",
+      "Copy or download the result. Errors show the line and column.",
+    ],
+    faqs: [
+      {
+        question: "Does sorting keys change the data?",
+        answer:
+          "No. Object key order carries no meaning in JSON. Array order is preserved exactly, because there it does matter.",
+      },
+      {
+        question: "How precise is the error location?",
+        answer:
+          "The position comes from the JSON parser itself, converted to a 1-based line and column. It points at the first character the parser could not accept.",
+      },
+      {
+        question: "Does it accept JSON5 or comments?",
+        answer:
+          "No. It uses the browser's JSON.parse, which implements strict JSON. Comments, trailing commas and single quotes are all rejected — and the error says where.",
+      },
+      {
+        question: "Is there a size limit?",
+        answer:
+          "There is no fixed limit, but very large documents are held in memory twice (input and output), so a file above a few megabytes may feel slow.",
+      },
+    ],
+
   },
   {
     id: 'xml-formatter',
@@ -278,11 +534,40 @@ const seeds: ToolSeed[] = [
     categories: ['developer', 'document'],
     keywords: ['xml', 'pretty print', 'validate', 'indent'],
     icon: 'code',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'XML text',
     outputFormat: 'Formatted XML',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      "Paste XML into the editor.",
+      "Leave well-formedness checking on to catch mismatched tags before formatting.",
+      "Choose an indent size.",
+      "Copy or download the formatted or minified result.",
+    ],
+    faqs: [
+      {
+        question: "What does the well-formedness check do?",
+        answer:
+          "It runs the document through the browser's own XML parser and reports the parser's message when it fails. Turn it off if you are formatting a fragment rather than a complete document.",
+      },
+      {
+        question: "Why did my mixed content get split across lines?",
+        answer:
+          "An element whose entire content is text stays on one line. Mixed content such as <p>Hello <b>world</b></p> is broken across lines, which adds whitespace between the words. That is harmless for data XML but visible in XHTML, so the tool says so rather than pretending it did not happen.",
+      },
+      {
+        question: "Is whitespace inside pre or script preserved?",
+        answer:
+          "Yes, during minification. Those four elements — pre, textarea, script and style — keep their whitespace exactly.",
+      },
+      {
+        question: "Does it validate against a schema?",
+        answer:
+          "No. It checks well-formedness only. Schema or DTD validation is a different job and is not attempted here.",
+      },
+    ],
+
   },
   {
     id: 'base64-encoder-decoder',
@@ -291,11 +576,40 @@ const seeds: ToolSeed[] = [
     categories: ['developer', 'document'],
     keywords: ['base64', 'encode', 'decode', 'data uri'],
     icon: 'code',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Text or file',
     outputFormat: 'Base64 or decoded data',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      "Choose a mode: text to Base64, Base64 to text, file to Base64, or read a data URL.",
+      "Paste your input, or drop a file in file mode.",
+      "Read the byte counts and the overhead figure.",
+      "Copy or download the result.",
+    ],
+    faqs: [
+      {
+        question: "Does it handle accented characters and emoji?",
+        answer:
+          "Yes. Text is converted to UTF-8 bytes with TextEncoder before encoding, and decoded with a strict UTF-8 decoder, so nothing is mangled.",
+      },
+      {
+        question: "Why does Base64 decoding sometimes fail?",
+        answer:
+          "The tool refuses rather than guessing. Invalid characters, a length that is not a multiple of four, padding in the middle, or bytes that are not valid UTF-8 each produce a specific message.",
+      },
+      {
+        question: "Is Base64 encryption?",
+        answer:
+          "No. It is a reversible encoding that anyone can undo. Never use it to hide a password or a key.",
+      },
+      {
+        question: "Why is the output about a third larger?",
+        answer:
+          "Base64 represents three bytes as four characters, so the encoded form is about 33% longer than the original.",
+      },
+    ],
+
   },
   {
     id: 'url-encoder-decoder',
@@ -304,11 +618,40 @@ const seeds: ToolSeed[] = [
     categories: ['developer', 'document', 'security'],
     keywords: ['url encode', 'percent encoding', 'querystring', 'uri'],
     icon: 'link',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Text or URL',
     outputFormat: 'Encoded or decoded text',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      "Choose Component for a single value, Full URL to keep the URL structure, or Query to read parameters.",
+      "Switch between Encode and Decode.",
+      "In Query mode, read the parameter table and the rebuilt query string.",
+      "Copy the result you need.",
+    ],
+    faqs: [
+      {
+        question: "Component or full URL?",
+        answer:
+          "Component escapes everything that is not unreserved, which is what you want for one value going into a query string. Full URL leaves the scheme, slashes, question mark and ampersand intact so the URL stays usable.",
+      },
+      {
+        question: "Why does a plus sign become a space?",
+        answer:
+          "In query strings, + is the historical encoding for a space. The query parser applies that rule; the Component mode does not, because + is a literal character outside a query string.",
+      },
+      {
+        question: "What happens with a malformed escape such as %ZZ?",
+        answer:
+          "You get a specific error naming the fragment, rather than a crash or a silently wrong result.",
+      },
+      {
+        question: "How are repeated keys shown?",
+        answer:
+          "As separate rows in the table, and as an array in the JSON view. Note that servers differ — some keep the first value, some the last.",
+      },
+    ],
+
   },
   {
     id: 'file-extension-checker',
@@ -317,11 +660,40 @@ const seeds: ToolSeed[] = [
     categories: ['document'],
     keywords: ['extension', 'file type', 'mime', 'lookup'],
     icon: 'file',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'File extension',
     outputFormat: 'File type information',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      "Paste a filename, a full path, or just the extension.",
+      "Read the extension, category and best-guess MIME type.",
+      "Search the table below by extension, description or MIME type.",
+      "Click any row or chip to load it into the checker.",
+    ],
+    faqs: [
+      {
+        question: "Is the MIME type authoritative?",
+        answer:
+          "No. It is a best guess from a hand-maintained table. Servers can send any type they like, and the real type is determined by the file's contents, not its name.",
+      },
+      {
+        question: "What does \"not in this table\" mean?",
+        answer:
+          "Only that this tool has no recorded type for that extension. It does not mean the extension is invalid or the file is suspicious.",
+      },
+      {
+        question: "Why are some extensions flagged as risky?",
+        answer:
+          "Executables and scripts are the formats that run code or install software. A .pdf that is really an .exe is a common trick, and Windows hides extensions by default.",
+      },
+      {
+        question: "Can it tell me what application opens a file?",
+        answer:
+          "Indirectly. The category and MIME type tell you the family. The exact application depends on your system, so the tool does not claim to know it.",
+      },
+    ],
+
   },
   {
     id: 'file-size-converter',
@@ -330,11 +702,40 @@ const seeds: ToolSeed[] = [
     categories: ['document', 'conversion'],
     keywords: ['bytes', 'kb', 'mb', 'gb', 'storage units'],
     icon: 'database',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Size value and unit',
     outputFormat: 'Converted size',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      "Enter a value and pick its unit.",
+      "Read every conversion at once, split into decimal and binary families.",
+      "Copy any single value with its button.",
+      "Check the explanation if a \"500 GB\" drive looks smaller than expected.",
+    ],
+    faqs: [
+      {
+        question: "What is the difference between KB and KiB?",
+        answer:
+          "A kilobyte is 1,000 bytes and a kibibyte is 1,024. They are different units, not two spellings of the same one. Drive makers use decimal; most operating systems report binary.",
+      },
+      {
+        question: "Why does a 500 GB drive show as about 465 GiB?",
+        answer:
+          "Because 500,000,000,000 bytes is 500 GB in decimal but about 465 GiB in binary. Nothing is missing — only the unit changed.",
+      },
+      {
+        question: "Can it handle very large values?",
+        answer:
+          "Yes, up to terabytes in both families. The arithmetic is done in JavaScript numbers, which are exact for integers up to about 9 × 10¹⁵ bytes — far beyond any realistic file size.",
+      },
+      {
+        question: "Does it accept negative sizes?",
+        answer:
+          "No. A negative size is rejected with an explanation rather than converted into nonsense.",
+      },
+    ],
+
   },
   {
     id: 'uuid-generator',
@@ -343,11 +744,40 @@ const seeds: ToolSeed[] = [
     categories: ['developer', 'document', 'productivity'],
     keywords: ['uuid', 'guid', 'unique id', 'v4'],
     icon: 'hash',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Options',
     outputFormat: 'UUID strings',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      "Choose how many UUIDs you need, from 1 to 1000.",
+      "Toggle uppercase, braces and hyphens to match the format your system expects.",
+      "Copy one value, copy them all, or download a text file.",
+      "Paste an existing UUID into the inspector to read its version and variant.",
+    ],
+    faqs: [
+      {
+        question: "How random are these UUIDs?",
+        answer:
+          "They come from crypto.getRandomValues, the browser's cryptographic random source. Version 4 carries 122 random bits.",
+      },
+      {
+        question: "Can two generated UUIDs collide?",
+        answer:
+          "In principle, yes; in practice, you would need about 2.7 × 10¹⁸ of them before a 50% chance of any collision. There is no registry and no coordination between machines.",
+      },
+      {
+        question: "Should I use a UUID as a database primary key?",
+        answer:
+          "Version 4 is random, so it does not sort by insertion order and can fragment an index. Version 7 exists for exactly that reason — it is time-ordered.",
+      },
+      {
+        question: "What is the nil UUID?",
+        answer:
+          "00000000-0000-0000-0000-000000000000. It is a reserved value meaning \"no UUID\", not a valid identifier, and the inspector recognises it.",
+      },
+    ],
+
   },
   {
     id: 'timestamp-converter',
@@ -356,11 +786,40 @@ const seeds: ToolSeed[] = [
     categories: ['developer', 'document'],
     keywords: ['unix timestamp', 'epoch', 'date', 'timezone', 'iso 8601'],
     icon: 'clock',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Timestamp or date',
     outputFormat: 'Converted date or timestamp',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      "Paste a Unix timestamp, an ISO 8601 string or a plain date.",
+      "Read the detected unit and every representation at once.",
+      "Copy the form the receiving system wants.",
+      "The \"Right now\" panel updates every second from your device clock.",
+    ],
+    faqs: [
+      {
+        question: "How does it know seconds from milliseconds?",
+        answer:
+          "By magnitude. A value below 100,000,000,000 is read as seconds and anything above as milliseconds. That boundary sits comfortably between any realistic value of either — 10¹¹ seconds is the year 5138.",
+      },
+      {
+        question: "Which time zone are the results in?",
+        answer:
+          "Every representation is shown: ISO 8601 and UTC are zone-free, and the local row uses your device's own zone, with the name and offset shown alongside.",
+      },
+      {
+        question: "Why is a date-only string treated as UTC?",
+        answer:
+          "That is what the ECMAScript specification requires for a date without a time. A datetime-local value, which has no zone either, is treated as local time — matching what the browser control means.",
+      },
+      {
+        question: "Does Unix time include leap seconds?",
+        answer:
+          "No. Unix time counts seconds since 1970-01-01T00:00:00Z and ignores leap seconds, so it can drift from UTC by a second or so over decades.",
+      },
+    ],
+
   },
 
   /* ------------------------------------------------------------------ */
@@ -863,7 +1322,7 @@ const seeds: ToolSeed[] = [
   },
 
   /* ------------------------------------------------------------------ */
-  /* DEVELOPER — planned                                                 */
+  /* DEVELOPER — live                                                    */
   /* ------------------------------------------------------------------ */
   {
     id: 'html-formatter',
@@ -872,11 +1331,38 @@ const seeds: ToolSeed[] = [
     categories: ['developer'],
     keywords: ['html', 'beautify', 'indent', 'pretty print'],
     icon: 'code',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'HTML markup',
-    outputFormat: 'Formatted HTML',
+    outputFormat: 'Formatted or minified HTML',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Paste your HTML markup into the input box.',
+      'Choose Format to indent it, or Minify to strip the whitespace between tags.',
+      'Copy or download the result; the stats show how the size changed.',
+    ],
+    faqs: [
+      {
+        question: 'Does minifying HTML break my <pre> or <script> blocks?',
+        answer:
+          'No. The minifier lifts <pre>, <textarea>, <script> and <style> blocks out before collapsing whitespace, then puts them back untouched. Text inside those elements keeps every space and line break.',
+      },
+      {
+        question: 'Can the HTML Formatter fix invalid markup?',
+        answer:
+          'No. It only reformats the markup you give it — it does not validate, repair or restructure it. A tag that is not closed stays not closed; only the indentation and spacing change.',
+      },
+      {
+        question: 'Is my HTML uploaded when I use this tool?',
+        answer:
+          'No. The HTML Formatter runs entirely in your browser, so the markup you paste never leaves your device.',
+      },
+      {
+        question: 'Is the HTML Formatter free?',
+        answer: 'Yes. It is completely free, needs no account, and has no usage limit.',
+      },
+    ],
+    privacyNote: 'Runs entirely in your browser. Your markup is never uploaded.',
   },
   {
     id: 'css-formatter',
@@ -885,11 +1371,37 @@ const seeds: ToolSeed[] = [
     categories: ['developer'],
     keywords: ['css', 'beautify', 'minify', 'indent'],
     icon: 'code',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'CSS',
     outputFormat: 'Formatted or minified CSS',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Paste your CSS into the input box.',
+      'Switch between Format and Minify — the output updates immediately.',
+      'Copy or download the result, and check the size-change stat to see what minifying saved.',
+    ],
+    faqs: [
+      {
+        question: 'Does minifying CSS damage strings or content values?',
+        answer:
+          'No. The minifier tracks quoted strings and only collapses whitespace outside them, so a value like content: "a   b" keeps its inner spaces.',
+      },
+      {
+        question: 'Does it understand nested CSS or preprocessor syntax?',
+        answer:
+          'It formats standard CSS, including nested rules, custom properties and at-rules. It does not compile Sass, Less or Stylus — paste plain CSS.',
+      },
+      {
+        question: 'Is my CSS uploaded anywhere?',
+        answer: 'No. Everything runs in your browser; your stylesheet never leaves your device.',
+      },
+      {
+        question: 'Is the CSS Formatter free?',
+        answer: 'Yes. It is completely free, needs no account, and has no usage limit.',
+      },
+    ],
+    privacyNote: 'Runs entirely in your browser. Your CSS is never uploaded.',
   },
   {
     id: 'javascript-formatter',
@@ -898,11 +1410,38 @@ const seeds: ToolSeed[] = [
     categories: ['developer'],
     keywords: ['javascript', 'beautify', 'format', 'js'],
     icon: 'code',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'JavaScript source',
     outputFormat: 'Formatted JavaScript',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Paste your JavaScript into the input box.',
+      'Choose Format to re-indent it, or Minify to strip comments and unnecessary whitespace.',
+      'Copy or download the result.',
+    ],
+    faqs: [
+      {
+        question: 'Does the minifier rename my variables?',
+        answer:
+          'No. It only removes comments and collapses whitespace — it never renames variables, reorders code or changes behaviour. That is deliberately conservative so the output always does the same thing as the input.',
+      },
+      {
+        question: 'Will it choke on a // inside a string or URL?',
+        answer:
+          'No. The comment stripper tracks string literals, template literals and regular-expression literals, so a // inside "https://example.com" is left alone.',
+      },
+      {
+        question: 'Is my code uploaded when I use this tool?',
+        answer:
+          'No. The JavaScript Formatter runs entirely in your browser, so your source never leaves your device.',
+      },
+      {
+        question: 'Is the JavaScript Formatter free?',
+        answer: 'Yes. It is completely free, needs no account, and has no usage limit.',
+      },
+    ],
+    privacyNote: 'Runs entirely in your browser. Your code is never uploaded.',
   },
   {
     id: 'sql-formatter',
@@ -911,11 +1450,37 @@ const seeds: ToolSeed[] = [
     categories: ['developer'],
     keywords: ['sql', 'query', 'format', 'beautify'],
     icon: 'database',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'SQL query',
     outputFormat: 'Formatted SQL',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Paste your SQL query into the input box.',
+      'Pick the SQL dialect that matches your database, then Format or Minify.',
+      'Copy or download the result.',
+    ],
+    faqs: [
+      {
+        question: 'Which SQL dialects are supported?',
+        answer:
+          'The formatter supports standard SQL plus MySQL, MariaDB, PostgreSQL, SQLite, Transact-SQL, PL/SQL, BigQuery, Hive, Redshift, Spark and Snowflake. Pick the closest match to your database.',
+      },
+      {
+        question: 'Does minifying SQL touch quoted identifiers or string values?',
+        answer:
+          'No. Quoted strings and quoted identifiers (like "my  column") are lifted out before whitespace is collapsed, so their inner spacing is preserved exactly.',
+      },
+      {
+        question: 'Is my query uploaded anywhere?',
+        answer: 'No. Everything runs in your browser, so your query never leaves your device.',
+      },
+      {
+        question: 'Is the SQL Formatter free?',
+        answer: 'Yes. It is completely free, needs no account, and has no usage limit.',
+      },
+    ],
+    privacyNote: 'Runs entirely in your browser. Your query is never uploaded.',
   },
   {
     id: 'regex-tester',
@@ -924,11 +1489,38 @@ const seeds: ToolSeed[] = [
     categories: ['developer'],
     keywords: ['regex', 'regular expression', 'match', 'pattern'],
     icon: 'search',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Pattern and sample text',
     outputFormat: 'Matches and captured groups',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Type your pattern and tick the flags you need (g, i, m, s, u, y).',
+      'Paste the sample text to test against — matches are highlighted as you type.',
+      'Open the match list to see each match, its index and its captured groups.',
+    ],
+    faqs: [
+      {
+        question: 'Which regex engine does this use?',
+        answer:
+          'It uses your browser’s native JavaScript RegExp engine, so the results are exactly what JavaScript will do at runtime — including the same syntax and the same limits.',
+      },
+      {
+        question: 'Why does my pattern stop matching after a while?',
+        answer:
+          'To keep the page responsive, matching stops after 5,000 matches. If your pattern can match an empty string it is also capped so the loop cannot run forever.',
+      },
+      {
+        question: 'Is my pattern or text sent anywhere?',
+        answer:
+          'No. The Regex Tester runs entirely in your browser, so your pattern and sample text never leave your device.',
+      },
+      {
+        question: 'Is the Regex Tester free?',
+        answer: 'Yes. It is completely free, needs no account, and has no usage limit.',
+      },
+    ],
+    privacyNote: 'Runs entirely in your browser. Your pattern and text are never uploaded.',
   },
   {
     id: 'jwt-decoder',
@@ -937,24 +1529,79 @@ const seeds: ToolSeed[] = [
     categories: ['developer', 'security'],
     keywords: ['jwt', 'token', 'claims', 'decode', 'bearer'],
     icon: 'key',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'JSON Web Token',
     outputFormat: 'Decoded header and payload',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Paste a JSON Web Token into the input box.',
+      'Read the decoded header and payload, with each standard claim explained in plain English.',
+      'Check the expiry panel to see whether the token is still valid.',
+    ],
+    faqs: [
+      {
+        question: 'Does decoding a JWT verify that it is genuine?',
+        answer:
+          'No — and this is important. Decoding only reads the header and payload, which are base64url-encoded and not secret. It does not check the signature, so a decoded token is not proof that the token is valid or untampered. Always verify the signature on your server.',
+      },
+      {
+        question: 'Can this tool be fooled by an "alg: none" token?',
+        answer:
+          'The tool displays whatever the header says, including alg: none, and flags it. That is exactly why you must never trust a client-side decode — signature verification is a server responsibility.',
+      },
+      {
+        question: 'Is my token sent to a server?',
+        answer:
+          'No. Decoding happens entirely in your browser. That said, treat any token you paste into any web page with care — this tool never transmits it, but tokens are sensitive credentials.',
+      },
+      {
+        question: 'Is the JWT Decoder free?',
+        answer: 'Yes. It is completely free, needs no account, and has no usage limit.',
+      },
+    ],
+    privacyNote:
+      'Runs entirely in your browser. Your token is never uploaded — but it is still a secret, so handle it carefully.',
   },
   {
     id: 'hash-generator',
     name: 'Hash Generator',
-    description: 'Generate MD5, SHA-1, SHA-256 and SHA-512 hashes of text.',
+    description: 'Generate MD5, SHA-1, SHA-256 and SHA-512 hashes of text or files.',
     categories: ['developer', 'security'],
     keywords: ['hash', 'sha256', 'md5', 'sha1', 'checksum'],
     icon: 'hash',
-    status: 'planned',
-    inputFormat: 'Text',
+    status: 'live',
+    inputFormat: 'Text or a file',
     outputFormat: 'Hash values',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Type or paste text, or drop in a file.',
+      'Every supported hash (MD5, SHA-1, SHA-256, SHA-512) is calculated at once.',
+      'Copy any value, or paste a checksum to compare it against the calculated hash.',
+    ],
+    faqs: [
+      {
+        question: 'How is MD5 calculated if the browser has no MD5 support?',
+        answer:
+          'MD5 is implemented from scratch following RFC 1321, so it works in every browser. SHA-1, SHA-256 and SHA-512 use the browser’s built-in Web Crypto API.',
+      },
+      {
+        question: 'Should I use MD5 or SHA-1 to protect passwords?',
+        answer:
+          'No. MD5 and SHA-1 are cryptographically broken and far too fast for password storage. Use them only for checksums and integrity checks. For passwords, use a slow, salted algorithm such as bcrypt, scrypt or Argon2.',
+      },
+      {
+        question: 'Is my text or file uploaded to hash it?',
+        answer:
+          'No. Hashing runs entirely in your browser, so your text or file never leaves your device — even large files are read locally.',
+      },
+      {
+        question: 'Is the Hash Generator free?',
+        answer: 'Yes. It is completely free, needs no account, and has no usage limit.',
+      },
+    ],
+    privacyNote: 'Runs entirely in your browser. Your text and files are never uploaded.',
   },
   {
     id: 'color-converter',
@@ -963,11 +1610,37 @@ const seeds: ToolSeed[] = [
     categories: ['developer', 'color'],
     keywords: ['hex', 'rgb', 'hsl', 'colour converter'],
     icon: 'palette',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Colour value',
     outputFormat: 'Converted colour values',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Enter a colour as HEX, RGB, RGBA, HSL, HSLA or a CSS colour name.',
+      'Every other format is calculated at once, with a live swatch.',
+      'Copy the value you need, or check the contrast panel to see the ratio against white and black.',
+    ],
+    faqs: [
+      {
+        question: 'Which colour formats are accepted?',
+        answer:
+          'HEX (3, 4, 6 and 8 digits), rgb(), rgba(), hsl(), hsla() and the standard CSS colour names such as rebeccapurple or tomato.',
+      },
+      {
+        question: 'What does the contrast ratio mean?',
+        answer:
+          'It is the WCAG contrast ratio between your colour and a background. A ratio of 4.5:1 or higher passes WCAG AA for normal text, and 7:1 passes AAA. The tool tells you which threshold your colour clears.',
+      },
+      {
+        question: 'Is anything sent to a server?',
+        answer: 'No. All colour maths runs in your browser.',
+      },
+      {
+        question: 'Is the Color Converter free?',
+        answer: 'Yes. It is completely free, needs no account, and has no usage limit.',
+      },
+    ],
+    privacyNote: 'Runs entirely in your browser.',
   },
   {
     id: 'cron-expression-helper',
@@ -976,11 +1649,37 @@ const seeds: ToolSeed[] = [
     categories: ['developer'],
     keywords: ['cron', 'schedule', 'expression', 'crontab'],
     icon: 'clock',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Cron expression',
     outputFormat: 'Explanation and next run times',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Type a cron expression, or start from one of the common presets.',
+      'Read the plain-English description and the per-field breakdown.',
+      'Check the next-run list to confirm the schedule fires when you expect.',
+    ],
+    faqs: [
+      {
+        question: 'Does the cron syntax use 5 fields or 6?',
+        answer:
+          'Both are accepted. A standard expression has five fields (minute, hour, day of month, month, day of week); an optional sixth leading field adds seconds.',
+      },
+      {
+        question: 'Which timezone are the next-run times in?',
+        answer:
+          'Times are calculated in your browser’s local timezone. The list shows the local date and time, so what you see is what your own machine would do.',
+      },
+      {
+        question: 'Is my expression sent anywhere?',
+        answer: 'No. Parsing and the next-run calculation both run in your browser.',
+      },
+      {
+        question: 'Is the Cron Expression Helper free?',
+        answer: 'Yes. It is completely free, needs no account, and has no usage limit.',
+      },
+    ],
+    privacyNote: 'Runs entirely in your browser.',
   },
   {
     id: 'diff-checker',
@@ -989,11 +1688,37 @@ const seeds: ToolSeed[] = [
     categories: ['developer', 'text'],
     keywords: ['diff', 'compare', 'merge', 'changes'],
     icon: 'diff',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Two blocks of text',
     outputFormat: 'Highlighted differences',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Paste the original text on the left and the changed text on the right, or drop in two files.',
+      'Choose a view — side by side, unified or inline — and toggle whether whitespace matters.',
+      'Download the result as a .diff file if you need to share it.',
+    ],
+    faqs: [
+      {
+        question: 'How large a comparison can it handle?',
+        answer:
+          'It compares up to 3,000 lines per side. Above that the tool says so rather than freezing your browser, because the line-diff algorithm gets slow on very large inputs.',
+      },
+      {
+        question: 'How does it decide what changed?',
+        answer:
+          'It runs a line-by-line longest-common-subsequence diff, which finds the smallest set of added and removed lines that turns one text into the other — the same idea as git diff.',
+      },
+      {
+        question: 'Is my text uploaded?',
+        answer: 'No. The comparison runs entirely in your browser, so neither text leaves your device.',
+      },
+      {
+        question: 'Is the Diff Checker free?',
+        answer: 'Yes. It is completely free, needs no account, and has no usage limit.',
+      },
+    ],
+    privacyNote: 'Runs entirely in your browser. Both texts stay on your device.',
   },
   {
     id: 'html-entity-encoder',
@@ -1002,11 +1727,37 @@ const seeds: ToolSeed[] = [
     categories: ['developer'],
     keywords: ['html entities', 'escape', 'unescape', 'ampersand'],
     icon: 'code',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Text or HTML entities',
     outputFormat: 'Encoded or decoded text',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Paste text to encode, or paste HTML entities to decode.',
+      'Pick the encoding level — minimal, named, numeric or encode-everything.',
+      'Copy the result; the stats show how many characters were converted.',
+    ],
+    faqs: [
+      {
+        question: 'What is the difference between the encoding levels?',
+        answer:
+          'Minimal encodes only the characters that are unsafe in HTML (&, <, >, " and \'). Named uses friendly entities like &copy; where one exists. Numeric uses &#NNN; everywhere. Encode-everything turns every character into a numeric entity.',
+      },
+      {
+        question: 'Does decoding handle both &#169; and &#xA9;?',
+        answer:
+          'Yes. Decoding understands named entities, decimal numeric entities and hexadecimal numeric entities in both upper and lower case.',
+      },
+      {
+        question: 'Is my text sent to a server?',
+        answer: 'No. Encoding and decoding both run in your browser.',
+      },
+      {
+        question: 'Is the HTML Entity Encoder free?',
+        answer: 'Yes. It is completely free, needs no account, and has no usage limit.',
+      },
+    ],
+    privacyNote: 'Runs entirely in your browser. Your text is never uploaded.',
   },
   {
     id: 'lorem-ipsum-generator',
@@ -1015,26 +1766,78 @@ const seeds: ToolSeed[] = [
     categories: ['developer', 'text'],
     keywords: ['lorem ipsum', 'placeholder', 'dummy text', 'filler'],
     icon: 'pilcrow',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Options',
     outputFormat: 'Placeholder text',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Choose whether you want words, sentences or paragraphs.',
+      'Set how many you need and whether to start with the classic "Lorem ipsum dolor sit amet…" opening.',
+      'Copy or download the generated text.',
+    ],
+    faqs: [
+      {
+        question: 'Is the output real Latin?',
+        answer:
+          'It is the traditional Lorem Ipsum placeholder text, which is scrambled Latin and deliberately meaningless. It is meant to fill space, not to be read.',
+      },
+      {
+        question: 'Will I get the same text every time?',
+        answer:
+          'No. Each generation is randomised, so pressing Generate again gives you different placeholder text at the same length.',
+      },
+      {
+        question: 'Is the generator doing anything online?',
+        answer: 'No. The words are generated locally in your browser.',
+      },
+      {
+        question: 'Is the Lorem Ipsum Generator free?',
+        answer: 'Yes. It is completely free, needs no account, and has no usage limit.',
+      },
+    ],
+    privacyNote: 'Runs entirely in your browser.',
   },
   {
     id: 'api-request-tester',
     name: 'API Request Tester',
-    description: 'Send an HTTP request and inspect the status, headers and response body.',
+    description: 'Send an HTTP request from your browser and inspect the status, headers and response body.',
     categories: ['developer'],
     keywords: ['api', 'http', 'request', 'rest', 'client'],
     icon: 'globe',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Request URL, method, headers and body',
     outputFormat: 'HTTP response',
-    processingMode: 'server',
+    processingMode: 'network',
     addedAt: '2026-10-17',
+    instructions: [
+      'Enter the request URL and choose an HTTP method.',
+      'Add any headers and a body, then press Send.',
+      'Read the status, timing, size, headers and response body in the result panel.',
+    ],
+    faqs: [
+      {
+        question: 'Why does a request fail with a CORS error?',
+        answer:
+          'Because the request is made by your browser, the target server must send an Access-Control-Allow-Origin header for this page. If it does not, the browser blocks the response and there is no way around it from a website. TOOLZEN does not proxy requests, so the tool reports this honestly instead of pretending to succeed.',
+      },
+      {
+        question: 'Does this tool send my cookies or log me in?',
+        answer:
+          'No. Requests are sent with credentials set to "omit", so your cookies are never attached and the tool never acts as you.',
+      },
+      {
+        question: 'Can I test a private or localhost address?',
+        answer:
+          'Requests go directly from your browser to the URL you enter. A private or internal address will usually fail the same way a CORS block does, and the tool explains that when it happens.',
+      },
+      {
+        question: 'Is the API Request Tester free?',
+        answer: 'Yes. It is completely free, needs no account, and has no usage limit.',
+      },
+    ],
     privacyNote:
-      'Requests are relayed by a server function with strict protections against internal network and metadata-endpoint access.',
+      'Requests go directly from your browser to the URL you enter — there is no TOOLZEN server in between, and cookies are never sent.',
   },
   {
     id: 'markdown-editor',
@@ -1043,15 +1846,41 @@ const seeds: ToolSeed[] = [
     categories: ['developer', 'document'],
     keywords: ['markdown', 'editor', 'preview', 'export'],
     icon: 'book-open',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Markdown text',
     outputFormat: 'Rendered preview and exported file',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Write Markdown in the editor, or use the toolbar for bold, lists, links and tables.',
+      'Switch between Split, Editor and Preview views.',
+      'Export the result as a .md or .html file when you are done.',
+    ],
+    faqs: [
+      {
+        question: 'Is the preview safe to render?',
+        answer:
+          'Yes. The rendered HTML is passed through DOMPurify, which strips scripts and other dangerous markup, so a pasted snippet cannot run code in the page.',
+      },
+      {
+        question: 'Which Markdown features are supported?',
+        answer:
+          'It supports standard Markdown plus tables, fenced code blocks, task lists and blockquotes — the same feature set used by GitHub-flavoured Markdown.',
+      },
+      {
+        question: 'Is my document uploaded?',
+        answer: 'No. Writing, previewing and exporting all happen in your browser.',
+      },
+      {
+        question: 'Is the Markdown Editor free?',
+        answer: 'Yes. It is completely free, needs no account, and has no usage limit.',
+      },
+    ],
+    privacyNote: 'Runs entirely in your browser. Your document is never uploaded.',
   },
 
   /* ------------------------------------------------------------------ */
-  /* CYBERSECURITY — planned                                             */
+  /* CYBERSECURITY — live                                                */
   /* ------------------------------------------------------------------ */
   {
     id: 'password-strength-estimator',
@@ -1061,12 +1890,40 @@ const seeds: ToolSeed[] = [
     categories: ['security'],
     keywords: ['password strength', 'entropy', 'crack time', 'passphrase'],
     icon: 'gauge',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Password',
     outputFormat: 'Strength estimate and advice',
     processingMode: 'client',
     addedAt: '2026-10-17',
     privacyNote: 'Evaluated entirely in your browser. The password is never transmitted or stored.',
+    instructions: [
+      'Type or paste the password you want to test. It never leaves the page.',
+      'Read the entropy figure, then the crack-time estimates for each attack scenario.',
+      'Work through the suggestions — length matters more than symbol substitution.',
+      'For a long passphrase, switch the mode to passphrase and compare the entropy.',
+    ],
+    faqs: [
+      {
+        question: 'Is it safe to type my real password here?',
+        answer:
+          'The password is analysed in this tab and is never sent to a server, written to storage or logged. That said, the safest habit is to test a password with the same pattern as your real one, not the real one itself.',
+      },
+      {
+        question: 'How is the crack time calculated?',
+        answer:
+          'The tool estimates the size of the character set in use, raises it to the length to get the number of possible passwords, then divides by a guesses-per-second figure for each scenario — an online form with rate limiting, a fast offline attack on a slow hash, and a GPU attack on a fast hash. These are order-of-magnitude estimates, not measurements.',
+      },
+      {
+        question: 'Why is a long passphrase stronger than a short complex password?',
+        answer:
+          'Because length multiplies the search space, while symbol substitution only adds a small constant per character — and humans substitute predictably. A four-word passphrase from a large list usually beats eight random characters with symbols.',
+      },
+      {
+        question: 'Does a common password get flagged even with digits on the end?',
+        answer:
+          'Yes. The checker strips trailing digits and symbols before comparing against a list of the most common passwords, so "password123!" is still recognised as a weak base.',
+      },
+    ],
   },
   {
     id: 'secure-password-generator',
@@ -1075,12 +1932,40 @@ const seeds: ToolSeed[] = [
     categories: ['security'],
     keywords: ['password generator', 'random', 'strong password', 'passphrase'],
     icon: 'key',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Options',
     outputFormat: 'Generated passwords',
     processingMode: 'client',
     addedAt: '2026-10-17',
     privacyNote: 'Generated locally using the browser cryptography API. Nothing is sent anywhere.',
+    instructions: [
+      'Choose a length. Sixteen characters is a sensible default; longer is always better.',
+      'Toggle the character sets you need. If a site rejects symbols, turn them off rather than shortening the password.',
+      'Press Generate. Every result comes from crypto.getRandomValues, not Math.random.',
+      'For something you have to type by hand, switch to passphrase mode and pick a word count.',
+    ],
+    faqs: [
+      {
+        question: 'How random are these passwords?',
+        answer:
+          "They come from crypto.getRandomValues, the browser's cryptographically secure random number generator. There is no seeded pseudo-random fallback and no pattern reused between generations.",
+      },
+      {
+        question: 'Are the passwords stored or transmitted?',
+        answer:
+          'No. Generation happens in this tab. Nothing is written to local storage, sent to a server or included in a URL.',
+      },
+      {
+        question: 'What is passphrase mode?',
+        answer:
+          'It builds a password from randomly chosen words from a fixed list, joined by a separator. A five-word passphrase is easier to remember than a random string of the same strength, which makes it practical for the one password you type often.',
+      },
+      {
+        question: 'Which mode should I use?',
+        answer:
+          'Use random characters for anything a password manager will fill in. Use a passphrase for the master password of the manager itself, or for a device login you have to type by hand.',
+      },
+    ],
   },
   {
     id: 'sha256-file-hash',
@@ -1089,13 +1974,41 @@ const seeds: ToolSeed[] = [
     categories: ['security'],
     keywords: ['sha256', 'file hash', 'checksum', 'integrity', 'verify'],
     icon: 'hash',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Any file',
     outputFormat: 'Hash values',
     processingMode: 'client',
     maxFileSize: '200 MB per file',
     addedAt: '2026-10-17',
     privacyNote: 'The file is read in your browser and never uploaded.',
+    instructions: [
+      'Drop a file onto the panel, or click to browse.',
+      'Every supported digest is computed at once: MD5, SHA-1, SHA-256, SHA-384 and SHA-512.',
+      'Copy the value you need with the button next to it.',
+      'Paste a published checksum into the compare box to see whether it matches.',
+    ],
+    faqs: [
+      {
+        question: 'Is the file uploaded anywhere?',
+        answer:
+          'No. The browser reads the file locally and computes the digest in memory. Nothing is transmitted, and closing the tab discards everything.',
+      },
+      {
+        question: 'Which hash should I use?',
+        answer:
+          'SHA-256 for almost everything. MD5 and SHA-1 are offered because download pages still publish them, but both are broken for security purposes — treat them as checksums against accidental corruption only, never as proof that a file is authentic.',
+      },
+      {
+        question: 'How large a file can it handle?',
+        answer:
+          'Up to about 200 MB comfortably. Beyond that the browser has to hold the whole file in memory, which can stall a tab. Very large files are better hashed with a command-line tool such as sha256sum.',
+      },
+      {
+        question: 'Why do two hashes of the same file sometimes differ?',
+        answer:
+          'If the files differ by even one byte — including line endings or metadata that a download changed — the digest is completely different. That is the point of a hash.',
+      },
+    ],
   },
   {
     id: 'file-integrity-verification',
@@ -1104,13 +2017,41 @@ const seeds: ToolSeed[] = [
     categories: ['security'],
     keywords: ['integrity', 'verify download', 'checksum', 'tamper'],
     icon: 'shield',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'File and expected hash',
-    outputFormat: 'Match or mismatch result',
     processingMode: 'client',
+    outputFormat: 'Match or mismatch result',
     maxFileSize: '200 MB per file',
     addedAt: '2026-10-17',
     privacyNote: 'The file is read in your browser and never uploaded.',
+    instructions: [
+      'Paste the published checksum — a bare hash, or a whole sha256sum listing with filenames.',
+      'Drop the downloaded file onto the panel.',
+      'The tool guesses the algorithm from the hash length and computes only that digest.',
+      'A green match means the bytes are identical. A mismatch means the file is not the one that checksum describes.',
+    ],
+    faqs: [
+      {
+        question: 'What does a mismatch actually mean?',
+        answer:
+          'The file you have is not byte-for-byte the file the checksum was published for. That could be a corrupted download, a different version, or a tampered file. Re-download from the official source before assuming the worst — but do not install it until the hashes agree.',
+      },
+      {
+        question: 'Does a match prove the file is safe?',
+        answer:
+          'No. It proves the file matches the checksum. If an attacker controlled both the download and the checksum page, both would agree. A match only means something when you trust the source of the checksum independently — for example, a signature you verified, or a page served over HTTPS from the vendor.',
+      },
+      {
+        question: 'Which algorithms are recognised?',
+        answer:
+          'MD5 (32 hex characters), SHA-1 (40), SHA-256 (64), SHA-384 (96) and SHA-512 (128). The length decides which one runs, so a pasted hash is never silently compared against the wrong digest.',
+      },
+      {
+        question: 'Can it check several files at once?',
+        answer:
+          'The parser reads a whole checksum listing, but verification runs one file at a time — the panel shows the expected checksum for each line so you can match them up.',
+      },
+    ],
   },
   {
     id: 'security-headers-checker',
@@ -1120,13 +2061,41 @@ const seeds: ToolSeed[] = [
     categories: ['security'],
     keywords: ['security headers', 'csp', 'hsts', 'x-frame-options'],
     icon: 'shield',
-    status: 'planned',
-    inputFormat: 'Website URL',
+    status: 'live',
+    inputFormat: 'Pasted headers, or a URL',
     outputFormat: 'Header report and recommendations',
-    processingMode: 'server',
+    processingMode: 'network',
     addedAt: '2026-10-17',
     privacyNote:
-      'The server fetches the public URL you enter. Internal and private network addresses are blocked.',
+      'Nothing is proxied. Pasted headers stay in your browser; a live check is a direct request from your browser to the site you name.',
+    instructions: [
+      "Run curl -sSI https://example.com in a terminal, or copy the response headers from your browser's Network panel.",
+      'Paste them into the Headers box. The audit runs as you type.',
+      'Read the findings in order — missing and failing headers come first, each with the value that was found and a specific fix.',
+      'Copy the Markdown report into a ticket or a pull request.',
+    ],
+    faqs: [
+      {
+        question: 'Why does the live check show almost no headers?',
+        answer:
+          'Cross-origin JavaScript only sees a short safelist of response headers unless the server sends Access-Control-Expose-Headers. HSTS and Content-Security-Policy are never exposed, so a live check cannot audit them. The Paste tab reads the complete set, which is why it is the primary mode.',
+      },
+      {
+        question: 'How is the score calculated?',
+        answer:
+          'Each graded header carries a weight. A correct value earns full weight, a present-but-weak value earns half, and a missing header earns nothing. The score is the share of available weight earned, out of 100. X-XSS-Protection is informational and carries no weight because the browser feature it controlled has been removed.',
+      },
+      {
+        question: 'Does a good score mean the site is secure?',
+        answer:
+          'No. Headers are one layer. A site can send a perfect CSP and still have an authentication bug. The report says this explicitly rather than presenting a number as a verdict.',
+      },
+      {
+        question: 'Why does the tool recommend removing X-XSS-Protection?',
+        answer:
+          'Modern browsers removed their XSS auditor because it introduced its own vulnerabilities. Setting the header to 1 re-enables a removed feature in older browsers; the recommended value is 0, or no header at all.',
+      },
+    ],
   },
   {
     id: 'ssl-certificate-info',
@@ -1135,11 +2104,41 @@ const seeds: ToolSeed[] = [
     categories: ['security'],
     keywords: ['ssl', 'tls', 'certificate', 'https', 'expiry'],
     icon: 'lock',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Domain name',
     outputFormat: 'Certificate details',
-    processingMode: 'server',
+    processingMode: 'network',
     addedAt: '2026-10-17',
+    privacyNote:
+      'The lookup goes from your browser straight to crt.sh, a public Certificate Transparency search service. TOOLZEN does not proxy it.',
+    instructions: [
+      'Enter a domain and press Search certificates.',
+      'Leave "Include subdomains" on unless the domain has thousands of names — the exact-name query is much faster.',
+      'Read the issuer, validity window and status for each certificate, newest expiry first.',
+      'Copy the CSV or the list of covered names if you need them elsewhere.',
+    ],
+    faqs: [
+      {
+        question: 'Is this the certificate the site is serving right now?',
+        answer:
+          "Not necessarily. crt.sh reports certificates that a public CA has logged as issued, which includes certificates that were never deployed and ones since revoked. For the live chain, use your browser's padlock panel or openssl s_client.",
+      },
+      {
+        question: 'Why are there so many certificates for one domain?',
+        answer:
+          'Certificate lifetimes are now short, and services like Cloudflare reissue automatically, so a busy domain accumulates dozens of entries per year. The tool deduplicates entries that appear in several logs.',
+      },
+      {
+        question: 'Why does the lookup sometimes time out?',
+        answer:
+          'crt.sh is a free public service and can be slow for domains with large subdomain trees. Turn off subdomain matching, or try again in a moment.',
+      },
+      {
+        question: 'Can it see certificates from an internal CA?',
+        answer:
+          'No. Certificate Transparency only records certificates from CAs that participate in public logs. A private or internal CA will not appear.',
+      },
+    ],
   },
   {
     id: 'dns-lookup',
@@ -1148,11 +2147,41 @@ const seeds: ToolSeed[] = [
     categories: ['security'],
     keywords: ['dns', 'records', 'mx', 'txt', 'nameserver', 'lookup'],
     icon: 'globe',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Domain name',
     outputFormat: 'DNS records',
-    processingMode: 'server',
+    processingMode: 'network',
     addedAt: '2026-10-17',
+    privacyNote:
+      'Queries go from your browser directly to a public DNS-over-HTTPS resolver (Google or Cloudflare) that you choose. Nothing passes through TOOLZEN.',
+    instructions: [
+      'Enter a domain name. A pasted URL is reduced to its hostname automatically.',
+      'Pick a record type, or press "Look up all common records" to fetch A, AAAA, CNAME, MX, TXT, NS and CAA at once.',
+      'TXT records are labelled when they are SPF, DMARC, DKIM or a known site-verification record.',
+      'Copy the results as zone-file lines or as raw JSON.',
+    ],
+    faqs: [
+      {
+        question: 'Which resolver answers the query?',
+        answer:
+          "Whichever you select — Google Public DNS or Cloudflare 1.1.1.1. Both publish a JSON API with CORS enabled, which is what makes a browser-only lookup possible. Their privacy policies apply to the query, not TOOLZEN's.",
+      },
+      {
+        question: 'Why is a record I just changed still showing the old value?',
+        answer:
+          "Resolvers cache answers for the record's TTL. A change is not visible everywhere until that TTL expires, which can be anywhere from a minute to a day.",
+      },
+      {
+        question: 'Why does it refuse private addresses?',
+        answer:
+          'Loopback, link-local and RFC 1918 addresses are rejected. A public resolver has no useful answer for them, and refusing keeps the tool from being used to probe internal networks.',
+      },
+      {
+        question: 'Does this show what my own network resolves?',
+        answer:
+          'No. It shows what the chosen public resolver returns. Your ISP, a corporate DNS filter or a hosts file can give a different answer for the same name.',
+      },
+    ],
   },
   {
     id: 'http-header-viewer',
@@ -1161,13 +2190,41 @@ const seeds: ToolSeed[] = [
     categories: ['security'],
     keywords: ['http headers', 'response', 'status code', 'redirect'],
     icon: 'activity',
-    status: 'planned',
-    inputFormat: 'Website URL',
+    status: 'live',
+    inputFormat: 'Website URL or pasted headers',
     outputFormat: 'HTTP response headers',
-    processingMode: 'server',
+    processingMode: 'network',
     addedAt: '2026-10-17',
     privacyNote:
-      'The server fetches the public URL you enter. Internal and private network addresses are blocked.',
+      'The request is made by your browser, with credentials omitted. Nothing is relayed through a TOOLZEN server.',
+    instructions: [
+      'Enter a URL and press Fetch headers, or switch to Paste and drop in curl -sSI output.',
+      'Read the status, round-trip time and whether the request was redirected.',
+      'Group headers by purpose, or switch to Raw or JSON for the exact bytes.',
+      'Copy the result as JSON, or as a curl command that reproduces the request.',
+    ],
+    faqs: [
+      {
+        question: 'Why are most headers missing on some sites?',
+        answer:
+          'CORS. A browser only exposes a short safelist of response headers to cross-origin JavaScript unless the server sends Access-Control-Expose-Headers. Sites that do not opt in will show only content-type, content-length, cache-control and a few others. The Paste tab avoids this entirely.',
+      },
+      {
+        question: 'Does it send my cookies?',
+        answer:
+          'No. Requests use credentials: "omit", so no cookies or HTTP authentication are attached. You are never signed in as yourself to the target site.',
+      },
+      {
+        question: 'What does a HEAD request change?',
+        answer:
+          'HEAD asks for the headers without the body, which is faster and cannot trigger a download. Some servers reject HEAD with 405, in which case the tool retries with GET and discards the body.',
+      },
+      {
+        question: 'Can I see request headers?',
+        answer:
+          'No. A browser does not expose the request headers it sent, and many are set by the browser itself. Use your developer tools Network panel for those.',
+      },
+    ],
   },
   {
     id: 'cybersecurity-checklist-generator',
@@ -1177,11 +2234,40 @@ const seeds: ToolSeed[] = [
     categories: ['security'],
     keywords: ['checklist', 'hardening', 'best practices', 'audit'],
     icon: 'check-square',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Options',
     outputFormat: 'Security checklist',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    privacyNote: 'Runs entirely in your browser. Your selections and ticks are never sent anywhere.',
+    instructions: [
+      'Pick the context that fits: personal, small business or developer.',
+      'Turn priority bands on or off. Start with Essential if you are new to this.',
+      'Tick items as you complete them — the progress bar is local to this page.',
+      'Copy the result as Markdown for a wiki, or CSV for a spreadsheet.',
+    ],
+    faqs: [
+      {
+        question: 'Where does the advice come from?',
+        answer:
+          'The items are hand-written, drawing on widely published baseline guidance from CISA, the NCSC and OWASP. Each item states what it protects against, so you can judge whether it applies to you rather than taking it on faith.',
+      },
+      {
+        question: 'Are my ticks saved?',
+        answer:
+          'No. Nothing is stored, so reloading the page clears the checkboxes. Copy the Markdown or CSV before you leave if you want to keep the state.',
+      },
+      {
+        question: 'Is this a compliance certification?',
+        answer:
+          'No. It is general guidance, not an audit against any standard. It cannot know your threat model, your regulatory obligations or your existing controls.',
+      },
+      {
+        question: 'Why are some items missing for my context?',
+        answer:
+          'Items are filtered to the context you choose — a personal checklist does not include breach-notification duties, and the developer checklist adds application-security items a home user does not need.',
+      },
+    ],
   },
   {
     id: 'security-awareness-resources',
@@ -1190,15 +2276,44 @@ const seeds: ToolSeed[] = [
     categories: ['security'],
     keywords: ['awareness', 'phishing', 'training', 'guidance', 'learn'],
     icon: 'book-open',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'None',
     outputFormat: 'Reference material',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    privacyNote: 'A static reading list. Nothing is tracked, and no link is an affiliate link.',
+    instructions: [
+      'Filter the reading list by topic or audience, or search for a keyword.',
+      "Every link opens the publisher's own site in a new tab.",
+      'Work through the six-message phishing exercise and decide which are genuine.',
+      'Reveal the explanations to see the specific tells in each message.',
+    ],
+    faqs: [
+      {
+        question: 'Who chose these links?',
+        answer:
+          'They are a hand-picked set from government and non-profit publishers — CISA, the NCSC, the FTC, NIST, OWASP, the EFF and a few well-known community projects. There are no sponsored links and no trackers.',
+      },
+      {
+        question: 'Is the phishing quiz realistic?',
+        answer:
+          'The messages are written for training, with the tells deliberately visible so they can be discussed. Real phishing is often cleaner — the point is to practise the habit of checking the sender domain and the link destination, not to memorise these examples.',
+      },
+      {
+        question: 'Why is one of the examples genuine?',
+        answer:
+          'Because a quiz where everything is phishing teaches you to flag everything. Recognising an ordinary message is part of the skill, and the genuine example still comes with a note on what to check anyway.',
+      },
+      {
+        question: 'Can I use this for staff training?',
+        answer:
+          "Yes — copy the Markdown or print the page. It is general awareness material, not a substitute for training specific to your organisation's systems and procedures.",
+      },
+    ],
   },
 
   /* ------------------------------------------------------------------ */
-  /* CALCULATORS — planned                                               */
+  /* CALCULATORS — live                                               */
   /* ------------------------------------------------------------------ */
   {
     id: 'percentage-calculator',
@@ -1207,11 +2322,39 @@ const seeds: ToolSeed[] = [
     categories: ['calculator'],
     keywords: ['percentage', 'percent', 'increase', 'decrease'],
     icon: 'percent',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Numbers',
     outputFormat: 'Calculated result',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Pick which of the three questions you are asking: X% of Y, X is what percent of Y, or the change from X to Y.',
+      'Type the two numbers. Decimals and negative values are both accepted.',
+      'Read the answer, the sentence in words, and the formula — all three are shown so you can check the working.',
+      'Division by zero is refused rather than answered with infinity, and a percentage change from zero is explained as undefined.',
+    ],
+    faqs: [
+      {
+        question: 'Why does a percentage change from a negative number use its magnitude?',
+        answer:
+          'Going from −200 to −100 is a rise, not a fall, even though the second number is larger in absolute terms. Dividing by the magnitude of the starting value keeps the sign of the answer pointing the right way: +50%.',
+      },
+      {
+        question: 'Is 20% then 10% the same as 30% off?',
+        answer:
+          'No — that is 28% off, because the second discount applies to the already-reduced price. Use the Discount Calculator if you need to stack offers.',
+      },
+      {
+        question: 'How many decimal places are shown?',
+        answer:
+          'Results are rounded to four decimal places for display. No rounding happens before the division, so the answer is as accurate as the inputs allow.',
+      },
+      {
+        question: 'Does the tool send my numbers anywhere?',
+        answer:
+          'No. The arithmetic runs in your browser and nothing is uploaded, logged or stored. You can disconnect from the internet and it will still work.',
+      },
+    ],
   },
   {
     id: 'age-calculator',
@@ -1220,11 +2363,39 @@ const seeds: ToolSeed[] = [
     categories: ['calculator'],
     keywords: ['age', 'date of birth', 'birthday', 'years old'],
     icon: 'calendar',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Date of birth',
     outputFormat: 'Age breakdown',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Enter the date of birth. The default reference date is today, but you can change it to any date.',
+      'Read the age in years, months and days — counted on the calendar, not by dividing days by 30.',
+      'Check the totals: whole days lived, whole weeks, whole hours and whole months.',
+      'The next-birthday panel counts down the days. A 29 February birthday falls on 28 February in a non-leap year.',
+    ],
+    faqs: [
+      {
+        question: 'Why is 31 January to 1 March reported as 1 month and 1 day?',
+        answer:
+          'Because months have different lengths. The leftover days are measured from the clamped month anniversary — 31 January plus one month is 28 February, and one more day takes you to 1 March.',
+      },
+      {
+        question: 'I was born on 29 February. When is my birthday?',
+        answer:
+          'In a non-leap year it falls on 28 February, which is the convention most legal systems use. In a leap year it is the real 29 February.',
+      },
+      {
+        question: 'Does the time of day matter?',
+        answer:
+          'No. Dates are read in your own timezone and the time of day is ignored, so the count never shifts by a day because of the clock.',
+      },
+      {
+        question: 'Can I work out the age of something other than a person?',
+        answer:
+          'Yes. Any two dates work — a company, a building, a warranty. Nothing here is specific to people.',
+      },
+    ],
   },
   {
     id: 'date-difference-calculator',
@@ -1233,11 +2404,39 @@ const seeds: ToolSeed[] = [
     categories: ['calculator'],
     keywords: ['date difference', 'days between', 'duration'],
     icon: 'calendar',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Two dates',
     outputFormat: 'Difference between dates',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Enter the start and end date. The end date is counted and the start date is not — the convention used by payment terms and delivery estimates.',
+      'Read the calendar breakdown in years, months and days, and the exact total in days and whole weeks.',
+      'Check the weekday count: Monday to Friday days and weekend days, which add up to the total.',
+      'Use the weekday panel to add or subtract working days from the start date, skipping Saturdays and Sundays.',
+    ],
+    faqs: [
+      {
+        question: 'Why is the count one day less than I expected?',
+        answer:
+          'The start date is excluded. From Monday to the following Monday is 7 days, not 8 — the same way a 30-day notice period starting on the 1st ends on the 31st.',
+      },
+      {
+        question: 'Are public holidays taken out of the weekday count?',
+        answer:
+          'No. Only Saturdays and Sundays are excluded, because public holidays differ by country, state and year. Check those against your own calendar.',
+      },
+      {
+        question: 'Why does the tool say months and years are approximate?',
+        answer:
+          'Converting days to months needs an average — 30.436875 days — and a 30-day answer is not the same as one month. The calendar breakdown above the conversion is exact.',
+      },
+      {
+        question: 'What if the second date is earlier than the first?',
+        answer:
+          'The tool swaps them, reports the size of the gap, and says plainly that the range was reversed rather than showing a negative number of days.',
+      },
+    ],
   },
   {
     id: 'time-duration-calculator',
@@ -1246,11 +2445,39 @@ const seeds: ToolSeed[] = [
     categories: ['calculator'],
     keywords: ['time duration', 'hours', 'minutes', 'timesheet'],
     icon: 'clock',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Two times or a duration',
     outputFormat: 'Calculated duration',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Type a duration the way you would say it: 2h 30m, 90m, 1.5h, 1 hour 30 minutes or 02:30:45.',
+      'Read the same duration in seconds, minutes, hours, days and weeks.',
+      'Enter a start time to see when the duration ends, including the day roll when it crosses midnight.',
+      'Enter how many items fit in the duration to get a per-item, per-hour and per-minute rate.',
+    ],
+    faqs: [
+      {
+        question: 'Why is a bare number like 90 refused?',
+        answer:
+          'Because 90 could mean 90 seconds, 90 minutes or 90 hours. Guessing would silently give you the wrong answer, so the tool asks you to add a unit instead.',
+      },
+      {
+        question: 'Why is 1:30 refused too?',
+        answer:
+          'It could be 1 hour 30 minutes or 1 minute 30 seconds. Write 1h 30m, or use the full 01:30:00 form, and there is no ambiguity.',
+      },
+      {
+        question: 'What happens when the end time crosses midnight?',
+        answer:
+          'The clock time is shown with the number of days rolled, such as 00:00 (+1 day). Seconds are kept in the label when the shift is not a whole number of minutes.',
+      },
+      {
+        question: 'Can I subtract a duration as well as add it?',
+        answer:
+          'Yes. The same panel shows the start time with the duration taken off, which is useful for working out when something began.',
+      },
+    ],
   },
   {
     id: 'bmi-calculator',
@@ -1259,11 +2486,39 @@ const seeds: ToolSeed[] = [
     categories: ['calculator'],
     keywords: ['bmi', 'body mass index', 'health', 'weight'],
     icon: 'heart',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Height and weight',
     outputFormat: 'BMI value and category',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Choose centimetres and kilograms, or feet, inches and pounds.',
+      'Enter your weight and height. The BMI is weight in kilograms divided by height in metres squared.',
+      'Read the band, the healthy weight range for your height, and where you sit on the scale.',
+      'Add your age, sex and activity level for resting metabolism and daily calorie targets — or use lean body mass instead.',
+    ],
+    faqs: [
+      {
+        question: 'Is BMI accurate?',
+        answer:
+          'It is a screening measure, not a diagnosis. It takes no account of muscle mass, frame size, age, pregnancy or where fat sits on the body, so an athlete can score as overweight while carrying very little fat.',
+      },
+      {
+        question: 'Which calorie figures should I use?',
+        answer:
+          'The maintenance figure is BMR multiplied by your activity level. The targets either side of it use the 7,700 kcal-per-kilogram rule of thumb for weekly change, which is an average and not a promise.',
+      },
+      {
+        question: 'Do the BMI cut-offs apply to everyone?',
+        answer:
+          'No. UK NICE guidance sets lower thresholds for adults of Black African, African-Caribbean, South Asian, Chinese and other Asian descent: 23 for overweight and 27.5 for obesity. The page says so.',
+      },
+      {
+        question: 'Where does the metabolic rate formula come from?',
+        answer:
+          'Mifflin–St Jeor, the equation most guidelines now prefer, or Katch–McArdle if you know your lean body mass. Both are shown with the working.',
+      },
+    ],
   },
   {
     id: 'emi-calculator',
@@ -1272,11 +2527,39 @@ const seeds: ToolSeed[] = [
     categories: ['calculator'],
     keywords: ['emi', 'loan', 'instalment', 'mortgage', 'interest'],
     icon: 'banknote',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Loan amount, rate and tenure',
     outputFormat: 'Estimated repayment figures',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Enter the loan amount, the annual interest rate and the term in months. Term presets are provided.',
+      'Read the monthly instalment, the total interest and the total payable over the whole term.',
+      'Look at the first twelve months of the amortisation table, where every row adds up to the instalment.',
+      'Enter an extra monthly payment to see how much sooner the loan clears and how much interest it saves.',
+    ],
+    faqs: [
+      {
+        question: 'Why is the total interest so much more than the loan?',
+        answer:
+          'On a long loan at a high rate, most of the early instalments are interest rather than principal. The amortisation table shows exactly how that shifts month by month.',
+      },
+      {
+        question: 'Does this include the fees my lender charges?',
+        answer:
+          'No. Processing fees, insurance, prepayment charges and GST are all outside this calculation. Your lender\'s APR — the figure that includes fees — will be higher than the rate you enter here.',
+      },
+      {
+        question: 'What if the interest rate is zero?',
+        answer:
+          'The instalment becomes the amount divided by the number of months, and the schedule shows every payment as pure principal. The tool flags this rather than dividing by zero.',
+      },
+      {
+        question: 'How is the extra payment saving worked out?',
+        answer:
+          'The schedule is re-run from the start with the higher payment, so the answer reflects the order interest is actually charged in rather than a shortcut formula.',
+      },
+    ],
   },
   {
     id: 'gst-calculator',
@@ -1285,11 +2568,39 @@ const seeds: ToolSeed[] = [
     categories: ['calculator'],
     keywords: ['gst', 'tax', 'vat', 'inclusive', 'exclusive'],
     icon: 'percent',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Amount and tax rate',
     outputFormat: 'Tax and net or gross amount',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Choose whether you are adding GST to a tax-exclusive amount or removing it from a tax-inclusive one.',
+      'Enter the amount and pick the rate slab — 0%, 5%, 12%, 18% and 28% are all offered, plus the less common ones.',
+      'Choose the supply type: same state splits the tax into CGST and SGST, different states charge IGST at the full rate.',
+      'Copy the one-line invoice summary, or read the table showing every slab side by side.',
+    ],
+    faqs: [
+      {
+        question: 'Why is removing GST not just the rate times the amount?',
+        answer:
+          'Because the rate applies to the net, not the gross. Taking 18% of a tax-inclusive ₹11,800 gives ₹2,124, which overstates the tax — the correct figure is ₹1,800, from gross × 100 ÷ 118.',
+      },
+      {
+        question: 'Does this tell me the rate for my product?',
+        answer:
+          'No. It applies the slab you choose. The correct rate depends on the HSN or SAC code and on notifications that change, so check the item before filing.',
+      },
+      {
+        question: 'When is IGST charged instead of CGST and SGST?',
+        answer:
+          'When the supplier and the place of supply are in different states or union territories. Within one state the tax splits into two equal halves.',
+      },
+      {
+        question: 'Is this advice for filing a return?',
+        answer:
+          'No. It is arithmetic on the figures you enter. Input tax credit, reverse charge, exemptions and composition schemes are not modelled.',
+      },
+    ],
   },
   {
     id: 'discount-calculator',
@@ -1298,11 +2609,39 @@ const seeds: ToolSeed[] = [
     categories: ['calculator'],
     keywords: ['discount', 'sale price', 'savings', 'off'],
     icon: 'percent',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Original price and discount',
     outputFormat: 'Final price and savings',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Enter the price and the first discount percentage. Add a second percentage to stack discounts.',
+      'Compare the stacked result against what the two percentages would give if they simply added up — the tool shows both.',
+      'Read the effective single percentage, which is what the stacked discounts actually come to.',
+      'Add pack sizes and prices to the comparison table to see which is cheapest per unit.',
+    ],
+    faqs: [
+      {
+        question: 'Why is 20% then 10% not 30% off?',
+        answer:
+          'Because the second discount is calculated on the price that is left, not on the original. 20% then 10% is 28% off. The tool shows the flat total beside it so the gap is visible.',
+      },
+      {
+        question: 'Is the retailer misleading me with stacked discounts?',
+        answer:
+          'Not usually — the arithmetic simply is not additive. The useful question is what the final price is, and that is the number the tool leads with.',
+      },
+      {
+        question: 'What if I know the sale price but not the original?',
+        answer:
+          'Enter the discounted price and the discount percentage, and the tool works the original back out.',
+      },
+      {
+        question: 'How does the pack comparison handle different units?',
+        answer:
+          'It divides price by size and labels the result per unit, whatever that unit is. A pack with a missing or zero size is skipped rather than given an invented price.',
+      },
+    ],
   },
   {
     id: 'profit-margin-calculator',
@@ -1311,11 +2650,39 @@ const seeds: ToolSeed[] = [
     categories: ['calculator'],
     keywords: ['profit', 'margin', 'markup', 'cost', 'revenue'],
     icon: 'trending-up',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Cost and selling price',
     outputFormat: 'Profit, margin and markup',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Pick which pair of numbers you have: revenue and cost, a target margin, a target markup, or a per-unit price and cost.',
+      'Read the margin, the markup and the cost as a share of revenue — all three, side by side.',
+      'Check the bar showing how each rupee of revenue splits between cost and profit.',
+      'Enter fixed costs, selling price and variable cost to get the break-even volume and the contribution per unit.',
+    ],
+    faqs: [
+      {
+        question: 'What is the difference between margin and markup?',
+        answer:
+          'Margin is profit as a share of the selling price; markup is profit as a share of the cost. A 50% markup is a 33.3% margin — the same money, a different denominator. Confusing the two is the most common pricing mistake.',
+      },
+      {
+        question: 'Why does the tool refuse to show a margin when cost is above revenue?',
+        answer:
+          'Because there is no margin to report — that is a loss. Showing a negative margin would suggest a number that does not exist, so the tool says so instead.',
+      },
+      {
+        question: 'What is contribution?',
+        answer:
+          'The selling price minus the variable cost. It is what each sale contributes towards fixed costs, and only the contribution above break-even becomes profit.',
+      },
+      {
+        question: 'Can I use fractional quantities?',
+        answer:
+          'Yes. 2.5 kg of stock is a real quantity, so the tool reports the figure as given rather than flooring it to a whole unit.',
+      },
+    ],
   },
   {
     id: 'compound-interest-calculator',
@@ -1324,11 +2691,39 @@ const seeds: ToolSeed[] = [
     categories: ['calculator'],
     keywords: ['compound interest', 'investment', 'savings', 'growth'],
     icon: 'banknote',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Principal, rate, term and compounding',
     outputFormat: 'Projected growth figures',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Enter the starting amount, the annual interest rate and the number of years.',
+      'Choose how often interest compounds: annually, half-yearly, quarterly, monthly or daily.',
+      'Add a monthly deposit if you are investing regularly. Deposits are applied at the end of each month.',
+      'Read the final amount, the interest earned, the effective annual rate and what the total is worth after inflation.',
+    ],
+    faqs: [
+      {
+        question: 'Why is the effective rate higher than the rate I entered?',
+        answer:
+          'Because each period\'s interest starts earning its own interest. ₹1,00,000 at 12% compounded monthly grows by 12.68% in a year, not 12%.',
+      },
+      {
+        question: 'Are deposits at the start or the end of the month?',
+        answer:
+          'The end, which is the conservative assumption. A deposit at the start of the month would earn a little more, and the tool does not claim otherwise.',
+      },
+      {
+        question: 'What does the purchasing power figure mean?',
+        answer:
+          'It is what the final amount would buy at today\'s prices, if inflation ran at the rate you enter for the whole term. It is usually a much smaller number than the balance.',
+      },
+      {
+        question: 'Does this account for tax on the interest?',
+        answer:
+          'No. Tax, charges and any change in the rate over the term are all outside this calculation, so treat the result as an illustration rather than a forecast.',
+      },
+    ],
   },
   {
     id: 'reading-time-calculator',
@@ -1337,11 +2732,39 @@ const seeds: ToolSeed[] = [
     categories: ['calculator', 'productivity'],
     keywords: ['reading time', 'speaking time', 'words per minute'],
     icon: 'clock',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Text',
     outputFormat: 'Estimated reading and speaking time',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Paste the text you want timed. A sample is provided if you just want to see it work.',
+      'Choose the reading rate: silent reading, reading aloud, technical text, or proof-reading.',
+      'Read the estimated time in words, and the speaking time at 150 words per minute.',
+      'Check the counts — words, characters, sentences, paragraphs, syllables — and the readability score.',
+    ],
+    faqs: [
+      {
+        question: 'Where do the words-per-minute figures come from?',
+        answer:
+          'The 238 figure for silent reading is an average from a 2019 meta-analysis of reading research; 183 is a typical adult reading aloud. Real rates vary by a factor of three or more between people and between texts.',
+      },
+      {
+        question: 'Is the readability score reliable?',
+        answer:
+          'It is an estimate. Syllables are counted by a vowel-group rule rather than a dictionary, so unusual words and names can shift the score a little. Treat it as a signal, not a measurement.',
+      },
+      {
+        question: 'How is a word counted?',
+        answer:
+          'A run of letters and numbers counts as one word, so a hyphenated or apostrophised word is not counted twice. Numbers are counted as words.',
+      },
+      {
+        question: 'Is my text uploaded anywhere?',
+        answer:
+          'No. The counting happens in your browser. Nothing is sent to a server, so you can paste confidential drafts without any of it leaving the page.',
+      },
+    ],
   },
 
   /* ------------------------------------------------------------------ */

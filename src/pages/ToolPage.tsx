@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getTool, relatedTools } from '@/data/registry'
 import { categoryName, categoryRoute } from '@/data/categories'
@@ -14,11 +15,27 @@ import { Badge } from '@/components/ui/Badge'
 import { buttonClasses } from '@/components/ui/Button'
 import { Icon } from '@/components/ui/Icon'
 import { ErrorState } from '@/components/ui/ErrorState'
+import { Skeleton } from '@/components/ui/Skeleton'
 import { AdSlot } from '@/components/ads/AdSlot'
 import { Seo } from '@/components/seo/Seo'
 import { ToolCard } from '@/components/tools/ToolCard'
 import { PageShell } from '@/components/layout/PageShell'
 import { NotFound } from './NotFound'
+
+/** Placeholder shown while a tool's code chunk is downloading. */
+function ToolWorkspaceFallback() {
+  return (
+    <div className="flex flex-col gap-4" aria-busy="true" aria-live="polite">
+      <span className="sr-only">Loading tool…</span>
+      <Skeleton className="h-10 w-48" />
+      <Skeleton className="h-56 w-full" />
+      <div className="flex gap-2">
+        <Skeleton className="h-9 w-28" />
+        <Skeleton className="h-9 w-24" />
+      </div>
+    </div>
+  )
+}
 
 /** Detail row used in the tool information table. */
 function DetailRow({ label, value }: { label: string; value: string }) {
@@ -124,7 +141,9 @@ export function ToolPage() {
         <section className="mt-8" aria-label={`${tool.name} workspace`}>
           {isAvailable && ToolComponent ? (
             <div className="tz-card p-5 sm:p-6">
-              <ToolComponent />
+              <Suspense fallback={<ToolWorkspaceFallback />}>
+                <ToolComponent />
+              </Suspense>
             </div>
           ) : tool.status === 'live' && !ToolComponent ? (
             <ErrorState
@@ -218,7 +237,9 @@ export function ToolPage() {
               value={
                 tool.processingMode === 'client'
                   ? 'In your browser — files and text never leave your device'
-                  : 'On a TOOLZEN server with temporary storage'
+                  : tool.processingMode === 'network'
+                    ? 'In your browser, with a direct request to a public API sent from your device'
+                    : 'On a TOOLZEN server with temporary storage'
               }
             />
             {tool.maxFileSize && <DetailRow label="Maximum size" value={tool.maxFileSize} />}

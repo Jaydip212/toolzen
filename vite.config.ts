@@ -155,7 +155,12 @@ function buildLlmsTxt(siteUrl: string): string {
   ]
 
   for (const tool of live) {
-    const mode = tool.processingMode === 'client' ? 'runs in the browser' : 'server-assisted'
+    const mode =
+      tool.processingMode === 'client'
+        ? 'runs in the browser'
+        : tool.processingMode === 'network'
+          ? 'runs in the browser and queries a public API directly from the device'
+          : 'server-assisted'
     lines.push(`- [${tool.name}](${siteUrl}${tool.route}): ${tool.description} (${mode})`)
   }
 
@@ -168,15 +173,17 @@ function buildLlmsTxt(siteUrl: string): string {
     )
   }
 
-  lines.push(
-    '',
-    '## Planned tools (NOT yet usable)',
-    '',
-    'These tools are on the roadmap and are clearly labelled "Coming soon" on the site. They are not functional yet and must not be described as available.',
-    '',
-  )
-  for (const tool of planned) {
-    lines.push(`- ${tool.name} — ${categoryName(tool.categories[0])}`)
+  if (planned.length > 0) {
+    lines.push(
+      '',
+      '## Planned tools (NOT yet usable)',
+      '',
+      'These tools are on the roadmap and are clearly labelled "Coming soon" on the site. They are not functional yet and must not be described as available.',
+      '',
+    )
+    for (const tool of planned) {
+      lines.push(`- ${tool.name} — ${categoryName(tool.categories[0])}`)
+    }
   }
 
   lines.push(

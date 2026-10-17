@@ -40,12 +40,21 @@ describe('tool registry integrity', () => {
 })
 
 describe('availability', () => {
-  it('exposes exactly the three implemented tools as live', () => {
-    expect(liveTools().map((tool) => tool.id).sort()).toEqual([
-      'case-converter',
-      'character-counter',
-      'word-counter',
-    ])
+  it('marks the original three text tools as live', () => {
+    const liveIds = new Set(liveTools().map((tool) => tool.id))
+    expect(liveIds.has('word-counter')).toBe(true)
+    expect(liveIds.has('character-counter')).toBe(true)
+    expect(liveIds.has('case-converter')).toBe(true)
+  })
+
+  it('gives every live tool instructions and FAQs', () => {
+    // A tool is only published with the on-page guidance and the structured
+    // data that the SEO/AEO layer depends on. This keeps the whole registry
+    // at the same standard as it grows.
+    for (const tool of liveTools()) {
+      expect(tool.instructions?.length ?? 0, `${tool.id} instructions`).toBeGreaterThanOrEqual(3)
+      expect(tool.faqs?.length ?? 0, `${tool.id} faqs`).toBeGreaterThanOrEqual(3)
+    }
   })
 
   it('splits live and planned tools without overlap', () => {
@@ -59,7 +68,7 @@ describe('availability', () => {
     const stats = platformStats()
     expect(stats.live).toBe(liveTools().length)
     expect(stats.total).toBe(tools.length)
-    expect(stats.total).toBeGreaterThan(stats.live)
+    expect(stats.live).toBeLessThanOrEqual(stats.total)
   })
 })
 
@@ -141,8 +150,11 @@ describe('toolsByCategory and categoryStats', () => {
     expect(stats.total).toBe(live.length + planned.length)
   })
 
-  it('reports zero live tools for a category that has none yet', () => {
-    expect(categoryStats('ai').live).toBe(0)
+  it('never reports more live tools than total tools', () => {
+    for (const category of tools.flatMap((tool) => tool.categories)) {
+      const stats = categoryStats(category)
+      expect(stats.live).toBeLessThanOrEqual(stats.total)
+    }
   })
 })
 

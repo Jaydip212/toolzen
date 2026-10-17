@@ -8,7 +8,6 @@ import type {
 } from 'react'
 import { cn } from '@/lib/utils'
 import { Icon } from './Icon'
-
 const controlBase =
   'w-full rounded-xl border border-line bg-surface text-sm text-fg transition-colors duration-150 placeholder:text-muted/70 disabled:cursor-not-allowed disabled:opacity-60'
 
@@ -224,5 +223,47 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
         />
       </div>
     </FieldShell>
+  )
+})
+
+/* -------------------------------------------------------------------------- */
+/* Checkbox                                                                   */
+/* -------------------------------------------------------------------------- */
+
+export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
+  /** The clickable text. The whole row is a label, so it is a large target. */
+  label: ReactNode
+  /** Optional second line explaining the option. */
+  hint?: string
+}
+
+export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Checkbox(
+  { label, hint, className, id, ...rest },
+  ref,
+) {
+  const generatedId = useId()
+  const fieldId = id ?? generatedId
+
+  return (
+    <label
+      htmlFor={fieldId}
+      className={cn(
+        'flex cursor-pointer items-start gap-2.5 text-sm',
+        rest.disabled && 'cursor-not-allowed opacity-60',
+        className,
+      )}
+    >
+      <input
+        ref={ref}
+        id={fieldId}
+        type="checkbox"
+        className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded border-line accent-brand"
+        {...rest}
+      />
+      <span className="min-w-0">
+        <span className="text-fg">{label}</span>
+        {hint && <span className="mt-0.5 block text-xs leading-relaxed text-muted">{hint}</span>}
+      </span>
+    </label>
   )
 })

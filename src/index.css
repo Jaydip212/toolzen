@@ -120,6 +120,81 @@
   .tz-skip-link:focus {
     @apply translate-y-0;
   }
+
+  /*
+   * Rendered Markdown. TOOLZEN does not use the Tailwind typography plugin,
+   * so the preview styles are defined here against the theme tokens.
+   */
+  .tz-prose {
+    @apply text-sm leading-relaxed text-fg;
+  }
+  .tz-prose > :first-child {
+    @apply mt-0;
+  }
+  .tz-prose > :last-child {
+    @apply mb-0;
+  }
+  .tz-prose h1 {
+    @apply mb-4 mt-6 text-2xl font-semibold tracking-tight;
+  }
+  .tz-prose h2 {
+    @apply mb-3 mt-6 text-xl font-semibold tracking-tight;
+  }
+  .tz-prose h3 {
+    @apply mb-2 mt-5 text-lg font-semibold;
+  }
+  .tz-prose h4,
+  .tz-prose h5,
+  .tz-prose h6 {
+    @apply mb-2 mt-4 text-base font-semibold;
+  }
+  .tz-prose p {
+    @apply my-3;
+  }
+  .tz-prose a {
+    @apply text-brand underline underline-offset-2 hover:opacity-80;
+  }
+  .tz-prose ul {
+    @apply my-3 list-disc space-y-1 pl-6;
+  }
+  .tz-prose ol {
+    @apply my-3 list-decimal space-y-1 pl-6;
+  }
+  .tz-prose li > ul,
+  .tz-prose li > ol {
+    @apply my-1;
+  }
+  .tz-prose blockquote {
+    @apply my-3 border-l-4 border-line pl-4 italic text-muted;
+  }
+  .tz-prose code {
+    @apply rounded bg-surface-2 px-1.5 py-0.5 font-mono text-xs;
+  }
+  .tz-prose pre {
+    @apply tz-scroll my-3 overflow-auto rounded-xl border border-line bg-surface-2/60 p-3 text-xs;
+  }
+  .tz-prose pre code {
+    @apply bg-transparent p-0 text-xs;
+  }
+  .tz-prose hr {
+    @apply my-6 border-line;
+  }
+  .tz-prose table {
+    @apply my-3 w-full border-collapse text-sm;
+  }
+  .tz-prose th,
+  .tz-prose td {
+    @apply border border-line px-3 py-2 text-left align-top;
+  }
+  .tz-prose th {
+    @apply bg-surface-2 font-semibold;
+  }
+  .tz-prose img {
+    @apply my-3 max-w-full rounded-lg;
+  }
+  .tz-prose input[type='checkbox'] {
+    @apply mr-1.5 align-middle accent-brand;
+  }
 }
 
 @layer utilities {

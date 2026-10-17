@@ -13,11 +13,16 @@ describe('App routing', () => {
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/Every Tool You Need/i)
   })
 
-  it('renders a working tool page at /tools/word-counter', () => {
+  it('renders a working tool page at /tools/word-counter', async () => {
     renderAt('/tools/word-counter')
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Word Counter')
     // The tool workspace is actually mounted, not just described.
-    expect(screen.getByLabelText('Your text')).toBeInTheDocument()
+    // Tools are lazy-loaded, so the first paint is a skeleton and the real
+    // component only appears once its chunk resolves. Under a full-suite run
+    // that dynamic import can take longer than the 1s default, so allow more.
+    expect(
+      await screen.findByLabelText('Your text', {}, { timeout: 5000 }),
+    ).toBeInTheDocument()
   })
 
   it('shows a coming-soon notice for a planned tool instead of a fake control', () => {
@@ -44,9 +49,11 @@ describe('App routing', () => {
   })
 
   it('searches the whole roadmap when a query is present', () => {
-    renderAt('/tools?q=json')
+    // "pdf" still has planned tools in the roadmap, so a query proves the
+    // status filter is lifted for searches rather than hiding them.
+    renderAt('/tools?q=pdf')
     // The URL query prefills the search box...
-    expect(screen.getByDisplayValue('json')).toBeInTheDocument()
+    expect(screen.getByDisplayValue('pdf')).toBeInTheDocument()
     // ...and planned matches are shown rather than hidden by the status filter.
     expect(screen.getByRole('heading', { name: /coming soon/i })).toBeInTheDocument()
   })

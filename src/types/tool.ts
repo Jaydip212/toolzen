@@ -3,8 +3,16 @@ import type { IconName } from '@/components/ui/Icon'
 /** Whether a tool is usable today or still on the roadmap. */
 export type ToolStatus = 'live' | 'planned'
 
-/** Where a tool performs its work. Surfaced to users for transparency. */
-export type ProcessingMode = 'client' | 'server'
+/**
+ * Where a tool performs its work. Surfaced to users for transparency.
+ *
+ * - `client`  — entirely in the browser; nothing leaves the device.
+ * - `network` — runs in the browser but queries a public API directly from the
+ *               user's device (for example DNS-over-HTTPS or a CT log). The
+ *               request never passes through a TOOLZEN server.
+ * - `server`  — would require a TOOLZEN backend. No tool uses this today.
+ */
+export type ProcessingMode = 'client' | 'network' | 'server'
 
 /** Identifier for one of TOOLZEN's twelve tool categories. */
 export type ToolCategoryId =
