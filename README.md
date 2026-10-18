@@ -14,15 +14,28 @@ everyday digital tasks.
 
 ## What works today
 
-| Tool | Category | Processing |
-| --- | --- | --- |
-| [Word Counter](/src/tools/word-counter) | Text, Productivity | In the browser |
-| [Character Counter](/src/tools/character-counter) | Text | In the browser |
-| [Case Converter](/src/tools/case-converter) | Text | In the browser |
+**92 of the 101 registered tools are live**, and every one of them runs entirely in the browser.
+The homepage prints the real number, derived from the registry rather than hard-coded.
 
-Everything else in the directory is honestly marked as coming soon. There are **no fake buttons and
-no fabricated results** anywhere in the app — the test suite enforces this (see
-`src/tools/ToolRenderer.test.ts`).
+| Category (primary) | Live | Examples |
+| --- | --- | --- |
+| Developer | 20 | JWT, regex, cron, hashes, API request tester, security headers, DNS, SSL |
+| PDF | 18 | Merge, split, rotate, organise, page numbers, watermark, text to PDF, PDF to JPG, to text, metadata, size analysis, compression |
+| Image | 17 | Compress, resize, crop, convert, rotate, flip, watermark, favicon, colour picker |
+| Calculator | 11 | Percentage, age, date difference, BMI, EMI, GST, discount, profit, interest |
+| Security | 10 | Password strength, secure password generator, file hashing, integrity checks |
+| Text | 7 | Word and character counts, case conversion, formatting, diff, markdown |
+| Document | 6 | CSV/JSON, formatters, Base64, URL encoding, UUID, timestamps |
+| QR & barcode | 2 | QR codes (text, link, Wi-Fi, contact card), five barcode formats |
+| Conversion | 1 | File size conversion |
+| AI | 0 by default | Seven tools, implemented but disabled until a provider key is configured — see below |
+
+Nine tools remain planned: the seven AI tools (needing a server key), plus **Unlock PDF** and
+**Protect PDF**, which cannot be built in the browser at all because `pdf-lib` has no RC4 or AES
+support in either direction. Their pages say so rather than implying they are coming soon.
+
+There are **no fake buttons and no fabricated results** anywhere in the app — the test suite
+enforces this (see `src/tools/ToolRenderer.test.ts`).
 
 ### Platform features
 
@@ -94,6 +107,9 @@ Copy `.env.example` to `.env.local`. All variables are optional for Phase 1.
 ## Project structure
 
 ```
+api/
+  ai.ts         The only server code: holds the AI provider key, builds the
+                prompts server-side, rate limits, never returns the key
 src/
   components/
     ads/         AdSlot — isolated from tool logic, off by default
@@ -103,12 +119,15 @@ src/
     ui/          Design-system primitives (Button, Card, Form, Toast, Modal, …)
   data/
     categories.ts  The 12 categories and their accent palettes
-    tools.ts       The tool registry (live + planned)
+    tools.ts       The tool registry (live + planned), AI status gating
     registry.ts    Search, filter, sort, related-tools and stats helpers
   lib/          cn(), formatters, theme persistence, clipboard helpers
+    ai-tasks.ts    The seven AI task definitions and their prompts
+    ai-client.ts   Browser half of the AI tools: probe, run, typed errors
   pages/        Home, AllTools, CategoryPage, ToolPage, About, Privacy, Terms, NotFound
   tools/        One folder per working tool (logic.ts + index.tsx + logic.test.ts)
     ToolRenderer.tsx  Maps a registry id to its component
+    shared/AiTool.tsx The shared body of all seven AI tools
   types/        Shared domain types
 ```
 
@@ -139,12 +158,36 @@ tool accidentally gains one.
 
 Every tool page states which processing mode applies:
 
-- **In your browser** — the tool runs on your device; nothing is uploaded.
-- **On a TOOLZEN server with temporary storage** — the file is uploaded over HTTPS, processed, and
-  deleted automatically. Files are stored outside the public web root with randomised identifiers
-  and are never exposed through public URLs.
+- **In your browser** — the tool runs on your device; nothing is uploaded. This is 92 of the 101
+  tools, including every PDF, image, text, developer, security and calculator tool.
+- **Sent to an AI provider** — the seven AI tools send your text to the serverless function in
+  `api/ai.ts`, which forwards it to the configured provider and returns the reply. Nothing is
+  retained by TOOLZEN. These are the only tools where text leaves the device.
+- **On a TOOLZEN server with temporary storage** — reserved for future tools that need server-side
+  compute. No tool currently uses it.
 
-The three tools shipped in Phase 1 are all browser-only. See `/privacy` for the full policy.
+See `/privacy` for the full policy.
+
+---
+
+## AI tools
+
+The seven AI tools are implemented and tested, but they cannot run without a provider key, so they
+ship **disabled** by default. Two steps switch them on:
+
+1. Set `AI_PROVIDER_API_KEY` in the hosting environment (Vercel → Settings → Environment Variables).
+   Optionally set `AI_PROVIDER_BASE_URL` (any OpenAI-compatible endpoint) and `AI_PROVIDER_MODEL`
+   (default `gpt-4o-mini`).
+2. Build with `VITE_AI_ENABLED=true`.
+
+Until both are done, the tools stay `planned` in the registry, are excluded from the sitemap, and
+the homepage's "available today" count stays truthful. If the flag is on but the key is missing,
+the tool renders an explanation and **no controls at all** rather than a button that fails.
+
+`api/ai.ts` is the only server code in the project. It refuses client-supplied prompts — the client
+names a task and the prompts live in `src/lib/ai-tasks.ts` — so the endpoint cannot be used as a
+free general-purpose language-model proxy. It also rate limits per address and never returns or logs
+the key.
 
 ---
 
@@ -160,10 +203,11 @@ loader script is intentionally not injected; that is Phase 5 work, after provide
 ## SEO
 
 Per-route `<Seo>` component managing title, description, canonical URL, robots directives,
-Open Graph/Twitter tags and JSON-LD (`WebSite`, `FAQPage`, `SoftwareApplication`). `robots.txt` and a
-sitemap for the static routes live in `public/`. Replace the `toolzen.example` host in
-`VITE_SITE_URL`, `public/robots.txt` and `public/sitemap.xml` with your production domain before
-deploying. A build-time sitemap generator that includes every tool route is planned for Phase 5.
+Open Graph/Twitter tags and JSON-LD (`Organization`, `WebSite`, `SoftwareApplication`,
+`BreadcrumbList`, `HowTo`, `FAQPage`, plus a speakable `WebPage`). `sitemap.xml`, `robots.txt` and
+`llms.txt` are generated from the tool registry at build time and written to `dist/`, so they can
+never list a tool that is not live. Replace the `toolzen.example` host via `VITE_SITE_URL` before
+deploying.
 
 ---
 
@@ -187,11 +231,13 @@ Set `VITE_SITE_URL` to your production origin in the hosting provider's environm
 
 | Phase | Scope | Status |
 | --- | --- | --- |
-| 1 | Foundation: setup, design system, homepage, directory, search, registry, 3 tools | ✅ Complete |
-| 2 | PDF, image, text and file utilities; calculators | Planned |
-| 3 | Developer tools, defensive security tools, document conversion | Planned |
-| 4 | Optional auth, admin dashboard, analytics, secure server processing | Planned |
-| 5 | Ad integration, SEO completion, performance/a11y/security review, launch | Planned |
+| 1 | Foundation: setup, design system, homepage, directory, search, registry | ✅ Complete |
+| 2 | PDF, image, text and file utilities; calculators; QR and barcode | ✅ Complete — 92 tools live |
+| 3 | Developer tools, defensive security tools, document conversion | ✅ Complete |
+| 4 | Secure server processing: the AI endpoint | ✅ Built — enable with a provider key |
+| 5 | Ad integration, performance/a11y/security review, launch | Pending |
+| — | Optional auth, admin dashboard, analytics | Not started, not promised |
+| — | Unlock PDF / Protect PDF | Blocked — `pdf-lib` has no RC4 or AES support |
 
 ---
 

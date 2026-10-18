@@ -239,7 +239,9 @@ export function ToolPage() {
                   ? 'In your browser — files and text never leave your device'
                   : tool.processingMode === 'network'
                     ? 'In your browser, with a direct request to a public API sent from your device'
-                    : 'On a TOOLZEN server with temporary storage'
+                    : tool.processingMode === 'ai'
+                      ? 'Sent to a TOOLZEN server, then to an AI provider — this is the only mode where your text leaves your device'
+                      : 'On a TOOLZEN server with temporary storage'
               }
             />
             {tool.maxFileSize && <DetailRow label="Maximum size" value={tool.maxFileSize} />}

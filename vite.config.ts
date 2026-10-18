@@ -3,7 +3,7 @@ import { loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import { fileURLToPath, URL } from 'node:url'
 
-import { tools } from './src/data/tools'
+import { tools, withAiStatus } from './src/data/tools'
 import { categories, categoryName, categoryRoute } from './src/data/categories'
 
 // Inlined rather than imported from src/lib/site.ts, because that module reads
@@ -31,7 +31,7 @@ const staticRoutes: { path: string; changefreq: string; priority: string }[] = [
  * marked `noindex` on their pages) so the site never promotes pages for tools
  * that do not work yet — no thin, mass-produced SEO pages.
  */
-function buildSitemap(siteUrl: string): string {
+function buildSitemap(siteUrl: string, registry: typeof tools): string {
   const entries: { loc: string; changefreq: string; priority: string; lastmod?: string }[] = [
     ...staticRoutes.map((route) => ({
       loc: `${siteUrl}${route.path}`,
@@ -43,7 +43,7 @@ function buildSitemap(siteUrl: string): string {
       changefreq: 'weekly',
       priority: '0.7',
     })),
-    ...tools
+    ...registry
       .filter((tool) => tool.status === 'live')
       .map((tool) => ({
         loc: `${siteUrl}${tool.route}`,
@@ -128,9 +128,9 @@ Sitemap: ${siteUrl}/sitemap.xml
  * Generated from the registry so it can never claim a tool is available when it
  * is not (GEO depends on being accurate, not on being flattering).
  */
-function buildLlmsTxt(siteUrl: string): string {
-  const live = tools.filter((tool) => tool.status === 'live')
-  const planned = tools.filter((tool) => tool.status === 'planned')
+function buildLlmsTxt(siteUrl: string, registry: typeof tools): string {
+  const live = registry.filter((tool) => tool.status === 'live')
+  const planned = registry.filter((tool) => tool.status === 'planned')
 
   const lines: string[] = [
     `# ${SITE_NAME}`,
@@ -166,7 +166,7 @@ function buildLlmsTxt(siteUrl: string): string {
 
   lines.push('', '## Categories', '')
   for (const category of categories) {
-    const inCategory = tools.filter((tool) => tool.categories.includes(category.id))
+    const inCategory = registry.filter((tool) => tool.categories.includes(category.id))
     const liveCount = inCategory.filter((tool) => tool.status === 'live').length
     lines.push(
       `- [${category.name}](${siteUrl}${categoryRoute(category.id)}): ${category.tagline} (${liveCount} available, ${inCategory.length - liveCount} planned)`,
@@ -201,7 +201,7 @@ function buildLlmsTxt(siteUrl: string): string {
 }
 
 /** Injects the production origin and emits generated SEO assets. */
-function seoAssetsPlugin(siteUrl: string): Plugin {
+function seoAssetsPlugin(siteUrl: string, registry: typeof tools): Plugin {
   return {
     name: 'toolzen-seo-assets',
 
@@ -214,7 +214,7 @@ function seoAssetsPlugin(siteUrl: string): Plugin {
         const url = req.url?.split('?')[0]
         if (url === '/sitemap.xml') {
           res.setHeader('Content-Type', 'application/xml; charset=utf-8')
-          res.end(buildSitemap(siteUrl))
+          res.end(buildSitemap(siteUrl, registry))
           return
         }
         if (url === '/robots.txt') {
@@ -224,7 +224,7 @@ function seoAssetsPlugin(siteUrl: string): Plugin {
         }
         if (url === '/llms.txt') {
           res.setHeader('Content-Type', 'text/plain; charset=utf-8')
-          res.end(buildLlmsTxt(siteUrl))
+          res.end(buildLlmsTxt(siteUrl, registry))
           return
         }
         next()
@@ -232,9 +232,9 @@ function seoAssetsPlugin(siteUrl: string): Plugin {
     },
 
     generateBundle() {
-      this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: buildSitemap(siteUrl) })
+      this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: buildSitemap(siteUrl, registry) })
       this.emitFile({ type: 'asset', fileName: 'robots.txt', source: buildRobots(siteUrl) })
-      this.emitFile({ type: 'asset', fileName: 'llms.txt', source: buildLlmsTxt(siteUrl) })
+      this.emitFile({ type: 'asset', fileName: 'llms.txt', source: buildLlmsTxt(siteUrl, registry) })
     },
   }
 }
@@ -243,9 +243,13 @@ function seoAssetsPlugin(siteUrl: string): Plugin {
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VITE_')
   const siteUrl = (env.VITE_SITE_URL || DEFAULT_SITE_URL).replace(/\/$/, '')
+  // The registry the app builds is the same one the sitemap describes, so the
+  // AI flag has to be applied here too — this file runs in plain Node, where
+  // `import.meta.env` is not populated.
+  const registry = withAiStatus(tools, env.VITE_AI_ENABLED === 'true')
 
   return {
-    plugins: [react(), seoAssetsPlugin(siteUrl)],
+    plugins: [react(), seoAssetsPlugin(siteUrl, registry)],
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -268,7 +272,7 @@ export default defineConfig(({ mode }) => {
       environment: 'jsdom',
       setupFiles: ['./vitest.setup.ts'],
       css: false,
-      include: ['src/**/*.{test,spec}.{ts,tsx}'],
+      include: ['src/**/*.{test,spec}.{ts,tsx}', 'api/**/*.{test,spec}.ts'],
     },
   }
 })

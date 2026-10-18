@@ -16,6 +16,37 @@ import type { Tool } from '@/types/tool'
  */
 type ToolSeed = Omit<Tool, 'route'>
 
+/**
+ * Whether the AI backend is provisioned for this build.
+ *
+ * The seven AI tools are implemented, but they cannot run without a
+ * server-side provider key. Shipping them as "live" on a deployment with no
+ * key would make the homepage's "available today" count a lie, so their status
+ * follows this flag: planned by default, live only when the deployer has set
+ * both the key and this flag.
+ *
+ * `vite.config.ts` also imports this module, in plain Node, where Vite has not
+ * populated `import.meta.env`. The optional chain keeps that import from
+ * throwing; the config applies its own copy of the flag when it generates the
+ * sitemap.
+ */
+export const AI_TOOL_IDS: ReadonlySet<string> = new Set([
+  'ai-text-summarizer',
+  'ai-writing-assistant',
+  'ai-grammar-helper',
+  'ai-email-drafting',
+  'ai-document-assistant',
+  'ai-translation',
+  'ai-text-rewriter',
+])
+
+const AI_ENABLED = import.meta.env?.VITE_AI_ENABLED === 'true'
+
+/** Apply the AI flag to a registry, so the config and the app agree. */
+export function withAiStatus<T extends ToolSeed>(list: T[], aiEnabled: boolean): T[] {
+  return list.map((tool) => (AI_TOOL_IDS.has(tool.id) ? { ...tool, status: aiEnabled ? 'live' : 'planned' } : tool))
+}
+
 const seeds: ToolSeed[] = [
   /* ------------------------------------------------------------------ */
   /* TEXT — live                                                         */
@@ -3912,7 +3943,7 @@ const seeds: ToolSeed[] = [
   },
 
   /* ------------------------------------------------------------------ */
-  /* AI — planned (requires a configured provider)                       */
+  /* AI — live only when the backend is provisioned                      */
   /* ------------------------------------------------------------------ */
   {
     id: 'ai-text-summarizer',
@@ -3921,13 +3952,41 @@ const seeds: ToolSeed[] = [
     categories: ['ai'],
     keywords: ['summarise', 'summarize', 'tl;dr', 'shorten'],
     icon: 'sparkles',
-    status: 'planned',
+    status: AI_ENABLED ? 'live' : 'planned',
     inputFormat: 'Text',
     outputFormat: 'Summary',
-    processingMode: 'server',
+    processingMode: 'ai',
     addedAt: '2026-10-17',
+    instructions: [
+      'Paste the article, report or notes you want shortened.',
+      'Choose whether you want about three sentences, one paragraph, or several paragraphs.',
+      'Press Summarise. The text goes to TOOLZEN’s server and then to the AI provider.',
+      'Read the result before you rely on it — a summary can drop a caveat that mattered.',
+    ],
+    faqs: [
+      {
+        question: 'Is my text private when I use an AI tool?',
+        answer:
+          'No, and this is the one category where that is true. The text is sent to TOOLZEN’s server, which forwards it to the AI provider to produce the summary. Every other tool on TOOLZEN runs entirely in your browser; these seven cannot, because producing new text needs a language model and a key that ships to a browser is a key anyone can take.',
+      },
+      {
+        question: 'How much text can I summarise at once?',
+        answer:
+          'Up to 20,000 characters, which is roughly 3,000 words. The limit exists because the model has a finite context and because an endpoint that accepts unlimited text can be made expensive by a single request. The tool counts the characters as you paste.',
+      },
+      {
+        question: 'Will the summary invent things that were not in the source?',
+        answer:
+          'The instruction given to the model is to use only facts from the source and to say so if the text is too short to summarise. That reduces invention but does not eliminate it. Treat the summary as a draft and check anything you intend to publish.',
+      },
+      {
+        question: 'Does it cost me anything?',
+        answer:
+          'No. There is no charge and no account. TOOLZEN pays for the model call, which is why there is a per-visitor request limit rather than unlimited use.',
+      },
+    ],
     privacyNote:
-      'Requires a configured AI provider. Text is sent to that provider to produce the result, and usage limits apply.',
+      'Text is sent to TOOLZEN’s server and on to the AI provider to produce the result. This is the only tool category that leaves your browser.',
   },
   {
     id: 'ai-writing-assistant',
@@ -3936,12 +3995,40 @@ const seeds: ToolSeed[] = [
     categories: ['ai'],
     keywords: ['writing', 'assistant', 'draft', 'tone'],
     icon: 'wand',
-    status: 'planned',
-    inputFormat: 'Prompt and text',
-    outputFormat: 'Suggested text',
-    processingMode: 'server',
+    status: AI_ENABLED ? 'live' : 'planned',
+    inputFormat: 'Brief',
+    outputFormat: 'Draft text',
+    processingMode: 'ai',
     addedAt: '2026-10-17',
-    privacyNote: 'Requires a configured AI provider. Usage limits apply.',
+    instructions: [
+      'Describe what you need written: the topic, the audience, and the points to cover.',
+      'Pick a tone and whether you want paragraphs or bullets.',
+      'Press Write. Your brief goes to TOOLZEN’s server and then to the AI provider.',
+      'Edit the draft. It is a starting point, not a finished piece.',
+    ],
+    faqs: [
+      {
+        question: 'What makes a good brief?',
+        answer:
+          'Say who it is for, what it needs to achieve, and any facts that must appear. The model is told not to add claims your brief does not support, so detail you leave out is detail the draft will not contain.',
+      },
+      {
+        question: 'Is my brief private?',
+        answer:
+          'No. It is sent to TOOLZEN’s server and forwarded to the AI provider. Do not paste confidential material into any AI tool here.',
+      },
+      {
+        question: 'Can it match a specific writing style?',
+        answer:
+          'It can follow a tone — neutral, friendly, formal or persuasive — and a shape, paragraphs or bullets. It does not clone a named author’s style, and asking it to would produce an imitation rather than the real thing.',
+      },
+      {
+        question: 'Is the draft ready to publish?',
+        answer:
+          'No. Read it, check every factual claim, and adjust the voice. The tool produces text, not verified fact.',
+      },
+    ],
+    privacyNote: 'Your brief is sent to TOOLZEN’s server and on to the AI provider.',
   },
   {
     id: 'ai-grammar-helper',
@@ -3950,12 +4037,40 @@ const seeds: ToolSeed[] = [
     categories: ['ai'],
     keywords: ['grammar', 'spelling', 'punctuation', 'proofread'],
     icon: 'circle-check',
-    status: 'planned',
+    status: AI_ENABLED ? 'live' : 'planned',
     inputFormat: 'Text',
-    outputFormat: 'Corrected text and explanations',
-    processingMode: 'server',
+    outputFormat: 'Corrected text and a list of changes',
+    processingMode: 'ai',
     addedAt: '2026-10-17',
-    privacyNote: 'Requires a configured AI provider. Usage limits apply.',
+    instructions: [
+      'Paste the text you want checked.',
+      'Choose how strict the check should be — clear errors only, errors and awkward phrasing, or a full tighten.',
+      'Press Proofread. The text goes to TOOLZEN’s server and then to the AI provider.',
+      'Compare the corrected text with the original, and read the list of changes underneath.',
+    ],
+    faqs: [
+      {
+        question: 'Will it rewrite my voice?',
+        answer:
+          'The instruction is to fix errors without changing your meaning or voice, and the strictness setting controls how much rephrasing is allowed. On the loosest setting it only fixes definite errors. On the strictest it may also tighten wordy phrasing, which is a matter of taste — read the changes list before accepting them.',
+      },
+      {
+        question: 'How do I know what it changed?',
+        answer:
+          'The reply is split into the corrected text and a list of changes with the reason for each. If the model returns no marker, the tool shows the whole reply as corrected text rather than guessing where the boundary was.',
+      },
+      {
+        question: 'Is my text private?',
+        answer:
+          'No. It is sent to TOOLZEN’s server and forwarded to the AI provider. If the text is confidential, do not paste it.',
+      },
+      {
+        question: 'Does it catch everything?',
+        answer:
+          'No proofreader does. It is good at spelling, agreement and punctuation, and less reliable on meaning — a sentence can be grammatically perfect and still say the wrong thing. Read the result.',
+      },
+    ],
+    privacyNote: 'Your text is sent to TOOLZEN’s server and on to the AI provider.',
   },
   {
     id: 'ai-email-drafting',
@@ -3964,12 +4079,40 @@ const seeds: ToolSeed[] = [
     categories: ['ai'],
     keywords: ['email', 'draft', 'compose', 'reply'],
     icon: 'mail',
-    status: 'planned',
-    inputFormat: 'Brief and options',
-    outputFormat: 'Email draft',
-    processingMode: 'server',
+    status: AI_ENABLED ? 'live' : 'planned',
+    inputFormat: 'Brief',
+    outputFormat: 'Email draft with a subject line',
+    processingMode: 'ai',
     addedAt: '2026-10-17',
-    privacyNote: 'Requires a configured AI provider. Usage limits apply.',
+    instructions: [
+      'Describe what the email needs to say, in plain words.',
+      'Pick a tone — professional, friendly, firm or apologetic — and a length.',
+      'Press Draft an email. The brief goes to TOOLZEN’s server and then to the AI provider.',
+      'Fill in any square-bracket placeholders before you send it.',
+    ],
+    faqs: [
+      {
+        question: 'Why are there square brackets in the draft?',
+        answer:
+          'The model is told never to invent dates, prices or names. When something is genuinely needed and your brief did not supply it, it leaves a clear placeholder such as [date] rather than guessing a plausible-looking value. That is deliberate.',
+      },
+      {
+        question: 'Does it write a subject line?',
+        answer:
+          'Yes. The draft starts with a subject line on its own line, then the body.',
+      },
+      {
+        question: 'Is my brief private?',
+        answer:
+          'No. It is sent to TOOLZEN’s server and forwarded to the AI provider. Do not describe anything confidential.',
+      },
+      {
+        question: 'Should I send the draft as it is?',
+        answer:
+          'Read it first, and check the facts, the names and the placeholders. An email that reads well but states the wrong date is worse than one that reads badly.',
+      },
+    ],
+    privacyNote: 'Your brief is sent to TOOLZEN’s server and on to the AI provider.',
   },
   {
     id: 'ai-document-assistant',
@@ -3978,13 +4121,40 @@ const seeds: ToolSeed[] = [
     categories: ['ai'],
     keywords: ['document', 'questions', 'assistant', 'q&a'],
     icon: 'file-text',
-    status: 'planned',
-    inputFormat: 'Document',
-    outputFormat: 'Answers',
-    processingMode: 'server',
-    maxFileSize: '10 MB per file',
+    status: AI_ENABLED ? 'live' : 'planned',
+    inputFormat: 'Pasted document and a question',
+    outputFormat: 'Answer grounded in the document',
+    processingMode: 'ai',
     addedAt: '2026-10-17',
-    privacyNote: 'Requires a configured AI provider. Usage limits apply.',
+    instructions: [
+      'Paste the document you want to ask about.',
+      'Type the question underneath it.',
+      'Press Answer from a document. Both go to TOOLZEN’s server and then to the AI provider.',
+      'If the answer is not in the document, the tool says so instead of guessing.',
+    ],
+    faqs: [
+      {
+        question: 'What happens if the answer is not in the document?',
+        answer:
+          'The tool is instructed to reply "The document does not say" and stop, rather than filling the gap with general knowledge. That is the whole point of a grounded question: an answer you can trace back to a sentence you pasted.',
+      },
+      {
+        question: 'Can I upload a PDF?',
+        answer:
+          'Not directly. This tool takes pasted text, so open the PDF, select the text and paste it in. A scanned PDF has no text layer to select — the PDF to Text tool explains why, and it will not run optical character recognition.',
+      },
+      {
+        question: 'How long can the document be?',
+        answer:
+          'Up to 20,000 characters, roughly 3,000 words. Longer documents need to be split, because the model has a finite context and because a huge paste is expensive to process.',
+      },
+      {
+        question: 'Is my document private?',
+        answer:
+          'No. It is sent to TOOLZEN’s server and forwarded to the AI provider. This is the most sensitive of the seven tools for that reason — do not paste contracts, medical records or anything confidential.',
+      },
+    ],
+    privacyNote: 'Your document is sent to TOOLZEN’s server and on to the AI provider.',
   },
   {
     id: 'ai-translation',
@@ -3993,12 +4163,40 @@ const seeds: ToolSeed[] = [
     categories: ['ai'],
     keywords: ['translate', 'language', 'translation'],
     icon: 'languages',
-    status: 'planned',
-    inputFormat: 'Text and language pair',
+    status: AI_ENABLED ? 'live' : 'planned',
+    inputFormat: 'Text and target language',
     outputFormat: 'Translated text',
-    processingMode: 'server',
+    processingMode: 'ai',
     addedAt: '2026-10-17',
-    privacyNote: 'Requires a configured AI provider. Usage limits apply.',
+    instructions: [
+      'Paste the text you want translated.',
+      'Choose the language to translate into.',
+      'Press Translate. The text goes to TOOLZEN’s server and then to the AI provider.',
+      'Have a speaker check anything important before you publish it.',
+    ],
+    faqs: [
+      {
+        question: 'Which languages are supported?',
+        answer:
+          'Spanish, French, German, Portuguese, Hindi, Gujarati, Arabic, Chinese (Simplified), Japanese and Russian. The list is fixed rather than free text so a language name cannot carry an instruction into the prompt.',
+      },
+      {
+        question: 'Does it keep the paragraph breaks?',
+        answer:
+          'Yes, the instruction is to preserve paragraph breaks and lists exactly. In practice a long document can still drift, so check the shape of the output as well as the words.',
+      },
+      {
+        question: 'Can I trust it for a legal or medical document?',
+        answer:
+          'No. Machine translation can be confidently wrong on exactly the terms that matter most in those documents. Use a qualified human translator for anything with consequences.',
+      },
+      {
+        question: 'Is my text private?',
+        answer:
+          'No. It is sent to TOOLZEN’s server and forwarded to the AI provider.',
+      },
+    ],
+    privacyNote: 'Your text is sent to TOOLZEN’s server and on to the AI provider.',
   },
   {
     id: 'ai-text-rewriter',
@@ -4007,17 +4205,45 @@ const seeds: ToolSeed[] = [
     categories: ['ai'],
     keywords: ['rewrite', 'paraphrase', 'reword', 'tone'],
     icon: 'refresh',
-    status: 'planned',
-    inputFormat: 'Text and options',
+    status: AI_ENABLED ? 'live' : 'planned',
+    inputFormat: 'Text and style',
     outputFormat: 'Rewritten text',
-    processingMode: 'server',
+    processingMode: 'ai',
     addedAt: '2026-10-17',
-    privacyNote: 'Requires a configured AI provider. Usage limits apply.',
+    instructions: [
+      'Paste the text you want rewritten.',
+      'Choose the style: simpler, shorter, more formal, or more engaging.',
+      'Press Rewrite. The text goes to TOOLZEN’s server and then to the AI provider.',
+      'Check that no fact changed while the wording did.',
+    ],
+    faqs: [
+      {
+        question: 'How is this different from the Grammar Helper?',
+        answer:
+          'The Grammar Helper fixes errors and leaves the wording as close to yours as it can. The Rewriter changes the wording on purpose — simpler, shorter, more formal or more engaging — while keeping the meaning and the facts.',
+      },
+      {
+        question: 'Will it drop detail when I choose Shorter?',
+        answer:
+          'It is instructed to cut only what does not carry meaning. That is an instruction, not a guarantee: compare the two texts before you use the shorter one, especially if it contains figures or conditions.',
+      },
+      {
+        question: 'Can it make text pass a plagiarism checker?',
+        answer:
+          'That is not what it is for, and it would not be honest to claim it. Rewriting someone else’s work to disguise its origin is plagiarism whatever the wording. Use it on your own text, to say the same thing better.',
+      },
+      {
+        question: 'Is my text private?',
+        answer:
+          'No. It is sent to TOOLZEN’s server and forwarded to the AI provider.',
+      },
+    ],
+    privacyNote: 'Your text is sent to TOOLZEN’s server and on to the AI provider.',
   },
 ]
 
 /** Full registry with routes derived from each tool's id. */
-export const tools: Tool[] = seeds.map((tool) => ({
+export const tools: Tool[] = withAiStatus(seeds, AI_ENABLED).map((tool) => ({
   ...tool,
   route: `/tools/${tool.id}`,
 }))

@@ -12,7 +12,7 @@ export type ToolStatus = 'live' | 'planned'
  *               request never passes through a TOOLZEN server.
  * - `server`  — would require a TOOLZEN backend. No tool uses this today.
  */
-export type ProcessingMode = 'client' | 'network' | 'server'
+export type ProcessingMode = 'client' | 'network' | 'server' | 'ai'
 
 /** Identifier for one of TOOLZEN's twelve tool categories. */
 export type ToolCategoryId =

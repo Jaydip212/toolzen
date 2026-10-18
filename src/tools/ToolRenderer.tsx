@@ -113,6 +113,15 @@ const toolComponents: Record<string, LazyExoticComponent<ComponentType>> = {
   /* QR & barcode */
   'qr-code-generator': lazy(() => import('./qr-code-generator')),
   'barcode-generator': lazy(() => import('./barcode-generator')),
+
+  /* AI — these call the serverless endpoint, not the browser alone */
+  'ai-text-summarizer': lazy(() => import('./ai-text-summarizer')),
+  'ai-writing-assistant': lazy(() => import('./ai-writing-assistant')),
+  'ai-grammar-helper': lazy(() => import('./ai-grammar-helper')),
+  'ai-email-drafting': lazy(() => import('./ai-email-drafting')),
+  'ai-document-assistant': lazy(() => import('./ai-document-assistant')),
+  'ai-translation': lazy(() => import('./ai-translation')),
+  'ai-text-rewriter': lazy(() => import('./ai-text-rewriter')),
 }
 
 /** Resolve the component for a tool id, if it has been implemented. */
