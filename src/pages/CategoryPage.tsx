@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { categories, categoryRoute, getCategory } from '@/data/categories'
 import { toolsByCategory } from '@/data/registry'
@@ -7,6 +8,8 @@ import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/Badge'
 import { Icon } from '@/components/ui/Icon'
 import { AdSlot } from '@/components/ads/AdSlot'
+import { SponsorSlot } from '@/components/ads/SponsorSlot'
+import { trackEvent } from '@/lib/analytics'
 import { Seo } from '@/components/seo/Seo'
 import { ToolCard } from '@/components/tools/ToolCard'
 import { PageShell } from '@/components/layout/PageShell'
@@ -15,6 +18,10 @@ import { NotFound } from './NotFound'
 export function CategoryPage() {
   const { categoryId = '' } = useParams()
   const category = getCategory(categoryId as ToolCategoryId)
+
+  useEffect(() => {
+    trackEvent('category_view', { categoryId })
+  }, [categoryId])
 
   if (!category) return <NotFound />
 
@@ -85,6 +92,7 @@ export function CategoryPage() {
         </header>
 
         <AdSlot placement="category" className="mt-8" />
+        <SponsorSlot placement="category" />
 
         {live.length > 0 ? (
           <section className="mt-10" aria-labelledby="available-heading">

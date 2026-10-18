@@ -101,21 +101,27 @@ export function Privacy() {
 
         <Section id="what-we-collect" title="What we do collect">
           <p>
-            We collect as little as possible. At present, the platform does not require accounts and
-            does not run third-party analytics. Standard server and CDN logs may record technical
-            request data such as IP address, user agent and timestamps for security and reliability
-            purposes. These logs are not used to profile you and do not contain the contents of your
-            files.
+            We collect as little as possible. The platform does not require accounts and does not
+            run third-party analytics. The software contains an optional usage counter that is
+            switched off unless the operator configures it; when on, it records only that a page or
+            tool was opened or a file downloaded — never your inputs, file contents, search text or
+            file names. Standard server and CDN logs may record technical request data such as IP
+            address, user agent and timestamps for security and reliability purposes. These logs are
+            not used to profile you and do not contain the contents of your files.
           </p>
         </Section>
 
         <Section id="advertising" title="Advertising">
           <p>
             TOOLZEN is funded by advertising. Advertisement slots are kept separate from tool
-            functionality, and ad code never has access to your files or your input. If and when an
-            advertising network is integrated, that network may set its own cookies or identifiers
-            under its own privacy policy, and we will update this page before that happens. Ad slots
-            are disabled by default and are only enabled after the required provider approvals.
+            functionality, and ad code never has access to your files or your input. Ads are
+            currently disabled; when an advertising network is integrated, it may set its own cookies
+            or identifiers under its own privacy policy, and this page will be updated before that
+            happens. Cards labelled "Sponsored" are direct placements negotiated with the operator,
+            marked with rel="sponsored" for search engines, and open in a new tab. Neither
+            mechanism stores your files, and neither can intercept a download button. Ad and
+            sponsorship containers are placed so they cannot cover tool controls, results or
+            uploads, and no format on this site opens pop-ups or forced redirects.
           </p>
         </Section>
 
@@ -146,9 +152,9 @@ export function Privacy() {
 
         <Section id="contact" title="Contact">
           <p>
-            A dedicated contact channel for privacy questions will be published alongside the
-            production launch. Until then, this policy describes the intended behaviour of the
-            platform as it is built.
+            The contact page lists how to reach the operator. Where contact details have not yet
+            been supplied, the page says so plainly rather than publishing a placeholder address;
+            nothing on this site invents a company name, registration number or phone number.
           </p>
         </Section>
 

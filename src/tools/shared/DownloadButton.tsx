@@ -1,6 +1,7 @@
 import { Button, type ButtonProps } from '@/components/ui/Button'
 import { Icon } from '@/components/ui/Icon'
 import { downloadBlob, downloadDataUrl, downloadText } from '@/lib/download'
+import { trackEvent } from '@/lib/analytics'
 
 export interface DownloadButtonProps extends Omit<ButtonProps, 'onClick' | 'children'> {
   /** Name the file is saved as, including extension. */
@@ -34,6 +35,8 @@ export function DownloadButton({
   const hasOutput = Boolean(blob) || Boolean(dataUrl) || (text !== undefined && text.length > 0)
 
   function handleDownload() {
+    // Counted without any filename or content — filenames can embed user text.
+    trackEvent('tool_download')
     if (blob) downloadBlob(blob, filename)
     else if (dataUrl) downloadDataUrl(dataUrl, filename)
     else if (text !== undefined) downloadText(text, filename, mimeType)

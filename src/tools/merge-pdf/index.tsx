@@ -149,6 +149,7 @@ export default function MergePdf() {
     <div className="flex flex-col gap-5">
       <ToolPanel title="1. Choose the PDFs">
         <FileDrop
+          maxFileSizeBytes={50 * 1024 * 1024}
           accept="application/pdf,.pdf"
           multiple
           label="Drop PDFs here, or choose files"

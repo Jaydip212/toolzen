@@ -9,6 +9,7 @@ const platformLinks = [
   { label: 'About', to: '/about' },
   { label: 'Privacy Policy', to: '/privacy' },
   { label: 'Terms of Service', to: '/terms' },
+  { label: 'Contact', to: '/contact' },
 ]
 
 export function Footer() {

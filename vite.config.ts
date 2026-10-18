@@ -22,6 +22,7 @@ const staticRoutes: { path: string; changefreq: string; priority: string }[] = [
   { path: '/about', changefreq: 'monthly', priority: '0.5' },
   { path: '/privacy', changefreq: 'monthly', priority: '0.4' },
   { path: '/terms', changefreq: 'monthly', priority: '0.4' },
+  { path: '/contact', changefreq: 'yearly', priority: '0.3' },
 ]
 
 /**
@@ -193,6 +194,7 @@ function buildLlmsTxt(siteUrl: string): string {
     `- [About ${SITE_NAME}](${siteUrl}/about): mission, principles and business model`,
     `- [Privacy Policy](${siteUrl}/privacy): local vs server processing, and file retention`,
     `- [Terms of Service](${siteUrl}/terms): acceptable use and disclaimers`,
+    `- [Contact](${siteUrl}/contact): reaching the operator`,
     `- [All tools](${siteUrl}/tools): the complete directory`,
     '',
   )

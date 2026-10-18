@@ -12,6 +12,7 @@ import { Icon, type IconName } from '@/components/ui/Icon'
 import { Input } from '@/components/ui/Form'
 import { Badge } from '@/components/ui/Badge'
 import { AdSlot } from '@/components/ads/AdSlot'
+import { SponsorSlot } from '@/components/ads/SponsorSlot'
 import { Seo } from '@/components/seo/Seo'
 import { CategoryCard } from '@/components/tools/CategoryCard'
 import { ToolCard } from '@/components/tools/ToolCard'
@@ -275,6 +276,8 @@ export function Home() {
           </div>
         </section>
       )}
+
+      <SponsorSlot placement="home" />
 
       {/* ---------------------------------------------------------------- */}
       {/* Categories                                                        */}

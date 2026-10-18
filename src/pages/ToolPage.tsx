@@ -1,4 +1,4 @@
-import { Suspense } from 'react'
+import { Suspense, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getTool, relatedTools } from '@/data/registry'
 import { categoryName, categoryRoute } from '@/data/categories'
@@ -17,6 +17,7 @@ import { Icon } from '@/components/ui/Icon'
 import { ErrorState } from '@/components/ui/ErrorState'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { AdSlot } from '@/components/ads/AdSlot'
+import { trackEvent } from '@/lib/analytics'
 import { Seo } from '@/components/seo/Seo'
 import { ToolCard } from '@/components/tools/ToolCard'
 import { PageShell } from '@/components/layout/PageShell'
@@ -56,6 +57,11 @@ export function ToolPage() {
   if (!tool) return <NotFound />
 
   const ToolComponent = getToolComponent(tool.id)
+  // Counted once per mounted tool page, with the registry id only.
+  useEffect(() => {
+    if (tool.status === 'live') trackEvent('tool_open', { toolId: tool.id })
+  }, [tool.id, tool.status])
+
   const isAvailable = tool.status === 'live' && Boolean(ToolComponent)
   const primaryCategory = tool.categories[0]
   const related = relatedTools(tool, 4)
@@ -137,8 +143,11 @@ export function ToolPage() {
 
         <AdSlot placement="tool-top" className="mt-8" />
 
-        {/* Working area */}
-        <section className="mt-8" aria-label={`${tool.name} workspace`}>
+        {/* Working area. On xl screens a sidebar column sits beside it — the
+            slot is in normal flow beside the workspace, never overlapping or
+            covering the tool's controls, results or download buttons. */}
+        <div className="mt-8 grid gap-8 xl:grid-cols-[minmax(0,1fr)_240px]">
+          <section aria-label={`${tool.name} workspace`}>
           {isAvailable && ToolComponent ? (
             <div className="tz-card p-5 sm:p-6">
               <Suspense fallback={<ToolWorkspaceFallback />}>
@@ -178,7 +187,14 @@ export function ToolPage() {
               </Link>
             </div>
           )}
-        </section>
+          </section>
+
+          <aside className="hidden xl:block" aria-label="Sponsored space">
+            <div className="sticky top-20">
+              <AdSlot placement="sidebar" minHeight={400} />
+            </div>
+          </aside>
+        </div>
 
         {/* How to use */}
         {isAvailable && tool.instructions && tool.instructions.length > 0 && (

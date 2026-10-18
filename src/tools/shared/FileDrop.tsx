@@ -13,9 +13,18 @@ export interface FileDropProps {
   label?: string
   /** Secondary line, e.g. the accepted formats and size limit. */
   hint?: string
+  /**
+   * Per-file size ceiling in bytes. Oversized files are rejected here with a
+   * clear message instead of being read into memory and crashing the tab.
+   * Defaults to 100 MB; tools whose hint promises a tighter limit pass it.
+   */
+  maxFileSizeBytes?: number
   disabled?: boolean
   className?: string
 }
+
+/** The default per-file ceiling, generous for browser-only processing. */
+export const DEFAULT_MAX_FILE_BYTES = 100 * 1024 * 1024
 
 /**
  * Accessible drag-and-drop file picker.
@@ -30,6 +39,7 @@ export function FileDrop({
   onFiles,
   label = 'Choose a file',
   hint,
+  maxFileSizeBytes = DEFAULT_MAX_FILE_BYTES,
   disabled = false,
   className,
 }: FileDropProps) {
@@ -37,14 +47,27 @@ export function FileDrop({
   // Counts enter/leave pairs so dragging over child nodes does not flicker.
   const dragDepth = useRef(0)
   const [dragging, setDragging] = useState(false)
+  const [sizeError, setSizeError] = useState<string | null>(null)
 
   const emit = useCallback(
     (list: FileList | null | undefined) => {
       if (!list || list.length === 0) return
       const files = Array.from(list)
+      const oversized = files.filter((file) => file.size > maxFileSizeBytes)
+      if (oversized.length > 0) {
+        setSizeError(
+          oversized.length === 1
+            ? `${oversized[0]!.name} is ${formatMb(oversized[0]!.size)}, over the ${formatMb(maxFileSizeBytes)} limit. Nothing was loaded.`
+            : `${oversized.length} files were over the ${formatMb(maxFileSizeBytes)} limit. Nothing was loaded.`,
+        )
+        const acceptable = files.filter((file) => file.size <= maxFileSizeBytes)
+        if (acceptable.length > 0) onFiles(multiple ? acceptable : acceptable.slice(0, 1))
+        return
+      }
+      setSizeError(null)
       onFiles(multiple ? files : files.slice(0, 1))
     },
-    [multiple, onFiles],
+    [multiple, onFiles, maxFileSizeBytes],
   )
 
   function openPicker() {
@@ -116,6 +139,11 @@ export function FileDrop({
         {dragging ? 'Drop to load' : label}
       </span>
       {hint && <span className="max-w-sm text-xs leading-relaxed text-muted">{hint}</span>}
+      {sizeError && (
+        <span role="alert" className="max-w-sm text-xs font-medium leading-relaxed text-danger">
+          {sizeError}
+        </span>
+      )}
 
       <input
         ref={inputRef}
@@ -135,3 +163,9 @@ export function FileDrop({
 }
 
 export default FileDrop
+
+/** Human-readable megabytes for size messages. */
+function formatMb(bytes: number): string {
+  const mb = bytes / (1024 * 1024)
+  return mb >= 10 ? `${Math.round(mb)} MB` : `${mb.toFixed(1)} MB`
+}

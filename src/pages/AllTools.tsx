@@ -6,6 +6,7 @@ import type { ToolCategoryId } from '@/types/tool'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/Button'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { trackEvent } from '@/lib/analytics'
 import { Icon } from '@/components/ui/Icon'
 import { Input, Select } from '@/components/ui/Form'
 import { Seo } from '@/components/seo/Seo'
@@ -31,6 +32,8 @@ export function AllTools() {
     if (next.trim()) params.set('q', next)
     else params.delete('q')
     setSearchParams(params, { replace: true })
+    // The query text is deliberately not sent — counts only.
+    if (next.trim()) trackEvent('search_performed')
   }
 
   const results = useMemo(
