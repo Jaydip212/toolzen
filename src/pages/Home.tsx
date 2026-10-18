@@ -2,8 +2,9 @@ import { useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { categories, categoryRoute } from '@/data/categories'
-import { featuredTools, liveTools, platformStats, recentlyAddedTools } from '@/data/registry'
-import { SITE_DEFINITION, SITE_TAGLINE } from '@/lib/site'
+import { getTool, platformStats, recentlyAddedTools } from '@/data/registry'
+import type { Tool } from '@/types/tool'
+import { SITE_DEFINITION } from '@/lib/site'
 import { compactSchemas, faqSchema, speakableSchema } from '@/lib/schema'
 import type { FaqEntry } from '@/types/tool'
 import { buttonClasses } from '@/components/ui/Button'
@@ -14,6 +15,25 @@ import { AdSlot } from '@/components/ads/AdSlot'
 import { Seo } from '@/components/seo/Seo'
 import { CategoryCard } from '@/components/tools/CategoryCard'
 import { ToolCard } from '@/components/tools/ToolCard'
+
+/**
+ * The eight tools shown in the Popular section. ids, not names — each is
+ * resolved through the registry, so a renamed or unshipped tool silently
+ * drops out instead of rendering a dead card.
+ */
+const POPULAR_TOOL_IDS = [
+  'merge-pdf',
+  'compress-pdf',
+  'pdf-to-jpg',
+  'image-compressor',
+  'image-resizer',
+  'json-formatter',
+  'qr-code-generator',
+  'word-counter',
+]
+
+/** The tools shown in the hero's decorative-but-functional side panel. */
+const HERO_VISUAL_IDS = ['merge-pdf', 'image-compressor', 'qr-code-generator', 'word-counter']
 
 const reasons: { icon: IconName; title: string; body: string }[] = [
   {
@@ -61,7 +81,7 @@ const faqs: FaqEntry[] = [
   {
     question: 'Which TOOLZEN tools work right now?',
     answer:
-      'The Word Counter, Character Counter and Case Converter are available today. Every other tool is listed with a "Coming soon" label until it genuinely works.',
+      '92 tools are available today, across PDF, images, documents, text, developer, security, calculation, QR code and productivity categories. The full directory on the All Tools page always reflects the current state.',
   },
   {
     question: 'Why are some tools marked as coming soon?',
@@ -80,30 +100,65 @@ const faqs: FaqEntry[] = [
   },
 ]
 
+/** Look up a set of registry ids, keeping only tools that are live today. */
+function toolsByIds(ids: string[]): Tool[] {
+  return ids
+    .map((id) => getTool(id))
+    .filter((tool): tool is Tool => tool !== undefined && tool.status === 'live')
+}
+
+/**
+ * The hero's side panel: four real tools as small cards. They are links, not
+ * a mock-up — the fastest tools to reach are one click away from the first
+ * screen. Rendering is skipped if none of the ids resolve.
+ */
+function HeroVisual({ availableCount }: { availableCount: number }) {
+  const tiles = toolsByIds(HERO_VISUAL_IDS)
+  if (tiles.length === 0) return null
+
+  return (
+    <div className="relative hidden lg:block">
+      <div aria-hidden="true" className="absolute -inset-8 rounded-3xl bg-brand-soft/40 blur-2xl" />
+
+      <div className="relative grid grid-cols-2 gap-4">
+        {tiles.map((tool) => (
+          <Link
+            key={tool.id}
+            to={tool.route}
+            className="tz-card group flex flex-col gap-3 p-5 transition-colors hover:border-brand/40"
+          >
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-soft text-brand">
+              <Icon name={tool.icon} size={19} />
+            </span>
+            <span>
+              <span className="block text-sm font-semibold tracking-tight text-fg">
+                {tool.name}
+              </span>
+              <span className="mt-1 block text-xs leading-relaxed text-muted">
+                Runs in your browser
+              </span>
+            </span>
+          </Link>
+        ))}
+      </div>
+
+      <div className="relative mt-4 flex items-center justify-end gap-2 pr-1">
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface px-3 py-1.5 text-xs font-medium text-muted">
+          <Icon name="circle-check" size={13} className="text-brand" />
+          {availableCount} tools available today
+        </span>
+      </div>
+    </div>
+  )
+}
+
 export function Home() {
   const navigate = useNavigate()
   const [query, setQuery] = useState('')
 
   const stats = platformStats()
-  const featured = featuredTools(6)
+  const popular = toolsByIds(POPULAR_TOOL_IDS)
   const recent = recentlyAddedTools(4)
-  const available = liveTools()
-
-  // Citable facts for answer engines and AI assistants. Every value is derived
-  // from the registry, so nothing here can drift or be invented.
-  const facts = useMemo(
-    () => [
-      { label: 'Tagline', value: SITE_TAGLINE },
-      { label: 'Available today', value: String(stats.live) },
-      { label: 'On the roadmap', value: String(stats.total - stats.live) },
-      { label: 'Categories', value: String(categories.length) },
-      { label: 'Cost', value: 'Free' },
-      { label: 'Account required', value: 'No' },
-      { label: 'Default processing', value: 'In your browser' },
-      { label: 'Data selling', value: 'Never' },
-    ],
-    [stats.live, stats.total],
-  )
 
   const jsonLd = useMemo(
     () =>
@@ -136,116 +191,90 @@ export function Home() {
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 bg-gradient-to-b from-brand-soft/60 to-transparent"
         />
-        <div className="tz-container relative py-16 sm:py-24">
-          <div className="mx-auto max-w-3xl text-center">
-            <Badge variant="brand" className="mb-5">
-              <Icon name="sparkles" size={13} />
-              Free forever · No account needed
-            </Badge>
+        <div className="tz-container relative py-16 sm:py-20 lg:py-24">
+          <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
+            <div>
+              <Badge variant="brand" className="mb-5">
+                <Icon name="sparkles" size={13} />
+                100+ free online tools
+              </Badge>
 
-            <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
-              Every Tool You Need.
-              <span className="block text-brand">One Simple Place.</span>
-            </h1>
+              <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
+                Every Tool You Need.
+                <span className="block text-brand">One Simple Place.</span>
+              </h1>
 
-            <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-muted sm:text-lg">
-              Free online tools to simplify your documents, images, files, and everyday digital
-              tasks.
-            </p>
+              <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted sm:text-lg">
+                Compress PDFs, edit images, convert files, and simplify everyday digital tasks with
+                free online tools.
+              </p>
 
-            <form onSubmit={submitSearch} className="mx-auto mt-8 max-w-xl" role="search">
-              <Input
-                type="search"
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search for a tool, e.g. “word counter”…"
-                aria-label="Search tools"
-                leading={<Icon name="search" size={18} />}
-                className="h-12 text-base"
-              />
-            </form>
+              <form onSubmit={submitSearch} className="mt-8 max-w-xl" role="search">
+                <Input
+                  type="search"
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="What do you want to do today?"
+                  aria-label="Search tools"
+                  leading={<Icon name="search" size={18} />}
+                  className="h-12 text-base"
+                />
+              </form>
 
-            {available.length > 0 && (
-              <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
-                <span className="text-xs font-medium uppercase tracking-wide text-muted">
-                  Available now
-                </span>
-                {available.map((tool) => (
-                  <Link
-                    key={tool.id}
-                    to={tool.route}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface px-3 py-1.5 text-xs font-medium text-fg transition-colors hover:border-brand/40 hover:text-brand"
-                  >
-                    <Icon name={tool.icon} size={13} />
-                    {tool.name}
-                  </Link>
-                ))}
+              <div className="mt-6 flex flex-wrap items-center gap-3">
+                <Link to="/tools" className={buttonClasses({ variant: 'primary', size: 'lg' })}>
+                  <Icon name="grid" size={18} />
+                  Explore All Tools
+                </Link>
+                <Link
+                  to={categoryRoute('pdf')}
+                  className={buttonClasses({ variant: 'outline', size: 'lg' })}
+                >
+                  Explore PDF Tools
+                  <Icon name="arrow-right" size={18} />
+                </Link>
               </div>
-            )}
 
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <Link to="/tools" className={buttonClasses({ variant: 'primary', size: 'lg' })}>
-                <Icon name="grid" size={18} />
-                Browse All Tools
-              </Link>
-              <Link
-                to={categoryRoute('pdf')}
-                className={buttonClasses({ variant: 'outline', size: 'lg' })}
-              >
-                Explore PDF Tools
-                <Icon name="arrow-right" size={18} />
-              </Link>
+              <p className="mt-6 text-xs text-muted">
+                {stats.total} tools mapped across {categories.length} categories · {stats.live}{' '}
+                available today · all free
+              </p>
             </div>
 
-            <p className="mt-5 text-xs text-muted">
-              {stats.total} tools mapped across 12 categories · {stats.live} available today · all
-              free
-            </p>
+            <HeroVisual availableCount={stats.live} />
           </div>
         </div>
       </section>
 
-      <AdSlot placement="homepage-banner" className="tz-container mt-10" />
-
       {/* ---------------------------------------------------------------- */}
-      {/* Definition and key facts (AEO / GEO)                              */}
+      {/* Popular tools                                                     */}
       {/* ---------------------------------------------------------------- */}
-      <section className="tz-container mt-16" aria-labelledby="what-is-toolzen">
-        <div className="grid gap-10 lg:grid-cols-[1.15fr_1fr] lg:gap-14">
-          <div>
-            <h2 id="what-is-toolzen" className="text-2xl font-semibold tracking-tight sm:text-3xl">
-              What is TOOLZEN?
-            </h2>
-            <p id="toolzen-definition" className="mt-4 text-base leading-relaxed text-fg">
-              {SITE_DEFINITION}
-            </p>
-            <p className="mt-4 text-sm leading-relaxed text-muted sm:text-base">
-              TOOLZEN is built around a simple idea: most everyday digital tasks — counting words,
-              converting an image, checking a file hash — should not require installing software,
-              creating an account or uploading your data to a stranger. Every tool states plainly
-              whether it runs in your browser or on a server, so you always know what happens to
-              your files.
-            </p>
-            <p className="mt-4 text-sm leading-relaxed text-muted sm:text-base">
-              The platform is organised into {categories.length} categories covering PDF and document
-              work, images, text, file conversion, developer utilities, defensive security,
-              calculations, QR codes, colour and design, productivity and AI assistance. It is free
-              to use and funded by advertising.
-            </p>
+      {popular.length > 0 && (
+        <section className="tz-container mt-16" aria-labelledby="popular-heading">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div className="max-w-2xl">
+              <h2 id="popular-heading" className="text-2xl font-semibold tracking-tight sm:text-3xl">
+                Popular tools
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-muted sm:text-base">
+                The tools people reach for most — merge a PDF, shrink an image, format some JSON.
+              </p>
+            </div>
+            <Link
+              to="/tools"
+              className="text-sm font-medium text-brand transition-colors hover:underline"
+            >
+              View all tools →
+            </Link>
           </div>
 
-          <dl className="grid grid-cols-2 gap-3 self-start sm:gap-4">
-            {facts.map((fact) => (
-              <div key={fact.label} className="rounded-xl border border-line bg-surface-2/50 p-4">
-                <dt className="text-xs font-medium uppercase tracking-wide text-muted">
-                  {fact.label}
-                </dt>
-                <dd className="mt-1 text-base font-semibold text-fg">{fact.value}</dd>
-              </div>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {popular.map((tool) => (
+              <ToolCard key={tool.id} tool={tool} />
             ))}
-          </dl>
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
 
       {/* ---------------------------------------------------------------- */}
       {/* Categories                                                        */}
@@ -253,7 +282,7 @@ export function Home() {
       <section className="tz-container mt-16" aria-labelledby="categories-heading">
         <div className="max-w-2xl">
           <h2 id="categories-heading" className="text-2xl font-semibold tracking-tight sm:text-3xl">
-            Browse by category
+            Explore categories
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-muted sm:text-base">
             Twelve focused collections covering documents, media, code, security, calculations and
@@ -269,34 +298,30 @@ export function Home() {
       </section>
 
       {/* ---------------------------------------------------------------- */}
-      {/* Featured tools                                                    */}
+      {/* Why TOOLZEN                                                       */}
       {/* ---------------------------------------------------------------- */}
-      {featured.length > 0 && (
-        <section className="tz-container mt-16" aria-labelledby="featured-heading">
-          <div className="flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <h2 id="featured-heading" className="text-2xl font-semibold tracking-tight sm:text-3xl">
-                Featured tools
-              </h2>
-              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted sm:text-base">
-                Hand-picked tools that are ready to use right now.
-              </p>
-            </div>
-            <Link
-              to="/tools"
-              className="text-sm font-medium text-brand transition-colors hover:underline"
-            >
-              View all tools →
-            </Link>
-          </div>
+      <section className="tz-container mt-20" aria-labelledby="why-heading">
+        <div className="max-w-2xl">
+          <h2 id="why-heading" className="text-2xl font-semibold tracking-tight sm:text-3xl">
+            Why TOOLZEN?
+          </h2>
+          <p id="toolzen-definition" className="mt-4 text-base leading-relaxed text-fg">
+            {SITE_DEFINITION}
+          </p>
+        </div>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {featured.map((tool) => (
-              <ToolCard key={tool.id} tool={tool} />
-            ))}
-          </div>
-        </section>
-      )}
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {reasons.map((reason) => (
+            <div key={reason.title} className="tz-card p-5">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-soft text-brand">
+                <Icon name={reason.icon} size={19} />
+              </span>
+              <h3 className="mt-4 text-sm font-semibold tracking-tight">{reason.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted">{reason.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* ---------------------------------------------------------------- */}
       {/* Recently added                                                    */}
@@ -318,102 +343,12 @@ export function Home() {
         </section>
       )}
 
-      {/* ---------------------------------------------------------------- */}
-      {/* Why TOOLZEN                                                       */}
-      {/* ---------------------------------------------------------------- */}
-      <section className="tz-container mt-20" aria-labelledby="why-heading">
-        <div className="max-w-2xl">
-          <h2 id="why-heading" className="text-2xl font-semibold tracking-tight sm:text-3xl">
-            Why TOOLZEN?
-          </h2>
-          <p className="mt-3 text-sm leading-relaxed text-muted sm:text-base">
-            A tools platform should get out of your way. These four principles shape every decision
-            we make.
-          </p>
-        </div>
-
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {reasons.map((reason) => (
-            <div key={reason.title} className="tz-card p-5">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-soft text-brand">
-                <Icon name={reason.icon} size={19} />
-              </span>
-              <h3 className="mt-4 text-sm font-semibold tracking-tight">{reason.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted">{reason.body}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ---------------------------------------------------------------- */}
-      {/* Privacy and security                                              */}
-      {/* ---------------------------------------------------------------- */}
-      <section className="tz-container mt-20" aria-labelledby="privacy-heading">
-        <div className="tz-card overflow-hidden">
-          <div className="grid gap-8 p-6 sm:p-10 lg:grid-cols-2">
-            <div>
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-soft text-brand">
-                <Icon name="shield" size={22} />
-              </span>
-              <h2 id="privacy-heading" className="mt-4 text-2xl font-semibold tracking-tight">
-                Privacy and security
-              </h2>
-              <p className="mt-3 text-sm leading-relaxed text-muted">
-                Privacy is a product requirement, not a marketing line. We keep your data on your
-                device whenever the technology allows it, and we tell you plainly when a tool needs
-                a server.
-              </p>
-              <Link
-                to="/privacy"
-                className={buttonClasses({ variant: 'secondary', size: 'md', className: 'mt-6' })}
-              >
-                Read the Privacy Policy
-                <Icon name="arrow-right" size={16} />
-              </Link>
-            </div>
-
-            <ul className="flex flex-col gap-4">
-              {[
-                {
-                  icon: 'cpu' as IconName,
-                  title: 'Browser-first processing',
-                  body: 'Text, image and calculation tools run locally, so nothing is transmitted.',
-                },
-                {
-                  icon: 'trash' as IconName,
-                  title: 'Temporary files are deleted',
-                  body: 'Server-processed uploads are removed automatically once your result is ready.',
-                },
-                {
-                  icon: 'eye-off' as IconName,
-                  title: 'No content logging',
-                  body: 'We do not log the contents of your documents or the text you enter.',
-                },
-                {
-                  icon: 'lock' as IconName,
-                  title: 'Encrypted in transit',
-                  body: 'Production traffic is served over HTTPS, and access controls protect stored data.',
-                },
-              ].map((item) => (
-                <li key={item.title} className="flex gap-3">
-                  <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-surface-2 text-muted">
-                    <Icon name={item.icon} size={16} />
-                  </span>
-                  <div>
-                    <p className="text-sm font-medium">{item.title}</p>
-                    <p className="mt-0.5 text-sm leading-relaxed text-muted">{item.body}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
+      <AdSlot placement="homepage-banner" className="tz-container mt-16" />
 
       {/* ---------------------------------------------------------------- */}
       {/* FAQ                                                               */}
       {/* ---------------------------------------------------------------- */}
-      <section className="tz-container mt-20" aria-labelledby="faq-heading">
+      <section className="tz-container mt-16" aria-labelledby="faq-heading">
         <div className="max-w-2xl">
           <h2 id="faq-heading" className="text-2xl font-semibold tracking-tight sm:text-3xl">
             Frequently asked questions
@@ -440,7 +375,7 @@ export function Home() {
       {/* ---------------------------------------------------------------- */}
       {/* Closing call to action                                            */}
       {/* ---------------------------------------------------------------- */}
-      <section className="tz-container mt-20">
+      <section className="tz-container mb-4 mt-16">
         <div className="rounded-2xl border border-line bg-gradient-to-br from-brand-soft to-accent-soft p-8 text-center sm:p-12">
           <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
             Ready to get something done?
@@ -452,7 +387,7 @@ export function Home() {
           <div className="mt-7 flex flex-wrap justify-center gap-3">
             <Link to="/tools" className={buttonClasses({ variant: 'primary', size: 'lg' })}>
               <Icon name="grid" size={18} />
-              Browse All Tools
+              Explore All Tools
             </Link>
             <Link to="/about" className={buttonClasses({ variant: 'outline', size: 'lg' })}>
               Learn about TOOLZEN
