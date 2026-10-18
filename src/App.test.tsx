@@ -26,7 +26,7 @@ describe('App routing', () => {
   })
 
   it('shows a coming-soon notice for a planned tool instead of a fake control', () => {
-    renderAt('/tools/merge-pdf')
+    renderAt('/tools/unlock-pdf')
     expect(screen.getByText('This tool is in development')).toBeInTheDocument()
     expect(screen.queryByLabelText('Your text')).not.toBeInTheDocument()
   })

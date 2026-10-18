@@ -89,6 +89,30 @@ const toolComponents: Record<string, LazyExoticComponent<ComponentType>> = {
   'image-watermark': lazy(() => import('./image-watermark')),
   'base64-to-image': lazy(() => import('./base64-to-image')),
   'favicon-generator': lazy(() => import('./favicon-generator')),
+
+  /* PDF */
+  'merge-pdf': lazy(() => import('./merge-pdf')),
+  'split-pdf': lazy(() => import('./split-pdf')),
+  'rotate-pdf': lazy(() => import('./rotate-pdf')),
+  'delete-pdf-pages': lazy(() => import('./delete-pdf-pages')),
+  'extract-pdf-pages': lazy(() => import('./extract-pdf-pages')),
+  'reorder-pdf-pages': lazy(() => import('./reorder-pdf-pages')),
+  'organize-pdf': lazy(() => import('./organize-pdf')),
+  'jpg-to-pdf': lazy(() => import('./jpg-to-pdf')),
+  'png-to-pdf': lazy(() => import('./png-to-pdf')),
+  'add-page-numbers': lazy(() => import('./add-page-numbers')),
+  'add-watermark': lazy(() => import('./add-watermark')),
+  'text-to-pdf': lazy(() => import('./text-to-pdf')),
+  'pdf-to-jpg': lazy(() => import('./pdf-to-jpg')),
+  'pdf-page-preview': lazy(() => import('./pdf-page-preview')),
+  'pdf-to-text': lazy(() => import('./pdf-to-text')),
+  'pdf-metadata-viewer': lazy(() => import('./pdf-metadata-viewer')),
+  'pdf-size-analyzer': lazy(() => import('./pdf-size-analyzer')),
+  'compress-pdf': lazy(() => import('./compress-pdf')),
+
+  /* QR & barcode */
+  'qr-code-generator': lazy(() => import('./qr-code-generator')),
+  'barcode-generator': lazy(() => import('./barcode-generator')),
 }
 
 /** Resolve the component for a tool id, if it has been implemented. */

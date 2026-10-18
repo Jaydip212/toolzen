@@ -1,10 +1,13 @@
 import { describe, expect, it } from 'vitest'
 
 import {
+  angleSwapsSize,
   complementOf,
+  displayedSize,
   formatPageList,
   isEncryptedPdfError,
   nameForRange,
+  normaliseAngle,
   outputName,
   parsePageGroups,
   readPdfHeader,
@@ -165,6 +168,46 @@ describe('complementOf', () => {
 
   it('keeps the document when nothing is chosen', () => {
     expect(complementOf([], 3)).toEqual([1, 2, 3])
+  })
+})
+
+describe('normaliseAngle', () => {
+  it('reduces angles to the four the format stores', () => {
+    expect(normaliseAngle(0)).toBe(0)
+    expect(normaliseAngle(90)).toBe(90)
+    expect(normaliseAngle(270)).toBe(270)
+    expect(normaliseAngle(360)).toBe(0)
+    expect(normaliseAngle(450)).toBe(90)
+    expect(normaliseAngle(-90)).toBe(270)
+    expect(normaliseAngle(-450)).toBe(270)
+  })
+
+  it('rounds a sloppy angle to the nearest quarter, rather than rejecting it', () => {
+    expect(normaliseAngle(91)).toBe(90)
+    expect(normaliseAngle(89)).toBe(90)
+    expect(normaliseAngle(44)).toBe(0)
+  })
+})
+
+describe('displayedSize', () => {
+  it('swaps the stored rectangle for a sideways angle', () => {
+    expect(displayedSize(595, 842, 90)).toEqual({ width: 842, height: 595 })
+    expect(displayedSize(595, 842, 270)).toEqual({ width: 842, height: 595 })
+  })
+
+  it('leaves it alone for upright and upside down', () => {
+    expect(displayedSize(595, 842, 0)).toEqual({ width: 595, height: 842 })
+    expect(displayedSize(595, 842, 180)).toEqual({ width: 595, height: 842 })
+  })
+})
+
+describe('angleSwapsSize', () => {
+  it('is true for the two sideways angles only', () => {
+    expect(angleSwapsSize(90)).toBe(true)
+    expect(angleSwapsSize(270)).toBe(true)
+    expect(angleSwapsSize(450)).toBe(true)
+    expect(angleSwapsSize(0)).toBe(false)
+    expect(angleSwapsSize(180)).toBe(false)
   })
 })
 

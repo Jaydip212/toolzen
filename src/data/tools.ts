@@ -823,7 +823,7 @@ const seeds: ToolSeed[] = [
   },
 
   /* ------------------------------------------------------------------ */
-  /* PDF — planned                                                       */
+  /* PDF — live                                                       */
   /* ------------------------------------------------------------------ */
   {
     id: 'merge-pdf',
@@ -832,12 +832,41 @@ const seeds: ToolSeed[] = [
     categories: ['pdf'],
     keywords: ['merge', 'combine', 'join', 'concatenate'],
     icon: 'layers',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Two or more PDF files',
     outputFormat: 'Single merged PDF',
     processingMode: 'client',
     maxFileSize: '50 MB per file',
     addedAt: '2026-10-17',
+    instructions: [
+      'Choose two or more PDFs. They are listed in the order you add them.',
+      'Arrange them with the arrow buttons, or remove a mistake. The order shown is the order of the pages in the result.',
+      'Check the summary line for the file count and the total pages.',
+      'Press Merge and download the single PDF. Your original files are never modified.',
+    ],
+    faqs: [
+      {
+        question: 'What happens to bookmarks and form fields?',
+        answer:
+          'Page content, text, images and on-page annotations come across. Bookmarks and fillable form fields do not: a bookmark lives in the document’s index, and a form field only works when the document registers it. Merge with a PDF editor if you need those.',
+      },
+      {
+        question: 'How many files can I merge at once?',
+        answer:
+          'Twenty-five. Every file has to be held open in memory at once, and past that point a browser tab starts to struggle. Split the work into batches rather than losing the tab.',
+      },
+      {
+        question: 'Is there a size limit?',
+        answer:
+          'Fifty megabytes per file is the practical limit, not a hard one. The merge happens in this tab, so the ceiling is your device’s memory rather than a server rule.',
+      },
+      {
+        question: 'Does merging change the quality of my pages?',
+        answer:
+          'No. Pages are copied as they are — no re-encoding, no recompression of images. The only change is that they now live in one document.',
+      },
+    ],
+
   },
   {
     id: 'split-pdf',
@@ -846,12 +875,41 @@ const seeds: ToolSeed[] = [
     categories: ['pdf'],
     keywords: ['split', 'separate', 'pages', 'ranges'],
     icon: 'scissors',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'PDF file',
     outputFormat: 'One or more PDF files',
     processingMode: 'client',
     maxFileSize: '50 MB per file',
     addedAt: '2026-10-17',
+    instructions: [
+      'Choose the PDF you want to split.',
+      'Pick a mode: by ranges you write, or every page separately.',
+      'In range mode, type the groups separated by commas, for example 1-3, 4-6, 7. Each group becomes one file.',
+      'Check the list of output files, then press Split. Several files download as a single ZIP.',
+    ],
+    faqs: [
+      {
+        question: 'How do the ranges work?',
+        answer:
+          'Each comma-separated group becomes one output file, in the order you wrote them. A single page is just its number, 7- means from page 7 to the end, and -3 means the first three pages. Anything invalid is named before you press the button.',
+      },
+      {
+        question: 'What does splitting into every page do?',
+        answer:
+          'It produces one file per page, numbered from one, ignoring the ranges box entirely. A document of forty pages becomes forty single-page PDFs.',
+      },
+      {
+        question: 'Why do I get a ZIP instead of many downloads?',
+        answer:
+          'Because a browser that fires forty downloads at once usually blocks most of them. The ZIP keeps the files separate inside one download you can open anywhere.',
+      },
+      {
+        question: 'Are my original pages changed?',
+        answer:
+          'No. Splitting copies pages into new documents; the file you chose is never written to, and nothing leaves this tab.',
+      },
+    ],
+
   },
   {
     id: 'compress-pdf',
@@ -860,12 +918,40 @@ const seeds: ToolSeed[] = [
     categories: ['pdf'],
     keywords: ['compress', 'reduce size', 'optimise', 'shrink'],
     icon: 'gauge',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'PDF file',
     outputFormat: 'Smaller PDF',
     processingMode: 'server',
     maxFileSize: '50 MB per file',
     addedAt: '2026-10-17',
+    instructions: [
+      'Choose the PDF you want to compress. Read the scope note before pressing the button.',
+      'Press Compress. The document is saved twice — once as it is, once with its objects packed — and the smaller file is kept.',
+      'Download the result, with both sizes shown so you can see exactly what changed.',
+    ],
+    faqs: [
+      {
+        question: 'Why did my PDF barely get smaller?',
+        answer:
+          'Because most of its bytes are almost certainly images, and this tool does not re-compress those. Packing objects into compressed streams helps documents made of thousands of small objects. A PDF made of photographs barely moves, and the tool says so before you press the button.',
+      },
+      {
+        question: 'How is this different from other compressors?',
+        answer:
+          'It measures both ways instead of promising a saving. The file is saved twice, the sizes are compared, and the smaller one is used — including keeping the original when packing makes the file larger. The number on the page is what happened, not a claim.',
+      },
+      {
+        question: 'Does compressing change anything visible?',
+        answer:
+          'No. The pages, text and images are identical. Only the way the document stores its objects changes, which is invisible to a reader.',
+      },
+      {
+        question: 'Can it make a file bigger?',
+        answer:
+          'In principle yes, which is why both saves are measured and the smaller one is kept. When that happens the tool says the packing made it larger and returns the original rather than quietly handing you a bigger file.',
+      },
+    ],
+
   },
   {
     id: 'rotate-pdf',
@@ -874,12 +960,41 @@ const seeds: ToolSeed[] = [
     categories: ['pdf'],
     keywords: ['rotate', 'turn', 'orientation', 'landscape', 'portrait'],
     icon: 'rotate-cw',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'PDF file',
     outputFormat: 'Rotated PDF',
     processingMode: 'client',
     maxFileSize: '50 MB per file',
     addedAt: '2026-10-17',
+    instructions: [
+      'Choose the PDF you want to turn.',
+      'Pick a turn: 90° left, 90° right, or 180°.',
+      'Choose whether every page turns, or only the pages you list.',
+      'Press Rotate and download. The page content is never re-drawn, so no quality is lost.',
+    ],
+    faqs: [
+      {
+        question: 'Does rotating reduce the quality of my pages?',
+        answer:
+          'No. A PDF page stores a rectangle plus an angle, so rotation only changes the angle. Nothing is re-rendered, recompressed or resampled.',
+      },
+      {
+        question: 'Why do the page dimensions swap?',
+        answer:
+          'A viewer shows the stored rectangle turned by the angle, so a page that ends at 90° or 270° displays with its width and height the other way round. A portrait page reads as landscape afterwards.',
+      },
+      {
+        question: 'What happens to a page that was already rotated?',
+        answer:
+          'The turn adds to whatever angle the page already has. A page that arrived sideways keeps its existing rotation and turns further from there.',
+      },
+      {
+        question: 'Can I rotate just one page?',
+        answer:
+          'Yes. Choose “Pages I choose” and list the page numbers, with ranges such as 2 or 4-6. Everything outside the list stays exactly as it was.',
+      },
+    ],
+
   },
   {
     id: 'organize-pdf',
@@ -888,12 +1003,41 @@ const seeds: ToolSeed[] = [
     categories: ['pdf'],
     keywords: ['organise', 'organize', 'rearrange', 'page manager'],
     icon: 'grid',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'PDF file',
     outputFormat: 'Reorganised PDF',
     processingMode: 'client',
     maxFileSize: '50 MB per file',
     addedAt: '2026-10-17',
+    instructions: [
+      'Choose the PDF whose pages you want to arrange. The pages are drawn as thumbnails.',
+      'Move a page with the arrow buttons to change the order.',
+      'Turn a page with the rotate buttons, or remove it with the bin.',
+      'Press Build the document and download. The grid shows the result before anything is written.',
+    ],
+    faqs: [
+      {
+        question: 'What does this tool do that the others do not?',
+        answer:
+          'It combines reorder, rotate and remove in one grid, with each page drawn as it will appear. The other tools do one job each; this one is for when you want to do all three and see the result.',
+      },
+      {
+        question: 'Are the thumbnails the real pages?',
+        answer:
+          'Yes. They are rendered from your file in this tab, so what you see is what the document contains, not a placeholder image.',
+      },
+      {
+        question: 'What happens to the pages I remove?',
+        answer:
+          'They are left out of the new document. They are still in the file on your device, which is never written to.',
+      },
+      {
+        question: 'Does turning a page here lose quality, like rotating an image would?',
+        answer:
+          'No. Page rotation is stored as an angle in the PDF, so the content is never re-drawn. Turning a page here is the same operation the rotate tool performs.',
+      },
+    ],
+
   },
   {
     id: 'delete-pdf-pages',
@@ -902,12 +1046,41 @@ const seeds: ToolSeed[] = [
     categories: ['pdf'],
     keywords: ['delete', 'remove', 'pages'],
     icon: 'trash',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'PDF file',
     outputFormat: 'PDF without selected pages',
     processingMode: 'client',
     maxFileSize: '50 MB per file',
     addedAt: '2026-10-17',
+    instructions: [
+      'Choose the PDF you want to trim.',
+      'List the pages to remove: single pages, ranges, or both, separated by commas.',
+      'Check the summary, which names the pages going and the pages staying.',
+      'Press Remove pages and download the cleaned document.',
+    ],
+    faqs: [
+      {
+        question: 'What happens to the pages I keep?',
+        answer:
+          'They stay in their original order and are copied as they are. Only the listed pages are left out of the new document.',
+      },
+      {
+        question: 'Can I delete every page by mistake?',
+        answer:
+          'No. A selection that would empty the document is refused with a message saying so, because a PDF with no pages is not a document anyone can open.',
+      },
+      {
+        question: 'Is my original file modified?',
+        answer:
+          'Never. The tool builds a new document from the pages you keep, and the file on your device is not written to.',
+      },
+      {
+        question: 'Is the removed page gone from the file?',
+        answer:
+          'It is gone from the output document. The original file still has it — save the original if you might need those pages later.',
+      },
+    ],
+
   },
   {
     id: 'extract-pdf-pages',
@@ -916,12 +1089,41 @@ const seeds: ToolSeed[] = [
     categories: ['pdf'],
     keywords: ['extract', 'select pages', 'subset'],
     icon: 'scan',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'PDF file',
     outputFormat: 'New PDF containing selected pages',
     processingMode: 'client',
     maxFileSize: '50 MB per file',
     addedAt: '2026-10-17',
+    instructions: [
+      'Choose the PDF to take pages from.',
+      'List the pages you want: single pages, ranges, or both.',
+      'Check the summary naming the pages and their order.',
+      'Press Extract and download the new document. The original is left untouched.',
+    ],
+    faqs: [
+      {
+        question: 'How is this different from deleting pages?',
+        answer:
+          'It is the same operation seen from the other side: extraction keeps the pages you list and builds a new file from them. Deleting removes the pages you list and keeps the rest.',
+      },
+      {
+        question: 'In what order do the pages come out?',
+        answer:
+          'Ascending page order, always. A range written backwards, such as 9-3, is rejected with that reason rather than silently reversed.',
+      },
+      {
+        question: 'What is the file called?',
+        answer:
+          'The original name with the page numbers appended, such as report-p1-3-8.pdf, so you can tell two extractions of the same document apart.',
+      },
+      {
+        question: 'Does extraction lose anything?',
+        answer:
+          'Pages are copied whole, including their annotations and images. What does not come across is the document’s bookmarks, because the new file has its own index.',
+      },
+    ],
+
   },
   {
     id: 'reorder-pdf-pages',
@@ -930,12 +1132,41 @@ const seeds: ToolSeed[] = [
     categories: ['pdf'],
     keywords: ['reorder', 'rearrange', 'sort pages'],
     icon: 'sort',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'PDF file',
     outputFormat: 'PDF with reordered pages',
     processingMode: 'client',
     maxFileSize: '50 MB per file',
     addedAt: '2026-10-17',
+    instructions: [
+      'Choose the PDF whose pages you want to move.',
+      'Move pages with the arrow buttons, or type the whole new order in the field, one page number per comma.',
+      'The list shows the position each page will take.',
+      'Press Apply the new order and download. Page content is not touched.',
+    ],
+    faqs: [
+      {
+        question: 'Why do I have to list every page?',
+        answer:
+          'Because a partial order does not say where the missing pages go. A list that skips one is refused and names it, rather than guessing at a position.',
+      },
+      {
+        question: 'Can a page appear twice?',
+        answer:
+          'Not in this tool. Duplicating a page would mean adding content, which is a different job. A repeated page is reported with how many times it appears.',
+      },
+      {
+        question: 'How do I move a page to the front quickly?',
+        answer:
+          'Type the whole order in the field, for example 5, 1, 2, 3, 4, and the list updates as soon as the order is complete and valid.',
+      },
+      {
+        question: 'Is the page content affected?',
+        answer:
+          'No. Only the order of the pages changes; what is on each page is copied exactly as it was.',
+      },
+    ],
+
   },
   {
     id: 'pdf-to-jpg',
@@ -944,12 +1175,40 @@ const seeds: ToolSeed[] = [
     categories: ['pdf', 'conversion'],
     keywords: ['pdf to jpg', 'export images', 'render pages'],
     icon: 'image',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'PDF file',
     outputFormat: 'JPG images',
     processingMode: 'client',
     maxFileSize: '50 MB per file',
     addedAt: '2026-10-17',
+    instructions: [
+      'Choose the PDF whose pages you want as images.',
+      'Pick the resolution: 72 DPI for screen use, 150 DPI to print, 300 DPI for print quality.',
+      'Set the JPEG quality, then press Render. Every page becomes a JPG, downloaded together as a ZIP.',
+    ],
+    faqs: [
+      {
+        question: 'Which resolution should I choose?',
+        answer:
+          '72 DPI is about screen resolution and makes small files. 150 DPI prints acceptably. 300 DPI is what a print shop expects, and makes the largest files. The numbers are the width in pixels the page is drawn at, so the file size scales with them.',
+      },
+      {
+        question: 'Why do I get a ZIP?',
+        answer:
+          'Because a browser blocks most of the downloads when a page fires twenty of them at once. The ZIP keeps each page as its own file inside one download, and the files are named with the page number padded so they sort correctly.',
+      },
+      {
+        question: 'What happens to the transparent parts of a page?',
+        answer:
+          'They are painted white, because JPEG has no way to store transparency. A page with a see-through background prints as white anyway, so this matches what comes off the printer.',
+      },
+      {
+        question: 'Does rendering lose quality?',
+        answer:
+          'The page is drawn at the width you chose, so anything above that resolution is resampled. Text and line art stay crisp at 150 DPI and above; a page rendered at 72 DPI and then printed will look soft.',
+      },
+    ],
+
   },
   {
     id: 'jpg-to-pdf',
@@ -958,12 +1217,40 @@ const seeds: ToolSeed[] = [
     categories: ['pdf', 'image', 'conversion'],
     keywords: ['jpg to pdf', 'images to pdf', 'combine images'],
     icon: 'file-text',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'JPG images',
     outputFormat: 'PDF',
     processingMode: 'client',
     maxFileSize: '20 MB per image',
     addedAt: '2026-10-17',
+    instructions: [
+      'Choose the JPG files you want in the document. Each becomes one page, in the order you add them.',
+      'Pick the page size and the margin in millimetres. Zero prints to the edge.',
+      'Press Build PDF and download. The order you added the images in is the page order.',
+    ],
+    faqs: [
+      {
+        question: 'Does the PDF keep the JPG quality?',
+        answer:
+          'Almost. Images are embedded as JPEG at 92% quality, which is visually identical to the original for nearly every photograph, but it is a re-encode rather than a copy of your exact bytes. A pixel-identical archive is a job for a ZIP file, not a PDF.',
+      },
+      {
+        question: 'Can I mix JPGs and PNGs in one document?',
+        answer:
+          'Not in this tool — it takes JPGs only, so the promise on the box is clear. The general Image to PDF tool accepts any image type, and the PNG-specific tool takes PNGs.',
+      },
+      {
+        question: 'What happens to the image dimensions?',
+        answer:
+          'Each image is scaled to fit inside the page and centred, so the aspect ratio is never changed and nothing is cropped. A landscape photo on a portrait page is letterboxed, not stretched.',
+      },
+      {
+        question: 'Where do my files go?',
+        answer:
+          'Nowhere. The images are read and the PDF is built in this browser tab, so nothing is uploaded and no copy of your photographs exists anywhere else.',
+      },
+    ],
+
   },
   {
     id: 'png-to-pdf',
@@ -972,12 +1259,40 @@ const seeds: ToolSeed[] = [
     categories: ['pdf', 'image', 'conversion'],
     keywords: ['png to pdf', 'images to pdf'],
     icon: 'file-text',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'PNG images',
     outputFormat: 'PDF',
     processingMode: 'client',
     maxFileSize: '20 MB per image',
     addedAt: '2026-10-17',
+    instructions: [
+      'Choose the PNG files you want in the document. Each becomes one page, in the order you add them.',
+      'Pick the page size and the margin in millimetres. Zero prints to the edge.',
+      'Press Build PDF and download.',
+    ],
+    faqs: [
+      {
+        question: 'What happens to the transparency in my PNGs?',
+        answer:
+          'It is flattened onto white. A PDF page has no way to show see-through areas over the paper background, so leaving transparency in would make those parts render as black. Flattening is what a printer would do anyway.',
+      },
+      {
+        question: 'Is the result lossless like the PNG I uploaded?',
+        answer:
+          'No. The pages are embedded as JPEG at 92% quality to keep the file small, which is a re-encode rather than a copy of your exact bytes. For a pixel-perfect archive, use a ZIP file rather than a PDF.',
+      },
+      {
+        question: 'Can I put several PNGs on one page?',
+        answer:
+          'Not here. Each image becomes its own page, which is what a document of scans or screenshots usually wants. Combining images onto a shared page is a layout job, not a conversion job.',
+      },
+      {
+        question: 'Where do my files go?',
+        answer:
+          'Nowhere. The conversion runs in this browser tab, so your images are never uploaded and no copy is kept.',
+      },
+    ],
+
   },
   {
     id: 'add-page-numbers',
@@ -986,12 +1301,41 @@ const seeds: ToolSeed[] = [
     categories: ['pdf'],
     keywords: ['page numbers', 'pagination', 'numbering'],
     icon: 'hash',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'PDF file',
     outputFormat: 'Numbered PDF',
     processingMode: 'client',
     maxFileSize: '50 MB per file',
     addedAt: '2026-10-17',
+    instructions: [
+      'Choose the PDF you want to number.',
+      'Pick the format — a bare number, “Page 3”, “Page 3 of 12”, or “3 / 12”.',
+      'Pick the position, and set the starting number. Leave it at 1 for an ordinary document.',
+      'Press Add page numbers and download. The original file is not modified.',
+    ],
+    faqs: [
+      {
+        question: 'Where exactly does the number go?',
+        answer:
+          'One of five positions: bottom centre, bottom right, bottom left, top centre, or top right. The number is drawn on top of the page in grey and sized to the page, so it reads as furniture rather than as content.',
+      },
+      {
+        question: 'Can I skip the first page?',
+        answer:
+          'Yes, indirectly: set the starting number to 1 and the numbering still covers every page. What this tool does not do is leave chosen pages unnumbered, because a gap in a numbering scheme usually means the numbering is wrong.',
+      },
+      {
+        question: 'What does the total in “Page 3 of 12” mean?',
+        answer:
+          'The number of pages in the document. That stays true even when numbering starts elsewhere, so the count reads consistently from the first page to the last.',
+      },
+      {
+        question: 'Does stamping a number change my pages?',
+        answer:
+          'It adds ink, not edits. The number is drawn over the existing content, so it sits on top of whatever is already there — including anything printed in that corner.',
+      },
+    ],
+
   },
   {
     id: 'add-watermark',
@@ -1000,18 +1344,47 @@ const seeds: ToolSeed[] = [
     categories: ['pdf'],
     keywords: ['watermark', 'stamp', 'branding'],
     icon: 'droplet',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'PDF file',
     outputFormat: 'Watermarked PDF',
     processingMode: 'client',
     maxFileSize: '50 MB per file',
     addedAt: '2026-10-17',
+    instructions: [
+      'Choose the PDF you want to stamp.',
+      'Type the text, up to sixty characters, and set its size in points.',
+      'Pick a placement: diagonal across the page, dead centre, tiled, or the bottom right corner.',
+      'Set the strength and press Add the watermark. The tool warns when the strength is high enough to cover the page.',
+    ],
+    faqs: [
+      {
+        question: 'How strong should a watermark be?',
+        answer:
+          'Around 10 to 30%. At 60% or above the stamp covers the page it is meant to label, and below 10% it disappears on a dark or busy page. Both ends are reported rather than applied silently.',
+      },
+      {
+        question: 'Can I use an image or logo instead of text?',
+        answer:
+          'Not in this tool. It stamps text, which covers the common case of marking a document confidential, draft or a sample. For a logo, use the image watermark tool on the pictures first and rebuild the PDF, or a desktop editor.',
+      },
+      {
+        question: 'Does the watermark survive someone copying the PDF?',
+        answer:
+          'The stamp is drawn into the page content, so it travels with the file and is not a comment someone can toggle off. It does not encrypt anything, so it is a marking tool and not a protection tool — protecting a PDF needs a password, which is a different job entirely.',
+      },
+      {
+        question: 'What does “tiled” do?',
+        answer:
+          'It repeats the text across the whole page on a diagonal grid, spaced by its own size. That is the hardest placement to crop out, and also the most intrusive.',
+      },
+    ],
+
   },
   {
     id: 'unlock-pdf',
     name: 'Unlock PDF',
     description:
-      'Remove a password from a PDF you are authorised to access, so you can work with it freely.',
+      'Remove a password from a PDF you are authorised to access. Still on the roadmap: the PDF library this site uses in the browser can read and write documents but has no RC4 or AES decryption, so an encrypted file cannot be opened here at all — not without sending it to a server, which TOOLZEN does not do.',
     categories: ['pdf'],
     keywords: ['unlock', 'remove password', 'decrypt'],
     icon: 'unlock',
@@ -1025,7 +1398,8 @@ const seeds: ToolSeed[] = [
   {
     id: 'protect-pdf',
     name: 'Protect PDF',
-    description: 'Add password protection and set permissions for printing and copying.',
+    description:
+      'Add password protection and set permissions for printing and copying. Still on the roadmap: the PDF library this site uses in the browser can write documents but has no encryption support, so it cannot add a password. Doing this properly needs a server, which would mean your file leaving your device.',
     categories: ['pdf'],
     keywords: ['protect', 'password', 'encrypt', 'permissions'],
     icon: 'lock',
@@ -1043,12 +1417,40 @@ const seeds: ToolSeed[] = [
     categories: ['pdf'],
     keywords: ['metadata', 'properties', 'author', 'producer', 'info'],
     icon: 'info',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'PDF file',
     outputFormat: 'Metadata report',
     processingMode: 'client',
     maxFileSize: '50 MB per file',
     addedAt: '2026-10-17',
+    instructions: [
+      'Choose the PDF whose properties you want to inspect.',
+      'The report lists every field the document states, and marks the ones it does not.',
+      'Nothing is changed and nothing is uploaded.',
+    ],
+    faqs: [
+      {
+        question: 'Why does it say “not stated in the document” for most fields?',
+        answer:
+          'Because the file genuinely does not say. Plenty of PDF generators write the pages and never set a title or an author. The report shows what the document states about itself rather than filling the gaps with guesses.',
+      },
+      {
+        question: 'What is XMP, and why is it not decoded here?',
+        answer:
+          'XMP is a second, richer metadata packet that some tools write alongside the standard one. This tool reports whether the packet is present but does not read it, and says so on the page rather than presenting a partial answer as complete.',
+      },
+      {
+        question: 'Can I edit the metadata with this tool?',
+        answer:
+          'No. It is read-only, deliberately: a viewer that could change a document’s title and author would need to re-save the file, and a tool that reads properties should not quietly rewrite them.',
+      },
+      {
+        question: 'Are the permission flags reliable?',
+        answer:
+          'They are advisory. A PDF can state that printing is not allowed, and a viewer may still respect or ignore that. The report shows the flags without claiming they control anything.',
+      },
+    ],
+
   },
   {
     id: 'pdf-page-preview',
@@ -1057,12 +1459,40 @@ const seeds: ToolSeed[] = [
     categories: ['pdf'],
     keywords: ['preview', 'view pages', 'thumbnail'],
     icon: 'eye',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'PDF file',
     outputFormat: 'Page previews',
     processingMode: 'client',
     maxFileSize: '50 MB per file',
     addedAt: '2026-10-17',
+    instructions: [
+      'Choose the PDF you want to look at.',
+      'The pages are drawn as thumbnails, in order, with the size each one prints at.',
+      'Nothing is written and nothing is uploaded. Close the tab when you are done looking.',
+    ],
+    faqs: [
+      {
+        question: 'Why would I preview a PDF here rather than open it?',
+        answer:
+          'Because the alternative is handing a file you have not seen to another tool. This draws every page first, so you can check the page count, spot a landscape page in a portrait document, or find the blank page at the end before you process anything.',
+      },
+      {
+        question: 'Are the thumbnails the real pages?',
+        answer:
+          'Yes. They are rendered from your file in this tab, at a width of 180 pixels. That is enough to judge layout and orientation, but not enough to read fine print.',
+      },
+      {
+        question: 'Why does the size shown differ from the size I exported at?',
+        answer:
+          'The size shown is what a reader sees after the page’s stored rotation is applied. A portrait page stored sideways reports as landscape, because that is how it prints and displays.',
+      },
+      {
+        question: 'Is my document uploaded to be shown?',
+        answer:
+          'No. The rendering happens entirely in this tab, which is why the tool works offline and why closing the tab discards everything it drew.',
+      },
+    ],
+
   },
   {
     id: 'pdf-size-analyzer',
@@ -1071,12 +1501,40 @@ const seeds: ToolSeed[] = [
     categories: ['pdf'],
     keywords: ['file size', 'analyse', 'optimise', 'breakdown'],
     icon: 'bar-chart',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'PDF file',
     outputFormat: 'Size breakdown report',
     processingMode: 'client',
     maxFileSize: '50 MB per file',
     addedAt: '2026-10-17',
+    instructions: [
+      'Choose the PDF you want measured.',
+      'The breakdown adds up the binary streams inside the file: images, fonts and page content.',
+      'Read the advice, which says what the breakdown means for shrinking the file.',
+    ],
+    faqs: [
+      {
+        question: 'What does the breakdown actually measure?',
+        answer:
+          'The decoded size of every stream in the document — the images, the fonts, and the page content along with form objects. Percentages are of the whole file, so they add up to roughly the file’s size rather than exceeding it.',
+      },
+      {
+        question: 'It says images are most of the file. What can I do?',
+        answer:
+          'Shrink the images before they go into the PDF, or use a tool that re-compresses them. This website does not re-encode images inside a PDF in the browser, because that means decoding and re-encoding every embedded image one at a time.',
+      },
+      {
+        question: 'Why is the total less than the file size?',
+        answer:
+          'Because the file also holds its own structure: the objects, the page tree, the cross-reference table. Those are small, but they are not counted as streams.',
+      },
+      {
+        question: 'Does this tool compress anything?',
+        answer:
+          'No. It measures and reports, and it does not write a file. The compression tool is a separate one, and it explains the difference between a structural re-save and an image re-compress.',
+      },
+    ],
+
   },
   {
     id: 'pdf-to-text',
@@ -1085,12 +1543,40 @@ const seeds: ToolSeed[] = [
     categories: ['pdf', 'conversion'],
     keywords: ['extract text', 'pdf to txt', 'copy text'],
     icon: 'file-text',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'PDF file',
     outputFormat: 'Plain text',
     processingMode: 'client',
     maxFileSize: '50 MB per file',
     addedAt: '2026-10-17',
+    instructions: [
+      'Choose the PDF whose text you want to extract.',
+      'Press Extract the text. The text layer of every page is read in order.',
+      'Read the result, switch the page markers on or off, and download it as a plain text file.',
+    ],
+    faqs: [
+      {
+        question: 'Why did a page come back empty?',
+        answer:
+          'Almost always because it is a scan: a photograph of writing, where the words exist only as pixels. This tool does not run optical character recognition, because that needs a server-side model and your file stays in this tab. The number of empty pages is reported so the gap is visible.',
+      },
+      {
+        question: 'Is the layout preserved?',
+        answer:
+          'Line breaks are kept where the document had them, so a heading stays on its own line. Columns, tables and indentation are not preserved, because the extracted text is a stream of words in reading order, not a layout.',
+      },
+      {
+        question: 'What are the [Page n] markers?',
+        answer:
+          'Optional separators the tool can insert between pages, so you can tell where one page ends and the next begins. Turn them off if you want an unbroken stream of text to paste somewhere else.',
+      },
+      {
+        question: 'Does extraction work on any PDF?',
+        answer:
+          'It works on any PDF with a text layer, which is nearly every document produced by a word processor. A scanned document, a photographed document, or an image exported as a PDF has no text layer to read.',
+      },
+    ],
+
   },
   {
     id: 'text-to-pdf',
@@ -1099,11 +1585,39 @@ const seeds: ToolSeed[] = [
     categories: ['pdf', 'conversion'],
     keywords: ['text to pdf', 'txt to pdf', 'create pdf'],
     icon: 'file-text',
-    status: 'planned',
+    status: 'live',
     inputFormat: 'Plain text',
     outputFormat: 'PDF',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Type or paste the text you want in the document. Blank lines start a new paragraph.',
+      'Pick the page size, A4 or US Letter.',
+      'Check the page count the tool predicts, then press Build the PDF and download.',
+    ],
+    faqs: [
+      {
+        question: 'Does it keep bold, italics or headings?',
+        answer:
+          'No. The output is one font, one size, with no styling, because this tool does not claim to read markdown or rich text. If you need formatting, write the document in a word processor and export a PDF there.',
+      },
+      {
+        question: 'How does it decide where a line breaks?',
+        answer:
+          'By character count, not by measuring each glyph. That means a line of wide capitals may wrap earlier than expected, while a line of thin punctuation wraps later. The margin is fixed, so text never runs off the page either way.',
+      },
+      {
+        question: 'Does it handle non-Latin scripts or emoji?',
+        answer:
+          'No, and it says so before building rather than failing halfway. The PDF fonts used here cover Latin text plus the Windows extras such as the euro sign and curly quotes. A Cyrillic letter, a Chinese character, an emoji or a tab is listed by name and code point, and the document is not built until those characters are replaced. The tool does not fall back to a system font it cannot see.',
+      },
+      {
+        question: 'Where does my text go?',
+        answer:
+          'Nowhere. The document is built in this browser tab from the standard font set, so nothing is uploaded and nothing is stored after you close the tab.',
+      },
+    ],
+
   },
 
   /* ------------------------------------------------------------------ */
@@ -3310,7 +3824,7 @@ const seeds: ToolSeed[] = [
   },
 
   /* ------------------------------------------------------------------ */
-  /* QR & BARCODE — planned                                              */
+  /* QR & BARCODE — live                                                 */
   /* ------------------------------------------------------------------ */
   {
     id: 'qr-code-generator',
@@ -3319,11 +3833,40 @@ const seeds: ToolSeed[] = [
     categories: ['qr', 'productivity'],
     keywords: ['qr code', 'generator', 'link', 'vcard', 'wifi'],
     icon: 'qr',
-    status: 'planned',
-    inputFormat: 'Text or URL',
-    outputFormat: 'QR code image',
+    status: 'live',
+    inputFormat: 'Text, link, Wi-Fi details or contact card',
+    outputFormat: 'QR code as PNG or SVG',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Choose what the code should hold: text or a link, Wi-Fi settings, or a contact card.',
+      'Type the details. The tool shows how many characters you have used against the limit for the recovery level you pick.',
+      'Pick a recovery level, a pixel size and PNG or SVG output, then draw the code.',
+      'Scan it with your own phone before you print it — that is the only test that matters.',
+    ],
+    faqs: [
+      {
+        question: 'Which QR error correction level should I use?',
+        answer:
+          'Level M (15%) is the right choice for almost everything a phone scans close up. A higher level survives more damage, but every module then carries data, so the code gets denser and harder to read from a distance. Only go to H when the code will sit on something that gets scratched or creased.',
+      },
+      {
+        question: 'How much data fits in a QR code?',
+        answer:
+          'A version 40 QR code, the largest there is, holds 2,953 bytes at level M and 1,273 at level H. Digits pack far denser than letters: the same code holds 7,089 digits at level L. The tool shows your position against that ceiling as you type, rather than failing when you submit.',
+      },
+      {
+        question: 'Do Wi-Fi QR codes really work on any phone?',
+        answer:
+          'Yes, on both iPhone and Android, without installing anything. The code holds the network name and password in the standard WIFI: format that the built-in cameras recognise. Special characters inside the name or password are escaped so a network called "Cafe; Guest" does not break the code.',
+      },
+      {
+        question: 'Is my data uploaded when I generate a QR code?',
+        answer:
+          'No. The code is drawn in your browser and nothing is sent anywhere, which is why this is safe for Wi-Fi passwords and private contact details.',
+      },
+    ],
+    privacyNote: 'Runs entirely in your browser. Nothing you encode is uploaded.',
   },
   {
     id: 'barcode-generator',
@@ -3332,11 +3875,40 @@ const seeds: ToolSeed[] = [
     categories: ['qr', 'productivity'],
     keywords: ['barcode', 'code 128', 'ean', 'upc', 'generator'],
     icon: 'barcode',
-    status: 'planned',
-    inputFormat: 'Text or number',
-    outputFormat: 'Barcode image',
+    status: 'live',
+    inputFormat: 'Text or number, in the format of your choice',
+    outputFormat: 'Barcode as an SVG image',
     processingMode: 'client',
     addedAt: '2026-10-17',
+    instructions: [
+      'Pick the format. CODE 128 takes any printable characters, while EAN-13, EAN-8 and ITF-14 take digits only.',
+      'Type the data. Leave off the final check digit and the tool works it out for you.',
+      'Adjust the bar width and height with the sliders, and choose whether to print the digits underneath.',
+      'Download the SVG. Print it and scan it before you rely on it.',
+    ],
+    faqs: [
+      {
+        question: 'What is a check digit, and why does the tool add one?',
+        answer:
+          'A check digit is a final digit calculated from the digits before it, so a scanner can tell whether it read the code correctly. If you type 12 digits for an EAN-13, the 13th is computed for you. If you type all 13 and the last one is wrong, the tool says what the correct digit is rather than drawing a barcode that will not scan.',
+      },
+      {
+        question: 'Which barcode format should I choose?',
+        answer:
+          'Use EAN-13 for retail products, EAN-8 for small packaging, ITF-14 for cartons, CODE 128 when you need to encode letters and symbols, and CODE 39 when an older system requires that specific format. CODE 39 only accepts uppercase letters, digits, and - . $ / + % and space.',
+      },
+      {
+        question: 'Why is the download an SVG rather than a PNG?',
+        answer:
+          'A barcode is read from the edges of its bars, and a pixel image softens those edges as it scales. An SVG stays sharp at any print size, so the bars a scanner sees are exactly the bars that were encoded.',
+      },
+      {
+        question: 'Is my data uploaded when I generate a barcode?',
+        answer:
+          'No. The barcode is drawn in your browser and nothing is sent to a server.',
+      },
+    ],
+    privacyNote: 'Runs entirely in your browser. Nothing you encode is uploaded.',
   },
 
   /* ------------------------------------------------------------------ */

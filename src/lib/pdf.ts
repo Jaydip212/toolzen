@@ -227,6 +227,32 @@ export function complementOf(pages: number[], pageCount: number): number[] {
   return kept
 }
 
+/**
+ * Reduce any angle to the 0 / 90 / 180 / 270 that a page rotation stores.
+ *
+ * A stored angle is always one of those four, but a user's arithmetic is not:
+ * 450 degrees is a full turn plus a quarter, which is a quarter. Rounding to
+ * the nearest quarter keeps that true.
+ */
+export function normaliseAngle(degrees: number): number {
+  const rounded = Math.round(degrees / 90) * 90
+  return ((rounded % 360) + 360) % 360
+}
+
+/** Whether an angle swaps the width and height a reader sees. */
+export function angleSwapsSize(angle: number): boolean {
+  return normaliseAngle(angle) === 90 || normaliseAngle(angle) === 270
+}
+
+/** The dimensions a reader sees for a stored rectangle at a given angle. */
+export function displayedSize(
+  width: number,
+  height: number,
+  angle: number,
+): { width: number; height: number } {
+  return angleSwapsSize(angle) ? { width: height, height: width } : { width, height }
+}
+
 /* ------------------------------------------------------------------ */
 /* Naming                                                              */
 /* ------------------------------------------------------------------ */

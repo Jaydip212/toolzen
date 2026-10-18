@@ -25,7 +25,7 @@ describe('ToolRenderer registry consistency', () => {
   it('returns a component for a live tool and undefined for a planned one', () => {
     // Implementations are `lazy()`-loaded, so they are objects, not functions.
     expect(getToolComponent('word-counter')).toBeDefined()
-    expect(getToolComponent('merge-pdf')).toBeUndefined()
+    expect(getToolComponent('unlock-pdf')).toBeUndefined()
   })
 
   it('exposes every implemented id for diagnostics', () => {
