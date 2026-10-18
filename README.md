@@ -95,7 +95,7 @@ Copy `.env.example` to `.env.local`. All variables are optional for Phase 1.
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
-| `VITE_SITE_URL` | `https://www.toolzen.example` | Canonical origin used for canonical URLs, Open Graph tags and the sitemap |
+| `VITE_SITE_URL` | `https://www.etoolzen.com` | Canonical origin used for canonical URLs, Open Graph tags and the sitemap |
 | `VITE_ADS_ENABLED` | `false` | Set to `true` to render ad slot containers |
 | `VITE_ADSENSE_CLIENT` | *(empty)* | AdSense publisher id, used only after account approval |
 
@@ -206,8 +206,8 @@ Per-route `<Seo>` component managing title, description, canonical URL, robots d
 Open Graph/Twitter tags and JSON-LD (`Organization`, `WebSite`, `SoftwareApplication`,
 `BreadcrumbList`, `HowTo`, `FAQPage`, plus a speakable `WebPage`). `sitemap.xml`, `robots.txt` and
 `llms.txt` are generated from the tool registry at build time and written to `dist/`, so they can
-never list a tool that is not live. Replace the `toolzen.example` host via `VITE_SITE_URL` before
-deploying.
+never list a tool that is not live. The default host is `www.etoolzen.com`; override it with
+`VITE_SITE_URL` if the site is served from a different origin.
 
 ---
 

@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  /** Public canonical origin, e.g. https://www.toolzen.example */
+  /** Public canonical origin, e.g. https://www.etoolzen.com */
   readonly VITE_SITE_URL?: string
   /** "true" enables ad slot containers. Defaults to disabled. */
   readonly VITE_ADS_ENABLED?: string

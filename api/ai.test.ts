@@ -163,11 +163,11 @@ describe('request validation', () => {
   })
 
   it('refuses an origin that is not the configured one', async () => {
-    process.env.AI_ALLOWED_ORIGIN = 'https://toolzen.example'
+    process.env.AI_ALLOWED_ORIGIN = 'https://www.etoolzen.com'
     const { res, state } = makeResponse()
     await handler(
       makeRequest({
-        headers: { 'x-forwarded-for': freshAddress(), origin: 'https://not-toolzen.example' },
+        headers: { 'x-forwarded-for': freshAddress(), origin: 'https://not-etoolzen.example' },
         body: { task: 'summarise', input: 'hello' },
       }),
       res,

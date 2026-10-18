@@ -13,7 +13,7 @@ const SITE_TAGLINE = 'Every Tool. One Place.'
 const SITE_DEFINITION =
   'TOOLZEN is a free online tools platform offering browser-based utilities for documents, images, files, text, developers, security and everyday calculations, with no account required.'
 
-const DEFAULT_SITE_URL = 'https://www.toolzen.example'
+const DEFAULT_SITE_URL = 'https://www.etoolzen.com'
 
 /** Static routes that are always indexable. */
 const staticRoutes: { path: string; changefreq: string; priority: string }[] = [

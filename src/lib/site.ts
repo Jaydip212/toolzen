@@ -22,7 +22,7 @@ export const SITE_DESCRIPTION =
   'Free online tools to simplify your documents, images, files and everyday digital tasks. No sign-up required.'
 
 /** Canonical production origin, without a trailing slash. */
-export const SITE_URL = (import.meta.env.VITE_SITE_URL ?? 'https://www.toolzen.example').replace(
+export const SITE_URL = (import.meta.env.VITE_SITE_URL ?? 'https://www.etoolzen.com').replace(
   /\/$/,
   '',
 )
