@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { categories, categoryRoute } from '@/data/categories'
 import { Logo } from '@/components/ui/Logo'
 
-const footerCategories = ['pdf', 'image', 'text', 'developer', 'calculator', 'ai'] as const
+const footerCategories = ['pdf', 'image', 'text', 'developer', 'calculator'] as const
 
 const platformLinks = [
   { label: 'All Tools', to: '/tools' },

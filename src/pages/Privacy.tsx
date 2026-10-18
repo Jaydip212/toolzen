@@ -84,45 +84,8 @@ export function Privacy() {
             exposed through public URLs.
           </p>
           <p>
-            <strong className="text-fg">Sent to an AI provider.</strong> The seven AI tools cannot
-            run in a browser, because producing new text needs a language model and a key that
-            ships to a browser is a key anyone can take. Your text is sent to TOOLZEN&rsquo;s server,
-            forwarded to a third-party AI provider to produce the result, and returned to you.
-            Nothing is retained by TOOLZEN after the response. See the section below.
-          </p>
-          <p>
             We do not claim that everything is processed locally. Where a server is involved, we say
             so plainly.
-          </p>
-        </Section>
-
-        <Section id="ai-tools" title="The AI tools, specifically">
-          <p>
-            The AI tools are the only part of TOOLZEN where your text leaves your device. That is a
-            real difference from every other tool here, so it is worth stating exactly what happens:
-          </p>
-          <ul className="list-disc space-y-2 pl-5">
-            <li>
-              Your text is sent over an encrypted connection to TOOLZEN&rsquo;s serverless function.
-            </li>
-            <li>
-              That function forwards the text to a third-party AI provider and returns the reply. The
-              provider&rsquo;s own privacy terms apply to that transfer, and its retention policy is
-              outside our control.
-            </li>
-            <li>
-              TOOLZEN does not write your text to a database, a log or a file, and does not use it to
-              train anything. The function holds it in memory only for the length of the request.
-            </li>
-            <li>
-              Your provider API key is never sent to the browser. It exists only in the server
-              environment, and no response contains it.
-            </li>
-          </ul>
-          <p>
-            Because of this, do not paste contracts, medical records, credentials or anything else
-            confidential into an AI tool here. For that material, use a tool on this site that runs
-            in your browser — most of them do.
           </p>
         </Section>
 
@@ -133,9 +96,6 @@ export function Privacy() {
             your result, plus a short grace period so a failed download can be retried. After that
             window they are deleted automatically. We do not keep copies, and we do not use your
             files for any other purpose.
-          </p>
-          <p>
-            Text sent to an AI tool is not stored at all: it is forwarded, answered, and discarded.
           </p>
         </Section>
 

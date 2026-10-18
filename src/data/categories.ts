@@ -163,16 +163,6 @@ export const categories: Category[] = [
     icon: 'check-square',
     accent: categoryAccents.lime,
   },
-  {
-    id: 'ai',
-    name: 'AI Tools',
-    shortName: 'AI',
-    tagline: 'Assistants for writing and summarising.',
-    description:
-      'Assistive writing and language tools. These require a configured AI provider, and usage limits apply so the service can stay free.',
-    icon: 'sparkles',
-    accent: categoryAccents.violet,
-  },
 ]
 
 const categoryById = new Map<ToolCategoryId, Category>(categories.map((c) => [c.id, c]))

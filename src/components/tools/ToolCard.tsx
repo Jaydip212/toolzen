@@ -43,11 +43,7 @@ export function ToolCard({ tool, className }: ToolCardProps) {
       <div className="flex items-center gap-1.5 text-xs text-muted">
         <Icon name={tool.processingMode === 'client' ? 'cpu' : 'globe'} size={13} />
         <span>
-          {tool.processingMode === 'client'
-            ? 'Runs in your browser'
-            : tool.processingMode === 'ai'
-              ? 'AI-assisted'
-              : 'Server-assisted'}
+          {tool.processingMode === 'client' ? 'Runs in your browser' : 'Server-assisted'}
         </span>
       </div>
     </Link>

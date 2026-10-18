@@ -114,14 +114,13 @@ const toolComponents: Record<string, LazyExoticComponent<ComponentType>> = {
   'qr-code-generator': lazy(() => import('./qr-code-generator')),
   'barcode-generator': lazy(() => import('./barcode-generator')),
 
-  /* AI — these call the serverless endpoint, not the browser alone */
-  'ai-text-summarizer': lazy(() => import('./ai-text-summarizer')),
-  'ai-writing-assistant': lazy(() => import('./ai-writing-assistant')),
-  'ai-grammar-helper': lazy(() => import('./ai-grammar-helper')),
-  'ai-email-drafting': lazy(() => import('./ai-email-drafting')),
-  'ai-document-assistant': lazy(() => import('./ai-document-assistant')),
-  'ai-translation': lazy(() => import('./ai-translation')),
-  'ai-text-rewriter': lazy(() => import('./ai-text-rewriter')),
+  /* Phase 3 — advanced developer, data and calculation utilities */
+  'number-base-converter': lazy(() => import('./number-base-converter')),
+  'url-parser': lazy(() => import('./url-parser')),
+  'http-status-reference': lazy(() => import('./http-status-reference')),
+  'json-to-typescript': lazy(() => import('./json-to-typescript')),
+  'unit-converter': lazy(() => import('./unit-converter')),
+  'slug-generator': lazy(() => import('./slug-generator')),
 }
 
 /** Resolve the component for a tool id, if it has been implemented. */

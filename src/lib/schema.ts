@@ -149,9 +149,7 @@ export function softwareApplicationSchema(tool: Tool) {
     featureList:
       tool.processingMode === 'client'
         ? ['Runs entirely in the browser', 'No upload', 'No account required']
-        : tool.processingMode === 'ai'
-          ? ['AI-generated output', 'Text is sent to an AI provider', 'No account required']
-          : ['Server-assisted processing', 'Temporary files deleted after processing', 'No account required'],
+        : ['Server-assisted processing', 'Temporary files deleted after processing', 'No account required'],
   }
 }
 

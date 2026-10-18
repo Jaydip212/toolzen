@@ -16,37 +16,6 @@ import type { Tool } from '@/types/tool'
  */
 type ToolSeed = Omit<Tool, 'route'>
 
-/**
- * Whether the AI backend is provisioned for this build.
- *
- * The seven AI tools are implemented, but they cannot run without a
- * server-side provider key. Shipping them as "live" on a deployment with no
- * key would make the homepage's "available today" count a lie, so their status
- * follows this flag: planned by default, live only when the deployer has set
- * both the key and this flag.
- *
- * `vite.config.ts` also imports this module, in plain Node, where Vite has not
- * populated `import.meta.env`. The optional chain keeps that import from
- * throwing; the config applies its own copy of the flag when it generates the
- * sitemap.
- */
-export const AI_TOOL_IDS: ReadonlySet<string> = new Set([
-  'ai-text-summarizer',
-  'ai-writing-assistant',
-  'ai-grammar-helper',
-  'ai-email-drafting',
-  'ai-document-assistant',
-  'ai-translation',
-  'ai-text-rewriter',
-])
-
-const AI_ENABLED = import.meta.env?.VITE_AI_ENABLED === 'true'
-
-/** Apply the AI flag to a registry, so the config and the app agree. */
-export function withAiStatus<T extends ToolSeed>(list: T[], aiEnabled: boolean): T[] {
-  return list.map((tool) => (AI_TOOL_IDS.has(tool.id) ? { ...tool, status: aiEnabled ? 'live' : 'planned' } : tool))
-}
-
 const seeds: ToolSeed[] = [
   /* ------------------------------------------------------------------ */
   /* TEXT — live                                                         */
@@ -3939,311 +3908,262 @@ const seeds: ToolSeed[] = [
           'No. The barcode is drawn in your browser and nothing is sent to a server.',
       },
     ],
-    privacyNote: 'Runs entirely in your browser. Nothing you encode is uploaded.',
   },
 
   /* ------------------------------------------------------------------ */
-  /* AI — live only when the backend is provisioned                      */
+  /* Phase 3 - advanced developer, data and calculation utilities        */
   /* ------------------------------------------------------------------ */
   {
-    id: 'ai-text-summarizer',
-    name: 'AI Text Summarizer',
-    description: 'Condense a long piece of text into a short summary you can adjust.',
-    categories: ['ai'],
-    keywords: ['summarise', 'summarize', 'tl;dr', 'shorten'],
-    icon: 'sparkles',
-    status: AI_ENABLED ? 'live' : 'planned',
-    inputFormat: 'Text',
-    outputFormat: 'Summary',
-    processingMode: 'ai',
-    addedAt: '2026-10-17',
+    id: 'number-base-converter',
+    name: 'Number Base Converter',
+    description: 'Convert whole numbers between binary, octal, decimal, hexadecimal and base 36, exactly.',
+    categories: ['developer'],
+    keywords: ['binary', 'hexadecimal', 'hex', 'octal', 'decimal', 'base 36', 'radix'],
+    icon: 'hash',
+    status: 'live',
+    inputFormat: 'A number and its base',
+    outputFormat: 'The same number in five bases',
+    processingMode: 'client',
+    addedAt: '2026-10-19',
     instructions: [
-      'Paste the article, report or notes you want shortened.',
-      'Choose whether you want about three sentences, one paragraph, or several paragraphs.',
-      'Press Summarise. The text goes to TOOLZEN’s server and then to the AI provider.',
-      'Read the result before you rely on it — a summary can drop a caveat that mattered.',
+      'Type or paste a whole number.',
+      'Pick the base it is written in.',
+      'Copy any of the five conversions - BigInt arithmetic keeps them exact.',
     ],
     faqs: [
       {
-        question: 'Is my text private when I use an AI tool?',
+        question: 'Why are whole numbers only?',
         answer:
-          'No, and this is the one category where that is true. The text is sent to TOOLZEN’s server, which forwards it to the AI provider to produce the summary. Every other tool on TOOLZEN runs entirely in your browser; these seven cannot, because producing new text needs a language model and a key that ships to a browser is a key anyone can take.',
+          'Fractions in other bases usually repeat forever (1/3 in binary, for example), so any output would either be truncated silently or look exact when it is not. Showing nothing beats showing a lie.',
       },
       {
-        question: 'How much text can I summarise at once?',
+        question: 'How large a number can it take?',
         answer:
-          'Up to 20,000 characters, which is roughly 3,000 words. The limit exists because the model has a finite context and because an endpoint that accepts unlimited text can be made expensive by a single request. The tool counts the characters as you paste.',
+          'Conversion uses arbitrary-precision integers, so values far beyond 64 bits convert exactly - try 2 to the power of 100.',
       },
       {
-        question: 'Will the summary invent things that were not in the source?',
+        question: 'Which digits are valid in each base?',
         answer:
-          'The instruction given to the model is to use only facts from the source and to say so if the text is too short to summarise. That reduces invention but does not eliminate it. Treat the summary as a draft and check anything you intend to publish.',
+          'Base 2 allows 0 and 1; base 16 adds a-f; base 36 adds the whole alphabet. The input is case-insensitive.',
       },
       {
-        question: 'Does it cost me anything?',
+        question: 'What are the bit facts for?',
         answer:
-          'No. There is no charge and no account. TOOLZEN pays for the model call, which is why there is a per-visitor request limit rather than unlimited use.',
+          'They tell you how many significant bits the value needs and how many bytes that rounds up to - useful when you are about to pack it into a fixed-width field.',
       },
     ],
-    privacyNote:
-      'Text is sent to TOOLZEN’s server and on to the AI provider to produce the result. This is the only tool category that leaves your browser.',
+    privacyNote: 'Runs entirely in your browser. Nothing you enter is uploaded.',
   },
   {
-    id: 'ai-writing-assistant',
-    name: 'AI Writing Assistant',
-    description: 'Get help drafting and improving text for a purpose and tone you choose.',
-    categories: ['ai'],
-    keywords: ['writing', 'assistant', 'draft', 'tone'],
-    icon: 'wand',
-    status: AI_ENABLED ? 'live' : 'planned',
-    inputFormat: 'Brief',
-    outputFormat: 'Draft text',
-    processingMode: 'ai',
-    addedAt: '2026-10-17',
+    id: 'url-parser',
+    name: 'URL Parser',
+    description: 'Break a URL into scheme, host, port, path, query parameters and fragment, decoded.',
+    categories: ['developer'],
+    keywords: ['url', 'uri', 'query string', 'parameters', 'parse'],
+    icon: 'link',
+    status: 'live',
+    inputFormat: 'A URL',
+    outputFormat: 'Its parts, with decoded query parameters',
+    processingMode: 'client',
+    addedAt: '2026-10-19',
     instructions: [
-      'Describe what you need written: the topic, the audience, and the points to cover.',
-      'Pick a tone and whether you want paragraphs or bullets.',
-      'Press Write. Your brief goes to TOOLZEN’s server and then to the AI provider.',
-      'Edit the draft. It is a starting point, not a finished piece.',
+      'Paste a URL - it must include the scheme, e.g. https://.',
+      'Read the parts below; the port row says whether you wrote it or it is the scheme default.',
+      'Query parameters are listed decoded, one row per name, including repeats.',
     ],
     faqs: [
       {
-        question: 'What makes a good brief?',
+        question: 'Why does the URL need a scheme?',
         answer:
-          'Say who it is for, what it needs to achieve, and any facts that must appear. The model is told not to add claims your brief does not support, so detail you leave out is detail the draft will not contain.',
+          'example.com/path is not a URL, it is a host and path. The parser tells you so instead of guessing https on your behalf.',
       },
       {
-        question: 'Is my brief private?',
+        question: 'What does "default 443 for https" mean?',
         answer:
-          'No. It is sent to TOOLZEN’s server and forwarded to the AI provider. Do not paste confidential material into any AI tool here.',
+          'The URL omitted the port, and this scheme default is 443. If you wrote :8443 explicitly, the row says so.',
       },
       {
-        question: 'Can it match a specific writing style?',
+        question: 'How are repeated query parameters shown?',
         answer:
-          'It can follow a tone — neutral, friendly, formal or persuasive — and a shape, paragraphs or bullets. It does not clone a named author’s style, and asking it to would produce an imitation rather than the real thing.',
+          'Each occurrence gets its own row, in order, with percent-encoding decoded - so q=a%20b reads as "a b".',
       },
       {
-        question: 'Is the draft ready to publish?',
+        question: 'Does it handle usernames in URLs?',
         answer:
-          'No. Read it, check every factual claim, and adjust the voice. The tool produces text, not verified fact.',
+          'Yes. If the URL carries credentials, the username appears as its own row. Nothing is sent anywhere.',
       },
     ],
-    privacyNote: 'Your brief is sent to TOOLZEN’s server and on to the AI provider.',
+    privacyNote: 'Runs entirely in your browser. The URL you paste is never transmitted.',
   },
   {
-    id: 'ai-grammar-helper',
-    name: 'AI Grammar Helper',
-    description: 'Find grammar, spelling and punctuation issues and apply the suggested fixes.',
-    categories: ['ai'],
-    keywords: ['grammar', 'spelling', 'punctuation', 'proofread'],
-    icon: 'circle-check',
-    status: AI_ENABLED ? 'live' : 'planned',
-    inputFormat: 'Text',
-    outputFormat: 'Corrected text and a list of changes',
-    processingMode: 'ai',
-    addedAt: '2026-10-17',
+    id: 'unit-converter',
+    name: 'Unit Converter',
+    description: 'Convert lengths, weights, data sizes and temperatures with exact factor tables.',
+    categories: ['calculator'],
+    keywords: ['units', 'length', 'weight', 'temperature', 'data size', 'metric', 'imperial', 'celsius', 'fahrenheit'],
+    icon: 'ruler',
+    status: 'live',
+    inputFormat: 'A value and a unit',
+    outputFormat: 'The value in every other unit of the category',
+    processingMode: 'client',
+    addedAt: '2026-10-19',
     instructions: [
-      'Paste the text you want checked.',
-      'Choose how strict the check should be — clear errors only, errors and awkward phrasing, or a full tighten.',
-      'Press Proofread. The text goes to TOOLZEN’s server and then to the AI provider.',
-      'Compare the corrected text with the original, and read the list of changes underneath.',
+      'Pick a category: length, weight, data size or temperature.',
+      'Enter a value and choose the unit it is in.',
+      'Every other unit in the category is converted at once; each result can be copied.',
     ],
     faqs: [
       {
-        question: 'Will it rewrite my voice?',
+        question: 'What is the difference between MB and MiB?',
         answer:
-          'The instruction is to fix errors without changing your meaning or voice, and the strictness setting controls how much rephrasing is allowed. On the loosest setting it only fixes definite errors. On the strictest it may also tighten wordy phrasing, which is a matter of taste — read the changes list before accepting them.',
+          'A megabyte is 1,000 bytes squared; a mebibyte is 1,024 bytes squared. Both families are listed separately so a file size never silently changes meaning.',
       },
       {
-        question: 'How do I know what it changed?',
+        question: 'How are temperatures converted?',
         answer:
-          'The reply is split into the corrected text and a list of changes with the reason for each. If the model returns no marker, the tool shows the whole reply as corrected text rather than guessing where the boundary was.',
+          'With the real affine formulas - F = C x 9/5 + 32, K = C + 273.15 - not by a multiplication factor, which would be wrong.',
       },
       {
-        question: 'Is my text private?',
+        question: 'Why does a very cold temperature produce a warning?',
         answer:
-          'No. It is sent to TOOLZEN’s server and forwarded to the AI provider. If the text is confidential, do not paste it.',
+          'Anything below -273.15 C is below absolute zero, which no physical system can reach. The tool flags it instead of converting nonsense.',
       },
       {
-        question: 'Does it catch everything?',
+        question: 'How precise are the results?',
         answer:
-          'No proofreader does. It is good at spelling, agreement and punctuation, and less reliable on meaning — a sentence can be grammatically perfect and still say the wrong thing. Read the result.',
+          'Computed in double precision and displayed to ten significant digits, which is well past the accuracy of the conversion factors themselves.',
       },
     ],
-    privacyNote: 'Your text is sent to TOOLZEN’s server and on to the AI provider.',
+    privacyNote: 'Runs entirely in your browser. Nothing you enter is uploaded.',
   },
   {
-    id: 'ai-email-drafting',
-    name: 'AI Email Drafting',
-    description: 'Draft a clear email from a short brief, with the tone and length you need.',
-    categories: ['ai'],
-    keywords: ['email', 'draft', 'compose', 'reply'],
-    icon: 'mail',
-    status: AI_ENABLED ? 'live' : 'planned',
-    inputFormat: 'Brief',
-    outputFormat: 'Email draft with a subject line',
-    processingMode: 'ai',
-    addedAt: '2026-10-17',
+    id: 'http-status-reference',
+    name: 'HTTP Status Reference',
+    description: 'A searchable, plain-language reference for the HTTP status codes you actually meet.',
+    categories: ['developer'],
+    keywords: ['http', 'status code', '404', '500', '301', 'rest', 'api'],
+    icon: 'globe',
+    status: 'live',
+    inputFormat: 'A search, or nothing',
+    outputFormat: 'Status codes with what each means in practice',
+    processingMode: 'client',
+    addedAt: '2026-10-19',
     instructions: [
-      'Describe what the email needs to say, in plain words.',
-      'Pick a tone — professional, friendly, firm or apologetic — and a length.',
-      'Press Draft an email. The brief goes to TOOLZEN’s server and then to the AI provider.',
-      'Fill in any square-bracket placeholders before you send it.',
+      'Search by number, name, or meaning - try "redirect", "timeout" or "429".',
+      'Results are grouped by class: informational, success, redirection, client error, server error.',
+      'Clear the search to see the full curated list.',
     ],
     faqs: [
       {
-        question: 'Why are there square brackets in the draft?',
+        question: 'Is every HTTP status code listed?',
         answer:
-          'The model is told never to invent dates, prices or names. When something is genuinely needed and your brief did not supply it, it leaves a clear placeholder such as [date] rather than guessing a plausible-looking value. That is deliberate.',
+          'No - this is a curated reference of the codes worth having at your fingertips, with a practical note for each, rather than an exhaustive registry.',
       },
       {
-        question: 'Does it write a subject line?',
+        question: 'What is the difference between 401 and 403?',
         answer:
-          'Yes. The draft starts with a subject line on its own line, then the body.',
+          '401 means "who are you?" - authenticate or re-authenticate. 403 means "I know who you are and you still may not". Re-authenticating never fixes a 403.',
       },
       {
-        question: 'Is my brief private?',
+        question: 'Why is 401 called Unauthorized?',
         answer:
-          'No. It is sent to TOOLZEN’s server and forwarded to the AI provider. Do not describe anything confidential.',
+          'Historical accident. It actually means unauthenticated, which is why 403 exists for the known-but-forbidden case.',
       },
       {
-        question: 'Should I send the draft as it is?',
+        question: 'Does it work offline?',
         answer:
-          'Read it first, and check the facts, the names and the placeholders. An email that reads well but states the wrong date is worse than one that reads badly.',
+          'Yes - the dataset ships with the page and is searched entirely in your browser.',
       },
     ],
-    privacyNote: 'Your brief is sent to TOOLZEN’s server and on to the AI provider.',
+    privacyNote: 'Runs entirely in your browser. Nothing is uploaded and nothing is logged.',
   },
   {
-    id: 'ai-document-assistant',
-    name: 'AI Document Assistant',
-    description: 'Ask questions about a document and get answers grounded in its contents.',
-    categories: ['ai'],
-    keywords: ['document', 'questions', 'assistant', 'q&a'],
-    icon: 'file-text',
-    status: AI_ENABLED ? 'live' : 'planned',
-    inputFormat: 'Pasted document and a question',
-    outputFormat: 'Answer grounded in the document',
-    processingMode: 'ai',
-    addedAt: '2026-10-17',
+    id: 'json-to-typescript',
+    name: 'JSON to TypeScript',
+    description: 'Generate TypeScript interfaces from a JSON payload, including nested objects and arrays.',
+    categories: ['developer'],
+    keywords: ['json', 'typescript', 'types', 'interface', 'code generation'],
+    icon: 'braces',
+    status: 'live',
+    inputFormat: 'JSON',
+    outputFormat: 'TypeScript interfaces',
+    processingMode: 'client',
+    addedAt: '2026-10-19',
     instructions: [
-      'Paste the document you want to ask about.',
-      'Type the question underneath it.',
-      'Press Answer from a document. Both go to TOOLZEN’s server and then to the AI provider.',
-      'If the answer is not in the document, the tool says so instead of guessing.',
+      'Paste a JSON payload - an API response is the usual candidate.',
+      'Set the root type name if you want something better than Root.',
+      'Copy the generated interfaces or download them as types.ts.',
     ],
     faqs: [
       {
-        question: 'What happens if the answer is not in the document?',
+        question: 'How are arrays handled?',
         answer:
-          'The tool is instructed to reply "The document does not say" and stop, rather than filling the gap with general knowledge. That is the whole point of a grounded question: an answer you can trace back to a sentence you pasted.',
+          'An array of objects becomes one item interface used as an array; mixed element types become an explicit union, and an empty array becomes unknown[].',
       },
       {
-        question: 'Can I upload a PDF?',
+        question: 'Why is nothing marked optional?',
         answer:
-          'Not directly. This tool takes pasted text, so open the PDF, select the text and paste it in. A scanned PDF has no text layer to select — the PDF to Text tool explains why, and it will not run optical character recognition.',
+          'A key present in the sample is emitted as required. Marking fields optional without seeing the data say so would produce types that lie.',
       },
       {
-        question: 'How long can the document be?',
+        question: 'What happens to null?',
         answer:
-          'Up to 20,000 characters, roughly 3,000 words. Longer documents need to be split, because the model has a finite context and because a huge paste is expensive to process.',
+          'It becomes an explicit null union member, so the generated type refuses to pretend the value is always a string or number.',
       },
       {
-        question: 'Is my document private?',
+        question: 'Are awkward keys handled?',
         answer:
-          'No. It is sent to TOOLZEN’s server and forwarded to the AI provider. This is the most sensitive of the seven tools for that reason — do not paste contracts, medical records or anything confidential.',
+          'Yes - keys that are not valid identifiers (order-id, class, 2026-plan) are quoted or prefixed so the output always compiles.',
       },
     ],
-    privacyNote: 'Your document is sent to TOOLZEN’s server and on to the AI provider.',
+    privacyNote: 'Runs entirely in your browser. Your JSON is never transmitted.',
   },
   {
-    id: 'ai-translation',
-    name: 'AI Translation',
-    description: 'Translate text between languages while keeping the original meaning and tone.',
-    categories: ['ai'],
-    keywords: ['translate', 'language', 'translation'],
-    icon: 'languages',
-    status: AI_ENABLED ? 'live' : 'planned',
-    inputFormat: 'Text and target language',
-    outputFormat: 'Translated text',
-    processingMode: 'ai',
-    addedAt: '2026-10-17',
+    id: 'slug-generator',
+    name: 'Slug Generator',
+    description: 'Turn titles into clean URL slugs, with accent transliteration and batch mode.',
+    categories: ['text'],
+    keywords: ['slug', 'url', 'seo', 'permalink', 'transliterate'],
+    icon: 'pilcrow',
+    status: 'live',
+    inputFormat: 'Titles, one per line for batches',
+    outputFormat: 'URL slugs',
+    processingMode: 'client',
+    addedAt: '2026-10-19',
     instructions: [
-      'Paste the text you want translated.',
-      'Choose the language to translate into.',
-      'Press Translate. The text goes to TOOLZEN’s server and then to the AI provider.',
-      'Have a speaker check anything important before you publish it.',
+      'Type or paste a title - or one title per line to batch.',
+      'Choose the word separator, optionally cap the length, and toggle lowercase.',
+      'Copy the slug; the tiles count how many lines produced a usable one.',
     ],
     faqs: [
       {
-        question: 'Which languages are supported?',
+        question: 'What happens to accented characters?',
         answer:
-          'Spanish, French, German, Portuguese, Hindi, Gujarati, Arabic, Chinese (Simplified), Japanese and Russian. The list is fixed rather than free text so a language name cannot carry an instruction into the prompt.',
+          'They are transliterated: cafe from cafe-with-accent, uber from uber-with-umlaut. The slug stays ASCII, which is what URLs and SEO tooling expect.',
       },
       {
-        question: 'Does it keep the paragraph breaks?',
+        question: 'What happens to text in other scripts?',
         answer:
-          'Yes, the instruction is to preserve paragraph breaks and lists exactly. In practice a long document can still drift, so check the shape of the output as well as the words.',
+          'Japanese, Chinese, Cyrillic and emoji are dropped rather than mangled. The counter shows when a line produced nothing, so nothing is silently lost.',
       },
       {
-        question: 'Can I trust it for a legal or medical document?',
+        question: 'How does the length cap cut?',
         answer:
-          'No. Machine translation can be confidently wrong on exactly the terms that matter most in those documents. Use a qualified human translator for anything with consequences.',
+          'On a word boundary - it truncates at the last separator before the cap so words stay whole whenever possible.',
       },
       {
-        question: 'Is my text private?',
+        question: 'Why choose dots or underscores?',
         answer:
-          'No. It is sent to TOOLZEN’s server and forwarded to the AI provider.',
+          'Underscores suit file names and some CMS id conventions; dots suit file-name-style slugs. Hyphens remain the SEO default for URLs.',
       },
     ],
-    privacyNote: 'Your text is sent to TOOLZEN’s server and on to the AI provider.',
-  },
-  {
-    id: 'ai-text-rewriter',
-    name: 'AI Text Rewriter',
-    description: 'Rewrite text to be shorter, clearer, more formal or more casual.',
-    categories: ['ai'],
-    keywords: ['rewrite', 'paraphrase', 'reword', 'tone'],
-    icon: 'refresh',
-    status: AI_ENABLED ? 'live' : 'planned',
-    inputFormat: 'Text and style',
-    outputFormat: 'Rewritten text',
-    processingMode: 'ai',
-    addedAt: '2026-10-17',
-    instructions: [
-      'Paste the text you want rewritten.',
-      'Choose the style: simpler, shorter, more formal, or more engaging.',
-      'Press Rewrite. The text goes to TOOLZEN’s server and then to the AI provider.',
-      'Check that no fact changed while the wording did.',
-    ],
-    faqs: [
-      {
-        question: 'How is this different from the Grammar Helper?',
-        answer:
-          'The Grammar Helper fixes errors and leaves the wording as close to yours as it can. The Rewriter changes the wording on purpose — simpler, shorter, more formal or more engaging — while keeping the meaning and the facts.',
-      },
-      {
-        question: 'Will it drop detail when I choose Shorter?',
-        answer:
-          'It is instructed to cut only what does not carry meaning. That is an instruction, not a guarantee: compare the two texts before you use the shorter one, especially if it contains figures or conditions.',
-      },
-      {
-        question: 'Can it make text pass a plagiarism checker?',
-        answer:
-          'That is not what it is for, and it would not be honest to claim it. Rewriting someone else’s work to disguise its origin is plagiarism whatever the wording. Use it on your own text, to say the same thing better.',
-      },
-      {
-        question: 'Is my text private?',
-        answer:
-          'No. It is sent to TOOLZEN’s server and forwarded to the AI provider.',
-      },
-    ],
-    privacyNote: 'Your text is sent to TOOLZEN’s server and on to the AI provider.',
+    privacyNote: 'Runs entirely in your browser. Nothing you type is uploaded.',
   },
 ]
 
+
 /** Full registry with routes derived from each tool's id. */
-export const tools: Tool[] = withAiStatus(seeds, AI_ENABLED).map((tool) => ({
+export const tools: Tool[] = seeds.map((tool) => ({
   ...tool,
   route: `/tools/${tool.id}`,
 }))

@@ -5,10 +5,10 @@
 A free, privacy-conscious online tools platform for documents, images, files, text, developers and
 everyday digital tasks.
 
-> **Status: Phase 1 (Foundation) complete.** This repository contains the design system, homepage,
-> tool directory, search, the tool registry and three genuinely working tools. Tools for PDF, image,
-> file conversion, developer, security, calculator, QR and AI categories are registered as
-> **planned** and are clearly labelled "Coming soon" — they are not implemented yet.
+> **Status: Phases 1–3 complete — 92 tools live.** PDF, image, document, conversion, text,
+> developer, security, calculator, QR and colour categories are implemented and working. TOOLZEN is
+> a conventional utilities platform: every tool is deterministic software running on standard
+> libraries and browser APIs, with no AI integration of any kind.
 
 ---
 
@@ -28,11 +28,10 @@ The homepage prints the real number, derived from the registry rather than hard-
 | Document | 6 | CSV/JSON, formatters, Base64, URL encoding, UUID, timestamps |
 | QR & barcode | 2 | QR codes (text, link, Wi-Fi, contact card), five barcode formats |
 | Conversion | 1 | File size conversion |
-| AI | 0 by default | Seven tools, implemented but disabled until a provider key is configured — see below |
 
-Nine tools remain planned: the seven AI tools (needing a server key), plus **Unlock PDF** and
-**Protect PDF**, which cannot be built in the browser at all because `pdf-lib` has no RC4 or AES
-support in either direction. Their pages say so rather than implying they are coming soon.
+Two tools remain planned: **Unlock PDF** and **Protect PDF**, which cannot be built in the
+browser at all because `pdf-lib` has no RC4 or AES support in either direction. Their pages say so
+rather than implying they are coming soon.
 
 There are **no fake buttons and no fabricated results** anywhere in the app — the test suite
 enforces this (see `src/tools/ToolRenderer.test.ts`).
@@ -107,9 +106,6 @@ Copy `.env.example` to `.env.local`. All variables are optional for Phase 1.
 ## Project structure
 
 ```
-api/
-  ai.ts         The only server code: holds the AI provider key, builds the
-                prompts server-side, rate limits, never returns the key
 src/
   components/
     ads/         AdSlot — isolated from tool logic, off by default
@@ -119,15 +115,12 @@ src/
     ui/          Design-system primitives (Button, Card, Form, Toast, Modal, …)
   data/
     categories.ts  The 12 categories and their accent palettes
-    tools.ts       The tool registry (live + planned), AI status gating
+    tools.ts       The tool registry (live + planned)
     registry.ts    Search, filter, sort, related-tools and stats helpers
   lib/          cn(), formatters, theme persistence, clipboard helpers
-    ai-tasks.ts    The seven AI task definitions and their prompts
-    ai-client.ts   Browser half of the AI tools: probe, run, typed errors
   pages/        Home, AllTools, CategoryPage, ToolPage, About, Privacy, Terms, NotFound
   tools/        One folder per working tool (logic.ts + index.tsx + logic.test.ts)
     ToolRenderer.tsx  Maps a registry id to its component
-    shared/AiTool.tsx The shared body of all seven AI tools
   types/        Shared domain types
 ```
 
@@ -158,36 +151,15 @@ tool accidentally gains one.
 
 Every tool page states which processing mode applies:
 
-- **In your browser** — the tool runs on your device; nothing is uploaded. This is 92 of the 101
+- **In your browser** — the tool runs on your device; nothing is uploaded. This is all 92 live
   tools, including every PDF, image, text, developer, security and calculator tool.
-- **Sent to an AI provider** — the seven AI tools send your text to the serverless function in
-  `api/ai.ts`, which forwards it to the configured provider and returns the reply. Nothing is
-  retained by TOOLZEN. These are the only tools where text leaves the device.
 - **On a TOOLZEN server with temporary storage** — reserved for future tools that need server-side
   compute. No tool currently uses it.
+- TOOLZEN has no AI features: no AI APIs, no AI keys and no AI-powered tools.
 
 See `/privacy` for the full policy.
 
 ---
-
-## AI tools
-
-The seven AI tools are implemented and tested, but they cannot run without a provider key, so they
-ship **disabled** by default. Two steps switch them on:
-
-1. Set `AI_PROVIDER_API_KEY` in the hosting environment (Vercel → Settings → Environment Variables).
-   Optionally set `AI_PROVIDER_BASE_URL` (any OpenAI-compatible endpoint) and `AI_PROVIDER_MODEL`
-   (default `gpt-4o-mini`).
-2. Build with `VITE_AI_ENABLED=true`.
-
-Until both are done, the tools stay `planned` in the registry, are excluded from the sitemap, and
-the homepage's "available today" count stays truthful. If the flag is on but the key is missing,
-the tool renders an explanation and **no controls at all** rather than a button that fails.
-
-`api/ai.ts` is the only server code in the project. It refuses client-supplied prompts — the client
-names a task and the prompts live in `src/lib/ai-tasks.ts` — so the endpoint cannot be used as a
-free general-purpose language-model proxy. It also rate limits per address and never returns or logs
-the key.
 
 ---
 
@@ -233,8 +205,7 @@ Set `VITE_SITE_URL` to your production origin in the hosting provider's environm
 | --- | --- | --- |
 | 1 | Foundation: setup, design system, homepage, directory, search, registry | ✅ Complete |
 | 2 | PDF, image, text and file utilities; calculators; QR and barcode | ✅ Complete — 92 tools live |
-| 3 | Developer tools, defensive security tools, document conversion | ✅ Complete |
-| 4 | Secure server processing: the AI endpoint | ✅ Built — enable with a provider key |
+| 3 | Advanced developer, security and data utilities; no AI by design | ✅ Complete |
 | 5 | Ad integration, performance/a11y/security review, launch | Pending |
 | — | Optional auth, admin dashboard, analytics | Not started, not promised |
 | — | Unlock PDF / Protect PDF | Blocked — `pdf-lib` has no RC4 or AES support |
