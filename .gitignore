@@ -31,3 +31,9 @@ pnpm-debug.log*
 
 # Test / coverage
 coverage
+
+# Verification scratch (smoke-test dumps, route lists, temp logs)
+__smoke/
+__routes.txt
+__*.html
+__*.log
