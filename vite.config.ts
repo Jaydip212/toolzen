@@ -20,6 +20,8 @@ const DEFAULT_SITE_URL = 'https://www.etoolzen.com'
 const staticRoutes: { path: string; changefreq: string; priority: string }[] = [
   { path: '/', changefreq: 'weekly', priority: '1.0' },
   { path: '/tools', changefreq: 'weekly', priority: '0.9' },
+  { path: '/guides', changefreq: 'weekly', priority: '0.6' },
+  { path: '/suggest', changefreq: 'monthly', priority: '0.4' },
   { path: '/about', changefreq: 'monthly', priority: '0.5' },
   { path: '/privacy', changefreq: 'monthly', priority: '0.4' },
   { path: '/terms', changefreq: 'monthly', priority: '0.4' },
@@ -197,6 +199,7 @@ function buildLlmsTxt(siteUrl: string): string {
     '',
     '## Guides',
     '',
+    `- [Guides index](${siteUrl}/guides): every TOOLZEN guide`,
     ...GUIDES.map(
       (guide) =>
         `- [${guide.title}](${siteUrl}/guides/${guide.slug}): ${guide.description}`,
@@ -208,6 +211,7 @@ function buildLlmsTxt(siteUrl: string): string {
     `- [Privacy Policy](${siteUrl}/privacy): local vs server processing, and file retention`,
     `- [Terms of Service](${siteUrl}/terms): acceptable use and disclaimers`,
     `- [Contact](${siteUrl}/contact): reaching the operator`,
+    `- [Suggest a tool](${siteUrl}/suggest): request a new utility`,
     `- [All tools](${siteUrl}/tools): the complete directory`,
     '',
   )
