@@ -163,6 +163,58 @@ See `/privacy` for the full policy.
 
 ---
 
+## Monetization, analytics and growth (Phases 4-6)
+
+- **Ad slots** cover the homepage, category pages and tool pages (top, bottom
+  and a desktop sidebar). They render nothing unless `VITE_ADS_ENABLED=true`;
+  with ads on but no publisher id, an honest "ad space reserved" placeholder
+  appears. No AdSense loader is injected until a real account exists, and no
+  publisher ids are invented.
+- **Direct sponsorships** are owner-supplied campaigns in
+  `src/components/ads/sponsorships.ts`, which ships empty. A campaign renders
+  only inside its date window, carries a visible "Sponsored" label, targets
+  https only and uses `rel="sponsored noopener"`. No agreement means no render.
+- **Analytics** (`src/lib/analytics.ts`) is off without
+  `VITE_ANALYTICS_ENDPOINT`. When configured, the payload is only an event
+  name, a page path and a registry id - never user input, file contents,
+  search text or filenames. Failure can never break a tool.
+- **Feedback and tool requests** validate fully and deliver only through an
+  optional `VITE_FEEDBACK_ENDPOINT`; without it the forms say plainly that
+  delivery is not configured. Real rate limiting belongs on that endpoint.
+- **Favourites and recently used tools** live in localStorage as ids only,
+  capped at ten recent entries, clearable and disableable. Nothing leaves the
+  browser. The **guides library** (`src/data/guides.ts`) holds real step-by-step
+  articles with comparison sections, linked only to live registry tools.
+
+## Advanced utilities (Phase 7)
+
+Fifteen new tools were added with no new dependencies: time-zone conversion
+(Intl, DST-aware), Roman numerals, number to words, UTF-8 binary text, CSS
+unit conversion, crypto-random number and token generation, list shuffling,
+meta tag / robots.txt / sitemap.xml generators, file signature inspection,
+canvas image effects (grayscale, invert, brightness, contrast) and exact-cents
+tip and split-bill calculators. The Unit Converter gained area, volume and
+speed families. All are client-side; the shared pure logic lives in
+`src/lib/phase7/` and is unit-tested in Node.
+
+Deliberately excluded, with reasons rather than placeholders:
+- **DOCX / XLSX / PPTX / RTF reading and writing** - ZIP-based Office Open XML
+  formats need a large document library, and some conversions (notably PPTX to
+  PDF) genuinely require server-side rendering. Clearly identified as a future
+  server component, not faked.
+- **Language minifiers, HTML/CSS validators and YAML converters** - correct
+  implementations need real parsers, not regex, and those libraries would grow
+  every bundle. Nothing here fakes a minify or a validation.
+- **Timers, calendars and the remaining money calculators** - not built; the
+  existing percentage, EMI, GST, compound-interest, date and time calculators
+  continue to work.
+- **Comparison pages** - handled by the Phase 6 guides library rather than
+  duplicated as thin pages.
+
+Every published tool has registry metadata, instructions, three FAQs, a
+privacy note and a real implementation; the registry integrity test enforces
+that standard.
+
 ## Advertisements
 
 Ad slots are **off by default** and render nothing. They are fully isolated from tool functionality:
