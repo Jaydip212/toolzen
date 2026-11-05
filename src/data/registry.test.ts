@@ -110,6 +110,19 @@ describe('searchTools', () => {
     expect(searchTools({ query: 'WORD COUNTER' })[0]?.id).toBe('word-counter')
   })
 
+  it('finds tools by a supported file format', () => {
+    // "webp" is not in most tool names, but the WebP converter declares it.
+    const results = searchTools({ query: 'webp' })
+    expect(results.some((tool) => tool.id === 'webp-converter')).toBe(true)
+    const csv = searchTools({ query: 'csv' })
+    expect(csv.some((tool) => tool.id === 'csv-to-json')).toBe(true)
+  })
+
+  it('finds tools by category name', () => {
+    const results = searchTools({ query: 'barcode' })
+    expect(results.some((tool) => tool.id === 'barcode-generator')).toBe(true)
+  })
+
   it('filters by category', () => {
     const results = searchTools({ category: 'pdf' })
     expect(results.length).toBeGreaterThan(0)

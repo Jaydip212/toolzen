@@ -18,8 +18,11 @@ import { ErrorState } from '@/components/ui/ErrorState'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { AdSlot } from '@/components/ads/AdSlot'
 import { trackEvent } from '@/lib/analytics'
+import { touchRecent } from '@/lib/usage'
 import { Seo } from '@/components/seo/Seo'
 import { ToolCard } from '@/components/tools/ToolCard'
+import { FavoriteButton } from '@/components/tools/FavoriteButton'
+import { FeedbackDialog } from '@/components/tools/FeedbackDialog'
 import { PageShell } from '@/components/layout/PageShell'
 import { NotFound } from './NotFound'
 
@@ -59,7 +62,11 @@ export function ToolPage() {
   const ToolComponent = getToolComponent(tool.id)
   // Counted once per mounted tool page, with the registry id only.
   useEffect(() => {
-    if (tool.status === 'live') trackEvent('tool_open', { toolId: tool.id })
+    if (tool.status === 'live') {
+      trackEvent('tool_open', { toolId: tool.id })
+      // Local, id-only history for the Recently used section.
+      touchRecent(tool.id)
+    }
   }, [tool.id, tool.status])
 
   const isAvailable = tool.status === 'live' && Boolean(ToolComponent)
@@ -131,6 +138,7 @@ export function ToolPage() {
               ) : (
                 <Badge variant="outline">Coming soon</Badge>
               )}
+              {isAvailable && <FavoriteButton toolId={tool.id} toolName={tool.name} />}
             </div>
             <p
               id="tool-summary"
@@ -268,6 +276,8 @@ export function ToolPage() {
             </p>
           )}
         </section>
+
+        <FeedbackDialog toolId={tool.id} toolName={tool.name} />
 
         <AdSlot placement="tool-bottom" className="mt-10" />
 

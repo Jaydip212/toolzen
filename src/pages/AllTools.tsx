@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { categories } from '@/data/categories'
-import { searchTools, type StatusFilter, type ToolSort } from '@/data/registry'
+import { liveTools, searchTools, type StatusFilter, type ToolSort } from '@/data/registry'
 import type { ToolCategoryId } from '@/types/tool'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/Button'
@@ -12,6 +12,7 @@ import { Input, Select } from '@/components/ui/Form'
 import { Seo } from '@/components/seo/Seo'
 import { ToolCard } from '@/components/tools/ToolCard'
 import { PageShell } from '@/components/layout/PageShell'
+import { PersonalTools } from '@/components/tools/PersonalTools'
 
 export function AllTools() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -60,6 +61,8 @@ export function AllTools() {
     [query, category, sort],
   )
 
+  const liveIds = useMemo(() => new Set(liveTools().map((tool) => tool.id)), [])
+
   const available = results.filter((tool) => tool.status === 'live')
   const comingSoon = results.filter((tool) => tool.status === 'planned')
   const filtersActive = query.trim().length > 0 || category !== 'all' || status !== 'live'
@@ -87,6 +90,12 @@ export function AllTools() {
             to “All tools” to see the full roadmap, including tools still in development.
           </p>
         </header>
+
+        {/*
+          The visitor's own sections sit above the directory, but only when no
+          search or filter is active — during a search they are noise.
+        */}
+        {!filtersActive && <PersonalTools liveIds={liveIds} />}
 
         {/* Controls */}
         <div className="mt-8 flex flex-col gap-4">

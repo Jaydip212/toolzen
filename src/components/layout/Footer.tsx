@@ -7,6 +7,8 @@ const footerCategories = ['pdf', 'image', 'text', 'developer', 'calculator'] as 
 const platformLinks = [
   { label: 'All Tools', to: '/tools' },
   { label: 'About', to: '/about' },
+  { label: 'Guides', to: '/guides' },
+  { label: 'Suggest a tool', to: '/suggest' },
   { label: 'Privacy Policy', to: '/privacy' },
   { label: 'Terms of Service', to: '/terms' },
   { label: 'Contact', to: '/contact' },

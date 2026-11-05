@@ -86,6 +86,15 @@ function scoreTerm(tool: Tool, term: string): number {
 
   if (description.includes(term)) score += 8
 
+  // File-format discovery: "jpg", "csv", "pdf" should find tools that accept
+  // or produce those formats. Weighted below names and keywords so a format
+  // match never outranks a tool actually named for the query.
+  const formats = `${tool.inputFormat} ${tool.outputFormat}`.toLowerCase()
+  if (formats.includes(term)) score += 12
+
+  // Category discovery: "qr" or "calculator" surfaces every tool in the group.
+  if (tool.categories.some((category) => category === term)) score += 15
+
   return score
 }
 

@@ -5,6 +5,7 @@ import { fileURLToPath, URL } from 'node:url'
 
 import { tools } from './src/data/tools'
 import { categories, categoryName, categoryRoute } from './src/data/categories'
+import { GUIDES } from './src/data/guides'
 
 // Inlined rather than imported from src/lib/site.ts, because that module reads
 // `import.meta.env`, which is not available while Vite bundles its own config.
@@ -52,6 +53,11 @@ function buildSitemap(siteUrl: string): string {
         priority: '0.8',
         lastmod: tool.addedAt,
       })),
+    ...GUIDES.map((guide) => ({
+      loc: `${siteUrl}/guides/${guide.slug}`,
+      changefreq: 'monthly',
+      priority: '0.6',
+    })),
   ]
 
   const urls = entries
@@ -188,6 +194,13 @@ function buildLlmsTxt(siteUrl: string): string {
   }
 
   lines.push(
+    '',
+    '## Guides',
+    '',
+    ...GUIDES.map(
+      (guide) =>
+        `- [${guide.title}](${siteUrl}/guides/${guide.slug}): ${guide.description}`,
+    ),
     '',
     '## Information and policies',
     '',

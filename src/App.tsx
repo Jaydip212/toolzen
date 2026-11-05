@@ -11,6 +11,9 @@ import { About } from '@/pages/About'
 import { Privacy } from '@/pages/Privacy'
 import { Terms } from '@/pages/Terms'
 import { Contact } from '@/pages/Contact'
+import { Guides } from '@/pages/Guides'
+import { Suggest } from '@/pages/Suggest'
+import { GuidePage } from '@/pages/GuidePage'
 import { NotFound } from '@/pages/NotFound'
 
 export function App() {
@@ -36,6 +39,9 @@ export function App() {
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/guides" element={<Guides />} />
+              <Route path="/suggest" element={<Suggest />} />
+              <Route path="/guides/:slug" element={<GuidePage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
