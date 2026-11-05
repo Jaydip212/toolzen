@@ -16,8 +16,7 @@ export function ToolCard({ tool, className }: ToolCardProps) {
     <Link
       to={tool.route}
       className={cn(
-        'group tz-card flex flex-col gap-3 p-5 transition duration-200',
-        'hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-card-hover',
+        'group tz-card tz-card-interactive flex flex-col gap-3 p-5',
         className,
       )}
     >

@@ -155,9 +155,9 @@ export function ToolPage() {
             slot is in normal flow beside the workspace, never overlapping or
             covering the tool's controls, results or download buttons. */}
         <div className="mt-8 grid gap-8 xl:grid-cols-[minmax(0,1fr)_240px]">
-          <section aria-label={`${tool.name} workspace`}>
+          <section aria-label={`${tool.name} workspace`} aria-describedby="tool-summary">
           {isAvailable && ToolComponent ? (
-            <div className="tz-card p-5 sm:p-6">
+            <div className="tz-workspace p-5 sm:p-6">
               <Suspense fallback={<ToolWorkspaceFallback />}>
                 <ToolComponent />
               </Suspense>

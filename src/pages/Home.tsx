@@ -1,8 +1,8 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { categories, categoryRoute } from '@/data/categories'
-import { getTool, platformStats, recentlyAddedTools } from '@/data/registry'
+import { getTool, liveTools, platformStats, recentlyAddedTools } from '@/data/registry'
 import type { Tool } from '@/types/tool'
 import { SITE_DEFINITION } from '@/lib/site'
 import { compactSchemas, faqSchema, speakableSchema } from '@/lib/schema'
@@ -13,6 +13,9 @@ import { Input } from '@/components/ui/Form'
 import { Badge } from '@/components/ui/Badge'
 import { AdSlot } from '@/components/ads/AdSlot'
 import { SponsorSlot } from '@/components/ads/SponsorSlot'
+import { GUIDES } from '@/data/guides'
+import { collectionSummary, heroBadgeLabel, personalToolIds } from '@/lib/phase8/discovery'
+import { getFavorites, getRecent } from '@/lib/usage'
 import { Seo } from '@/components/seo/Seo'
 import { CategoryCard } from '@/components/tools/CategoryCard'
 import { ToolCard } from '@/components/tools/ToolCard'
@@ -160,6 +163,18 @@ export function Home() {
   const stats = platformStats()
   const popular = toolsByIds(POPULAR_TOOL_IDS)
   const recent = recentlyAddedTools(4)
+  const [personalIds, setPersonalIds] = useState<string[]>([])
+
+  // The visitor's own favourites and history, read from this browser only.
+  useEffect(() => {
+    const known = new Set(liveTools().map((tool) => tool.id))
+    setPersonalIds(
+      personalToolIds(getFavorites(), getRecent().map((entry) => entry.id), known, 4),
+    )
+  }, [])
+
+  const personal = toolsByIds(personalIds)
+  const featuredGuides = GUIDES.slice(0, 3)
 
   const jsonLd = useMemo(
     () =>
@@ -192,12 +207,13 @@ export function Home() {
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 bg-gradient-to-b from-brand-soft/60 to-transparent"
         />
+        <div aria-hidden="true" className="tz-hero-grid pointer-events-none absolute inset-0 opacity-70" />
         <div className="tz-container relative py-16 sm:py-20 lg:py-24">
-          <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
+          <div className="tz-page-enter grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
             <div>
               <Badge variant="brand" className="mb-5">
                 <Icon name="sparkles" size={13} />
-                100+ free online tools
+                {heroBadgeLabel(stats.live)}
               </Badge>
 
               <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
@@ -248,17 +264,46 @@ export function Home() {
       </section>
 
       {/* ---------------------------------------------------------------- */}
+      {/* Your tools — honest local data, hidden when there is none          */}
+      {/* ---------------------------------------------------------------- */}
+      {personal.length > 0 && (
+        <section className="tz-container mt-14" aria-labelledby="your-tools-heading">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div className="max-w-2xl">
+              <p className="tz-eyebrow">Your tools</p>
+              <h2 id="your-tools-heading" className="tz-section-title mt-2">
+                Pick up where you left off
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-muted sm:text-base">
+                Favourites and recently used tools from this browser. These are your own visits —
+                not a popularity ranking — and nothing is shared with anyone.
+              </p>
+            </div>
+            <Link to="/tools" className="text-sm font-medium text-brand transition-colors hover:underline">
+              All tools →
+            </Link>
+          </div>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {personal.map((tool) => (
+              <ToolCard key={tool.id} tool={tool} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ---------------------------------------------------------------- */}
       {/* Popular tools                                                     */}
       {/* ---------------------------------------------------------------- */}
       {popular.length > 0 && (
         <section className="tz-container mt-16" aria-labelledby="popular-heading">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div className="max-w-2xl">
-              <h2 id="popular-heading" className="text-2xl font-semibold tracking-tight sm:text-3xl">
+              <h2 id="popular-heading" className="tz-section-title">
                 Popular tools
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-muted sm:text-base">
-                The tools people reach for most — merge a PDF, shrink an image, format some JSON.
+                A curated starting point — merge a PDF, shrink an image, format some JSON. This is
+                an editorial selection, not a usage ranking: TOOLZEN collects no popularity data.
               </p>
             </div>
             <Link
@@ -284,12 +329,11 @@ export function Home() {
       {/* ---------------------------------------------------------------- */}
       <section className="tz-container mt-16" aria-labelledby="categories-heading">
         <div className="max-w-2xl">
-          <h2 id="categories-heading" className="text-2xl font-semibold tracking-tight sm:text-3xl">
+          <h2 id="categories-heading" className="tz-section-title">
             Explore categories
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-muted sm:text-base">
-            Twelve focused collections covering documents, media, code, security, calculations and
-            everyday productivity.
+            {collectionSummary(categories.length)}
           </p>
         </div>
 
@@ -305,7 +349,7 @@ export function Home() {
       {/* ---------------------------------------------------------------- */}
       <section className="tz-container mt-20" aria-labelledby="why-heading">
         <div className="max-w-2xl">
-          <h2 id="why-heading" className="text-2xl font-semibold tracking-tight sm:text-3xl">
+          <h2 id="why-heading" className="tz-section-title">
             Why TOOLZEN?
           </h2>
           <p id="toolzen-definition" className="mt-4 text-base leading-relaxed text-fg">
@@ -331,7 +375,7 @@ export function Home() {
       {/* ---------------------------------------------------------------- */}
       {recent.length > 0 && (
         <section className="tz-container mt-16" aria-labelledby="recent-heading">
-          <h2 id="recent-heading" className="text-2xl font-semibold tracking-tight sm:text-3xl">
+          <h2 id="recent-heading" className="tz-section-title">
             Recently added
           </h2>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted sm:text-base">
@@ -346,6 +390,46 @@ export function Home() {
         </section>
       )}
 
+      {/* ---------------------------------------------------------------- */}
+      {/* Guides                                                            */}
+      {/* ---------------------------------------------------------------- */}
+      <section className="tz-container mt-16" aria-labelledby="guides-heading">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div className="max-w-2xl">
+            <p className="tz-eyebrow">Learn</p>
+            <h2 id="guides-heading" className="tz-section-title mt-2">
+              Short, useful guides
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-muted sm:text-base">
+              Plain-language walkthroughs for the tasks our tools solve, including the trade-offs
+              nobody mentions.
+            </p>
+          </div>
+          <Link to="/guides" className="text-sm font-medium text-brand transition-colors hover:underline">
+            All guides →
+          </Link>
+        </div>
+        <div className="mt-8 grid gap-4 sm:grid-cols-3">
+          {featuredGuides.map((guide) => (
+            <Link
+              key={guide.slug}
+              to={`/guides/${guide.slug}`}
+              className="tz-card tz-card-interactive group flex flex-col p-5"
+            >
+              <Icon name="book-open" size={18} className="text-brand" />
+              <h3 className="mt-3 text-sm font-semibold tracking-tight text-fg group-hover:text-brand">
+                {guide.title}
+              </h3>
+              <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">{guide.description}</p>
+              <span className="mt-4 inline-flex items-center gap-1 text-xs font-medium text-brand">
+                Read the guide
+                <Icon name="arrow-right" size={13} />
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       <AdSlot placement="homepage-banner" className="tz-container mt-16" />
 
       {/* ---------------------------------------------------------------- */}
@@ -353,7 +437,7 @@ export function Home() {
       {/* ---------------------------------------------------------------- */}
       <section className="tz-container mt-16" aria-labelledby="faq-heading">
         <div className="max-w-2xl">
-          <h2 id="faq-heading" className="text-2xl font-semibold tracking-tight sm:text-3xl">
+          <h2 id="faq-heading" className="tz-section-title">
             Frequently asked questions
           </h2>
         </div>
@@ -380,7 +464,7 @@ export function Home() {
       {/* ---------------------------------------------------------------- */}
       <section className="tz-container mb-4 mt-16">
         <div className="rounded-2xl border border-line bg-gradient-to-br from-brand-soft to-accent-soft p-8 text-center sm:p-12">
-          <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+          <h2 className="tz-section-title">
             Ready to get something done?
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-muted sm:text-base">

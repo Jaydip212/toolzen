@@ -6,7 +6,7 @@ export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'dan
 export type ButtonSize = 'sm' | 'md' | 'lg' | 'icon' | 'icon-sm'
 
 const base =
-  'inline-flex select-none items-center justify-center gap-2 rounded-xl font-medium whitespace-nowrap transition-colors duration-150 disabled:pointer-events-none disabled:opacity-50'
+  'inline-flex select-none items-center justify-center gap-2 rounded-xl font-medium whitespace-nowrap transition-all duration-150 active:translate-y-px disabled:pointer-events-none disabled:opacity-50'
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary: 'bg-brand text-brand-fg shadow-sm hover:bg-brand-hover',

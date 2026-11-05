@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useId, useRef, useState } from 'react'
 import type { DragEvent } from 'react'
 import { cn } from '@/lib/utils'
 import { Icon } from '@/components/ui/Icon'
@@ -44,6 +44,7 @@ export function FileDrop({
   className,
 }: FileDropProps) {
   const inputRef = useRef<HTMLInputElement>(null)
+  const hintId = useId()
   // Counts enter/leave pairs so dragging over child nodes does not flicker.
   const dragDepth = useRef(0)
   const [dragging, setDragging] = useState(false)
@@ -104,11 +105,18 @@ export function FileDrop({
     emit(event.dataTransfer?.files)
   }
 
+  const sizeLabel =
+    maxFileSizeBytes >= 1024 * 1024
+      ? `${Math.round(maxFileSizeBytes / (1024 * 1024))} MB per file`
+      : `${Math.round(maxFileSizeBytes / 1024)} KB per file`
+
   return (
     <div
       role="button"
       tabIndex={disabled ? -1 : 0}
+      aria-label={label}
       aria-disabled={disabled || undefined}
+      aria-describedby={hintId}
       onClick={openPicker}
       onKeyDown={(event) => {
         if (event.key === 'Enter' || event.key === ' ') {
@@ -121,16 +129,18 @@ export function FileDrop({
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       className={cn(
-        'flex cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed px-6 py-10 text-center transition-colors duration-150',
-        dragging ? 'border-brand bg-brand-soft' : 'border-line bg-surface-2/40 hover:border-brand/60',
+        'flex cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed px-6 py-10 text-center transition-all duration-200',
+        dragging
+          ? 'scale-[1.01] border-brand bg-brand-soft shadow-card-hover'
+          : 'border-line bg-surface-2/40 hover:border-brand/60 hover:bg-surface-2/70',
         disabled && 'cursor-not-allowed opacity-60',
         className,
       )}
     >
       <span
         className={cn(
-          'flex h-11 w-11 items-center justify-center rounded-full transition-colors',
-          dragging ? 'bg-brand text-brand-fg' : 'bg-surface-2 text-muted',
+          'flex h-11 w-11 items-center justify-center rounded-full transition-all duration-200',
+          dragging ? 'scale-110 bg-brand text-brand-fg' : 'bg-surface-2 text-muted',
         )}
       >
         <Icon name={dragging ? 'download' : 'upload'} size={20} />
@@ -138,7 +148,13 @@ export function FileDrop({
       <span className="text-sm font-medium text-fg">
         {dragging ? 'Drop to load' : label}
       </span>
-      {hint && <span className="max-w-sm text-xs leading-relaxed text-muted">{hint}</span>}
+      <span id={hintId} className="flex max-w-sm flex-col items-center gap-1.5">
+        {hint && <span className="text-xs leading-relaxed text-muted">{hint}</span>}
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface px-2.5 py-1 text-[11px] font-medium text-muted">
+          <Icon name="shield" size={12} />
+          {sizeLabel} · stays on your device
+        </span>
+      </span>
       {sizeError && (
         <span role="alert" className="max-w-sm text-xs font-medium leading-relaxed text-danger">
           {sizeError}

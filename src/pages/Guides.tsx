@@ -38,7 +38,7 @@ export function Guides() {
                   <Link
                     key={guide.slug}
                     to={`/guides/${guide.slug}`}
-                    className="tz-card group flex flex-col p-5 transition-colors hover:border-brand/40"
+                    className="tz-card tz-card-interactive group flex flex-col p-5"
                   >
                     <h3 className="text-sm font-semibold tracking-tight text-fg group-hover:text-brand">
                       {guide.title}

@@ -11,9 +11,17 @@ export interface ThemeToggleProps {
 export function ThemeToggle({ className }: ThemeToggleProps) {
   const [theme, setThemeState] = useState<Theme>(() => getInitialTheme())
 
-  // Keep the document class in sync with React state.
+  // Keep the document class and the browser UI colour in sync with React state.
   useEffect(() => {
     applyTheme(theme)
+    const meta = document.querySelector('meta[name="theme-color"]:not([media])')
+    if (meta) meta.setAttribute('content', theme === 'dark' ? '#0b0f19' : '#4f46e5')
+    else {
+      const created = document.createElement('meta')
+      created.name = 'theme-color'
+      created.content = theme === 'dark' ? '#0b0f19' : '#4f46e5'
+      document.head.appendChild(created)
+    }
   }, [theme])
 
   // Follow the OS preference while the user has not made an explicit choice.

@@ -54,14 +54,13 @@ export default {
         ],
       },
       borderRadius: {
-        xl: '0.875rem',
-        '2xl': '1.125rem',
+        xl: 'var(--radius-xl)',
+        '2xl': 'var(--radius-2xl)',
       },
       boxShadow: {
-        card: '0 1px 2px 0 rgb(15 23 42 / 0.04), 0 1px 3px 0 rgb(15 23 42 / 0.06)',
-        'card-hover':
-          '0 4px 6px -1px rgb(15 23 42 / 0.07), 0 2px 4px -2px rgb(15 23 42 / 0.06)',
-        pop: '0 10px 30px -10px rgb(15 23 42 / 0.25)',
+        card: 'var(--shadow-card)',
+        'card-hover': 'var(--shadow-card-hover)',
+        pop: 'var(--shadow-pop)',
       },
       keyframes: {
         'fade-in': {

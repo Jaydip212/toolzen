@@ -8,7 +8,7 @@ export interface PageShellProps {
 
 /** Standard page padding and max width used by every route. */
 export function PageShell({ children, className }: PageShellProps) {
-  return <div className={cn('tz-container py-10 sm:py-12', className)}>{children}</div>
+  return <div className={cn('tz-container tz-page-enter py-10 sm:py-12', className)}>{children}</div>
 }
 
 export default PageShell
