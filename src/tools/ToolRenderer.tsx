@@ -121,6 +121,23 @@ const toolComponents: Record<string, LazyExoticComponent<ComponentType>> = {
   'json-to-typescript': lazy(() => import('./json-to-typescript')),
   'unit-converter': lazy(() => import('./unit-converter')),
   'slug-generator': lazy(() => import('./slug-generator')),
+
+  /* Phase 7 - deterministic advanced utilities */
+  'time-zone-converter': lazy(() => import('./time-zone-converter')),
+  'roman-numeral-converter': lazy(() => import('./roman-numeral-converter')),
+  'number-to-words': lazy(() => import('./number-to-words')),
+  'binary-text-converter': lazy(() => import('./binary-text-converter')),
+  'css-unit-converter': lazy(() => import('./css-unit-converter')),
+  'list-shuffler': lazy(() => import('./list-shuffler')),
+  'random-number-generator': lazy(() => import('./random-number-generator')),
+  'random-token-generator': lazy(() => import('./random-token-generator')),
+  'meta-tag-generator': lazy(() => import('./meta-tag-generator')),
+  'robots-txt-generator': lazy(() => import('./robots-txt-generator')),
+  'sitemap-xml-generator': lazy(() => import('./sitemap-xml-generator')),
+  'file-signature-inspector': lazy(() => import('./file-signature-inspector')),
+  'image-effects': lazy(() => import('./image-effects')),
+  'tip-calculator': lazy(() => import('./tip-calculator')),
+  'split-bill-calculator': lazy(() => import('./split-bill-calculator')),
 }
 
 /** Resolve the component for a tool id, if it has been implemented. */

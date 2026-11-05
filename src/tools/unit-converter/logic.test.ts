@@ -28,6 +28,15 @@ describe('convert (factor categories)', () => {
     expect(convert('mass', 0, 'kg', 'lb')).toBe(0)
   })
 
+  it('converts area, volume and speed with exact factors', () => {
+    expect(convert('area', 1, 'ha', 'm2')).toBe(10_000)
+    expect(convert('area', 1, 'km2', 'm2')).toBe(1e6)
+    expect(convert('volume', 1, 'm3', 'l')).toBe(1000)
+    expect(convert('volume', 1, 'gal', 'ml')).toBeCloseTo(3785.411784, 6)
+    expect(convert('speed', 100, 'kmh', 'mps')).toBeCloseTo(27.7777778, 6)
+    expect(convert('speed', 1, 'mps', 'kmh')).toBeCloseTo(3.6, 8)
+  })
+
   it('returns null for unknown units or categories', () => {
     expect(convert('length', 1, 'm', 'stone')).toBeNull()
     expect(convert('power', 1, 'w', 'kw')).toBeNull()

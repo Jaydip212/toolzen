@@ -49,6 +49,41 @@ export const CATEGORIES: UnitCategory[] = [
       { id: 'gib', label: 'Gibibyte (1024³ B)', factor: 1024 ** 3 },
     ],
   },
+  {
+    id: 'area',
+    label: 'Area',
+    units: [
+      { id: 'm2', label: 'Square metre', factor: 1 },
+      { id: 'cm2', label: 'Square centimetre', factor: 1e-4 },
+      { id: 'km2', label: 'Square kilometre', factor: 1e6 },
+      { id: 'ha', label: 'Hectare', factor: 10_000 },
+      { id: 'ft2', label: 'Square foot', factor: 0.09290304 },
+      { id: 'acre', label: 'Acre', factor: 4046.8564224 },
+    ],
+  },
+  {
+    id: 'volume',
+    label: 'Volume',
+    units: [
+      { id: 'l', label: 'Litre', factor: 1 },
+      { id: 'ml', label: 'Millilitre', factor: 0.001 },
+      { id: 'm3', label: 'Cubic metre', factor: 1000 },
+      { id: 'ft3', label: 'Cubic foot', factor: 28.316846592 },
+      { id: 'gal', label: 'US gallon', factor: 3.785411784 },
+      { id: 'cup', label: 'US cup', factor: 0.2365882365 },
+    ],
+  },
+  {
+    id: 'speed',
+    label: 'Speed',
+    units: [
+      { id: 'mps', label: 'Metre per second', factor: 1 },
+      { id: 'kmh', label: 'Kilometre per hour', factor: 1 / 3.6 },
+      { id: 'mph', label: 'Mile per hour', factor: 0.44704 },
+      { id: 'knot', label: 'Knot', factor: 1852 / 3600 },
+      { id: 'fps', label: 'Foot per second', factor: 0.3048 },
+    ],
+  },
 ]
 
 const TEMPERATURE_UNITS = [
