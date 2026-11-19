@@ -4656,6 +4656,80 @@ const seeds: ToolSeed[] = [
     ],
     privacyNote: 'Runs entirely in your browser. Nothing you enter is uploaded.',
   },
+  {
+    id: 'pdf-to-word',
+    name: 'PDF to Word',
+    description: 'Extract the text from a PDF and package it into an editable .docx document.',
+    categories: ['pdf', 'conversion', 'document'],
+    keywords: ['pdf to word', 'pdf to docx', 'convert pdf', 'extract text', 'editable'],
+    icon: 'file-text',
+    status: 'live',
+    inputFormat: 'PDF file',
+    outputFormat: '.docx document',
+    processingMode: 'client',
+    maxFileSize: '50 MB per file',
+    addedAt: '2026-11-20',
+    instructions: [
+      'Choose the PDF whose text you want in a Word document.',
+      'Press Convert to Word. The text layer of every page is read in order.',
+      'Download the .docx file and open it in Word, LibreOffice or Google Docs.',
+    ],
+    faqs: [
+      {
+        question: 'Is the formatting preserved?',
+        answer:
+          'No. The tool reads the text layer of the PDF and writes it into a Word document as plain paragraphs. Fonts, colours, bold, italic, headings, tables, images, columns and page layout are not carried across, because reconstructing them would mean rendering the PDF layout rather than extracting text.',
+      },
+      {
+        question: 'Why did some pages come back empty?',
+        answer:
+          'Those pages are almost always scans: photographs of writing where the words exist only as pixels. This tool does not run optical character recognition, because that needs a server-side model and your file stays in this tab. The number of empty pages is reported so the gap is visible.',
+      },
+      {
+        question: 'Does it work on any PDF?',
+        answer:
+          'It works on any PDF with a text layer, which is nearly every document produced by a word processor. A scanned document, a photographed document, or an image exported as a PDF has no text layer to read.',
+      },
+    ],
+    privacyNote: 'Runs entirely in your browser. Your PDF is never uploaded.',
+  },
+  {
+    id: 'word-to-pdf',
+    name: 'Word to PDF',
+    description: 'Read a .docx file and build a PDF document from its text.',
+    categories: ['pdf', 'conversion', 'document'],
+    keywords: ['word to pdf', 'docx to pdf', 'convert word', 'export pdf'],
+    icon: 'file-text',
+    status: 'live',
+    inputFormat: '.docx file',
+    outputFormat: 'PDF',
+    processingMode: 'client',
+    maxFileSize: '50 MB per file',
+    addedAt: '2026-11-20',
+    instructions: [
+      'Choose the .docx file you want as a PDF.',
+      'Pick the page size — A4 or US Letter.',
+      'Press Build the PDF and download the result.',
+    ],
+    faqs: [
+      {
+        question: 'Is the formatting preserved?',
+        answer:
+          'No. The tool reads the text from the .docx and lays it out as plain paragraphs on a PDF page. Fonts, colours, bold, italic, headings, tables, images, headers, footers and columns are not carried across. For a formatted PDF, use the word processor’s own PDF export — this tool is for when you cannot or do not want to.',
+      },
+      {
+        question: 'Does it work on .doc files?',
+        answer:
+          'No, only .docx. The older .doc format is a binary format, not a ZIP of XML, and reading it reliably needs a full Word-compatible parser. A .docx is an open standard that any modern word processor produces.',
+      },
+      {
+        question: 'What happens to characters the PDF fonts cannot draw?',
+        answer:
+          'The standard PDF fonts cover Latin text plus the Windows-1252 extras such as curly quotes and the euro sign. Non-Latin scripts, emoji and tabs are listed by name before the build, and those characters are skipped in the output rather than stopping the conversion.',
+      },
+    ],
+    privacyNote: 'Runs entirely in your browser. Your document is never uploaded.',
+  },
 ]
 
 
