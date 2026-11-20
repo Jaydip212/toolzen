@@ -49,6 +49,21 @@ export function guidesForCategory<T extends { toolIds: string[] }>(
     .slice(0, limit)
 }
 
+/**
+ * Guides that actually mention a tool, via the guide's own tool ids.
+ *
+ * Used on the tool page so every tool can point at real, relevant reading.
+ * A guide that does not list the tool is never shown, and the result is capped
+ * so one tool cannot turn into a wall of links.
+ */
+export function guidesForTool<T extends { toolIds: string[] }>(
+  guides: T[],
+  toolId: string,
+  limit = 3,
+): T[] {
+  return guides.filter((guide) => guide.toolIds.includes(toolId)).slice(0, limit)
+}
+
 /** Light, deterministic search over a tool-shaped list, used by category pages. */
 export function filterToolsByQuery<T extends { name: string; description: string; keywords?: string[] }>(
   tools: T[],

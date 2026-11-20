@@ -27,6 +27,32 @@ export interface FileDropProps {
 export const DEFAULT_MAX_FILE_BYTES = 100 * 1024 * 1024
 
 /**
+ * Whether a file satisfies an `accept` attribute.
+ *
+ * The browser enforces `accept` on the picker, but a drag-and-drop bypasses it
+ * entirely, so the same rule has to be applied here. Three token forms are
+ * understood: extensions (`.pdf`), exact MIME types
+ * (`application/pdf`), and wildcards (`image/*`). Extensions are matched
+ * against the file name because some systems report an empty MIME type for
+ * documents — the extension is the reliable signal in that case.
+ */
+export function fileMatchesAccept(file: File, accept?: string): boolean {
+  const tokens = (accept ?? '')
+    .split(',')
+    .map((token) => token.trim().toLowerCase())
+    .filter(Boolean)
+  if (tokens.length === 0) return true
+
+  const name = file.name.toLowerCase()
+  const type = (file.type ?? '').toLowerCase()
+  return tokens.some((token) => {
+    if (token.startsWith('.')) return name.endsWith(token)
+    if (token.endsWith('/*')) return type.startsWith(token.slice(0, -1))
+    return type === token
+  })
+}
+
+/**
  * Accessible drag-and-drop file picker.
  *
  * The whole surface is a button, so it is reachable by keyboard and announced
@@ -48,27 +74,43 @@ export function FileDrop({
   // Counts enter/leave pairs so dragging over child nodes does not flicker.
   const dragDepth = useRef(0)
   const [dragging, setDragging] = useState(false)
-  const [sizeError, setSizeError] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   const emit = useCallback(
     (list: FileList | null | undefined) => {
       if (!list || list.length === 0) return
       const files = Array.from(list)
-      const oversized = files.filter((file) => file.size > maxFileSizeBytes)
-      if (oversized.length > 0) {
-        setSizeError(
-          oversized.length === 1
-            ? `${oversized[0]!.name} is ${formatMb(oversized[0]!.size)}, over the ${formatMb(maxFileSizeBytes)} limit. Nothing was loaded.`
-            : `${oversized.length} files were over the ${formatMb(maxFileSizeBytes)} limit. Nothing was loaded.`,
+
+      // The picker enforces `accept`, but a drop does not — validate both
+      // routes here so a wrong-type file is named instead of silently loaded.
+      const wrongType = files.filter((file) => !fileMatchesAccept(file, accept))
+      const oversized = files.filter(
+        (file) => fileMatchesAccept(file, accept) && file.size > maxFileSizeBytes,
+      )
+      const accepted = files.filter(
+        (file) => fileMatchesAccept(file, accept) && file.size <= maxFileSizeBytes,
+      )
+
+      const messages: string[] = []
+      if (wrongType.length > 0) {
+        messages.push(
+          wrongType.length === 1
+            ? `${wrongType[0]!.name} is not an accepted file type.`
+            : `${wrongType.length} files were not accepted file types.`,
         )
-        const acceptable = files.filter((file) => file.size <= maxFileSizeBytes)
-        if (acceptable.length > 0) onFiles(multiple ? acceptable : acceptable.slice(0, 1))
-        return
       }
-      setSizeError(null)
-      onFiles(multiple ? files : files.slice(0, 1))
+      if (oversized.length > 0) {
+        messages.push(
+          oversized.length === 1
+            ? `${oversized[0]!.name} is ${formatMb(oversized[0]!.size)}, over the ${formatMb(maxFileSizeBytes)} limit.`
+            : `${oversized.length} files were over the ${formatMb(maxFileSizeBytes)} limit.`,
+        )
+      }
+      setError(messages.length > 0 ? `${messages.join(' ')} Nothing was loaded from those files.` : null)
+
+      if (accepted.length > 0) onFiles(multiple ? accepted : accepted.slice(0, 1))
     },
-    [multiple, onFiles, maxFileSizeBytes],
+    [accept, multiple, onFiles, maxFileSizeBytes],
   )
 
   function openPicker() {
@@ -155,9 +197,9 @@ export function FileDrop({
           {sizeLabel} · stays on your device
         </span>
       </span>
-      {sizeError && (
+      {error && (
         <span role="alert" className="max-w-sm text-xs font-medium leading-relaxed text-danger">
-          {sizeError}
+          {error}
         </span>
       )}
 

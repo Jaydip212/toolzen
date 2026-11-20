@@ -89,7 +89,7 @@ export function ColorConverterTool() {
         <Input
           label="Colour value"
           value={input}
-          containerClassName="min-w-64 flex-1"
+          containerClassName="min-w-0 flex-1"
           placeholder="#4f46e5, rgb(79, 70, 229), hsl(243, 75%, 59%) or a name like tomato"
           hint="Accepts hex, rgb(), rgba(), hsl(), hsla() and CSS colour names."
           onChange={(event) => setInput(event.target.value)}

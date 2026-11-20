@@ -95,7 +95,7 @@ export function ApiRequestTesterTool() {
         <Input
           label="URL"
           value={url}
-          containerClassName="min-w-72 flex-1"
+          containerClassName="min-w-0 flex-1"
           placeholder="https://api.github.com/repos/facebook/react"
           error={urlError ?? undefined}
           className="font-mono text-xs"

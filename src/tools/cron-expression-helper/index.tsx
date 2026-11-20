@@ -38,7 +38,7 @@ export function CronExpressionHelperTool() {
         <Input
           label="Cron expression"
           value={expression}
-          containerClassName="min-w-64 flex-1"
+          containerClassName="min-w-0 flex-1"
           placeholder="*/15 9-17 * * MON-FRI"
           className="font-mono"
           spellCheck={false}

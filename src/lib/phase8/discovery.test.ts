@@ -3,6 +3,7 @@ import {
   collectionSummary,
   filterToolsByQuery,
   guidesForCategory,
+  guidesForTool,
   heroBadgeLabel,
   personalToolIds,
   relatedCategories,
@@ -62,6 +63,27 @@ describe('guidesForCategory', () => {
 
   it('returns nothing for a category with no matching guides', () => {
     expect(guidesForCategory(guides, new Set(['csv-viewer']))).toEqual([])
+  })
+})
+
+describe('guidesForTool', () => {
+  const guides = [
+    { slug: 'a', toolIds: ['merge-pdf'] },
+    { slug: 'b', toolIds: ['word-counter'] },
+    { slug: 'c', toolIds: ['json-formatter', 'merge-pdf'] },
+    { slug: 'd', toolIds: ['qr-code-generator'] },
+  ]
+
+  it('returns only guides that actually list the tool', () => {
+    expect(guidesForTool(guides, 'merge-pdf').map((guide) => guide.slug)).toEqual(['a', 'c'])
+  })
+
+  it('honours the limit', () => {
+    expect(guidesForTool(guides, 'merge-pdf', 1)).toHaveLength(1)
+  })
+
+  it('returns nothing for a tool with no guide', () => {
+    expect(guidesForTool(guides, 'compress-pdf')).toEqual([])
   })
 })
 

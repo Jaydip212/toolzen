@@ -2,6 +2,8 @@ import { Suspense, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getTool, relatedTools } from '@/data/registry'
 import { categoryName, categoryRoute } from '@/data/categories'
+import { GUIDES } from '@/data/guides'
+import { guidesForTool } from '@/lib/phase8/discovery'
 import { getToolComponent } from '@/tools/ToolRenderer'
 import {
   breadcrumbSchema,
@@ -72,6 +74,7 @@ export function ToolPage() {
   const isAvailable = tool.status === 'live' && Boolean(ToolComponent)
   const primaryCategory = tool.categories[0]
   const related = relatedTools(tool, 4)
+  const guides = guidesForTool(GUIDES, tool.id)
 
   const breadcrumbs = [
     { name: 'Home', path: '/' },
@@ -220,6 +223,38 @@ export function ToolPage() {
                 </li>
               ))}
             </ol>
+          </section>
+        )}
+
+        {/* Relevant guides — only guides that actually reference this tool. */}
+        {guides.length > 0 && (
+          <section className="mt-10" aria-labelledby="tool-guides">
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <h2 id="tool-guides" className="text-lg font-semibold tracking-tight">
+                Guides using {tool.name}
+              </h2>
+              <Link to="/guides" className="text-sm font-medium text-brand hover:underline">
+                All guides
+              </Link>
+            </div>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {guides.map((guide) => (
+                <Link
+                  key={guide.slug}
+                  to={`/guides/${guide.slug}`}
+                  className="tz-card tz-card-interactive flex flex-col gap-2 p-4"
+                >
+                  <span className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-brand">
+                    <Icon name="lightbulb" size={14} />
+                    {guide.group}
+                  </span>
+                  <span className="text-sm font-semibold text-fg">{guide.title}</span>
+                  <span className="line-clamp-2 text-xs leading-relaxed text-muted">
+                    {guide.description}
+                  </span>
+                </Link>
+              ))}
+            </div>
           </section>
         )}
 

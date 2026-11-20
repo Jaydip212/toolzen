@@ -102,6 +102,7 @@ export function ToolSearch({ open, onClose }: ToolSearchProps) {
             placeholder="Search tools…"
             aria-label="Search tools"
             aria-controls="tool-search-results"
+            aria-activedescendant={results.length > 0 ? `tool-search-option-${active}` : undefined}
             autoComplete="off"
             className="h-14 flex-1 bg-transparent text-sm text-fg outline-none placeholder:text-muted"
           />
@@ -110,20 +111,26 @@ export function ToolSearch({ open, onClose }: ToolSearchProps) {
           </kbd>
         </div>
 
-        <div id="tool-search-results" className="tz-scroll max-h-[60vh] overflow-y-auto p-2" role="listbox">
-          <p className="px-3 py-2 text-xs font-medium uppercase tracking-wide text-muted">
-            {trimmed ? `Results for “${trimmed}”` : 'Available now'}
-          </p>
+        <p id="tool-search-heading" className="px-3 pb-1 pt-2 text-xs font-medium uppercase tracking-wide text-muted">
+          {trimmed ? `Results for “${trimmed}”` : 'Available now'}
+        </p>
 
+        <div
+          id="tool-search-results"
+          className="tz-scroll max-h-[60vh] overflow-y-auto p-2 pt-0"
+          role="listbox"
+          aria-labelledby="tool-search-heading"
+        >
           {results.length === 0 ? (
             <p className="px-3 py-6 text-center text-sm text-muted">
               No tools match “{trimmed}”.
             </p>
           ) : (
-            <ul className="flex flex-col gap-0.5">
+            <ul role="presentation" className="flex flex-col gap-0.5">
               {results.map((tool, index) => (
-                <li key={tool.id}>
+                <li key={tool.id} role="presentation">
                   <button
+                    id={`tool-search-option-${index}`}
                     type="button"
                     role="option"
                     aria-selected={index === active}

@@ -62,8 +62,14 @@ const reasons: { icon: IconName; title: string; body: string }[] = [
   },
 ]
 
-const faqs: FaqEntry[] = [
-  {
+/**
+ * Homepage FAQ content. The "which tools work now" answer is derived from the
+ * real live count so the page and its FAQPage JSON-LD never state a stale
+ * number — the platform publishes no fabricated statistics.
+ */
+export function homeFaqs(liveCount: number): FaqEntry[] {
+  return [
+    {
     question: 'What is TOOLZEN?',
     answer: SITE_DEFINITION,
   },
@@ -85,7 +91,7 @@ const faqs: FaqEntry[] = [
   {
     question: 'Which TOOLZEN tools work right now?',
     answer:
-      '92 tools are available today, across PDF, images, documents, text, developer, security, calculation, QR code and productivity categories. The full directory on the All Tools page always reflects the current state.',
+      `${liveCount} tools are available today, across PDF, images, documents, text, developer, security, calculation, QR code and productivity categories. The full directory on the All Tools page always reflects the current state.`,
   },
   {
     question: 'Why are some tools marked as coming soon?',
@@ -102,7 +108,8 @@ const faqs: FaqEntry[] = [
     answer:
       'Yes. Every page is built mobile-first and works on phones, tablets and desktop computers.',
   },
-]
+  ]
+}
 
 /** Look up a set of registry ids, keeping only tools that are live today. */
 function toolsByIds(ids: string[]): Tool[] {
@@ -161,6 +168,7 @@ export function Home() {
   const [query, setQuery] = useState('')
 
   const stats = platformStats()
+  const faqItems = homeFaqs(stats.live)
   const popular = toolsByIds(POPULAR_TOOL_IDS)
   const recent = recentlyAddedTools(4)
   const [personalIds, setPersonalIds] = useState<string[]>([])
@@ -179,7 +187,7 @@ export function Home() {
   const jsonLd = useMemo(
     () =>
       compactSchemas([
-        faqSchema(faqs),
+        faqSchema(faqItems),
         speakableSchema('/', ['#toolzen-definition', '#faq-heading']),
       ]),
     [],
@@ -443,7 +451,7 @@ export function Home() {
         </div>
 
         <div className="mt-8 flex max-w-3xl flex-col gap-3">
-          {faqs.map((faq) => (
+          {faqItems.map((faq) => (
             <details key={faq.question} className="tz-card group px-5 py-4">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-medium text-fg">
                 {faq.question}

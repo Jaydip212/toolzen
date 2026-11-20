@@ -2,8 +2,6 @@ import { Link } from 'react-router-dom'
 import { categories, categoryRoute } from '@/data/categories'
 import { Logo } from '@/components/ui/Logo'
 
-const footerCategories = ['pdf', 'image', 'text', 'developer', 'calculator'] as const
-
 const platformLinks = [
   { label: 'All Tools', to: '/tools' },
   { label: 'About', to: '/about' },
@@ -34,21 +32,17 @@ export function Footer() {
 
           <nav aria-label="Tool categories">
             <h2 className="text-sm font-semibold text-fg">Categories</h2>
-            <ul className="mt-4 space-y-2.5">
-              {footerCategories.map((id) => {
-                const category = categories.find((item) => item.id === id)
-                if (!category) return null
-                return (
-                  <li key={id}>
-                    <Link
-                      to={categoryRoute(id)}
-                      className="text-sm text-muted transition-colors hover:text-fg"
-                    >
-                      {category.name}
-                    </Link>
-                  </li>
-                )
-              })}
+            <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2.5">
+              {categories.map((category) => (
+                <li key={category.id}>
+                  <Link
+                    to={categoryRoute(category.id)}
+                    className="text-sm text-muted transition-colors hover:text-fg"
+                  >
+                    {category.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </nav>
 
